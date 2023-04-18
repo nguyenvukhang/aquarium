@@ -17,7 +17,11 @@ struct BoardData: Codable {
         guard let unwrappedUrl = url,
               let data = URLSession.synchronousDataTask(with: unwrappedUrl).data,
               let boardData = try? JSONDecoder().decode(BoardData.self, from: data) else {
-            assert(false)
+            // assert(false)
+            let link = "https://aquarium2.vercel.app/api/get?id="
+            let id = "MDo4LDM0MCw5OTA="
+            let defaultURL = URL(string: link + id)
+            return BoardData.create(from: defaultURL)
         }
         return boardData
     }

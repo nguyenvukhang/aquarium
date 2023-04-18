@@ -43,3 +43,14 @@ struct Board {
         return gMat
     }
 }
+
+extension Board: CustomStringConvertible {
+    var description: String {
+        var output = ""
+        let groupMatAsString = groupMat.map({ $0.map({ String($0) }) })
+        for row in groupMatAsString {
+            output += row.joined(separator: "") + "\n"
+        }
+        return output
+    }
+}

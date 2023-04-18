@@ -38,6 +38,7 @@ class ViewController: UIViewController {
         self.board = board
         // engine.load(board)
         // engine.solve()
+        print(board)
     }
 }
 
