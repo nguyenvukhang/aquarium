@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2F2091D529EEE90600FF61E7 /* AqEngine in Frameworks */ = {isa = PBXBuildFile; productRef = 2F2091D429EEE90600FF61E7 /* AqEngine */; };
+		2F2091D529EEE90600FF61E7 /* Engine in Frameworks */ = {isa = PBXBuildFile; productRef = 2F2091D429EEE90600FF61E7 /* Engine */; };
 		2F5C21C229EEE067005D3AED /* URLSession+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F5C21C129EEE067005D3AED /* URLSession+.swift */; };
 		2FC8639F29EDAA01009C1AC4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FC8639E29EDAA01009C1AC4 /* AppDelegate.swift */; };
 		2FC863A129EDAA01009C1AC4 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FC863A029EDAA01009C1AC4 /* SceneDelegate.swift */; };
@@ -39,7 +39,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		2F2091D229EEE8FD00FF61E7 /* AqEngine */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = AqEngine; sourceTree = "<group>"; };
+		2F2091D229EEE8FD00FF61E7 /* Engine */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Engine; sourceTree = "<group>"; };
 		2F5C21C129EEE067005D3AED /* URLSession+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLSession+.swift"; sourceTree = "<group>"; };
 		2FC8639B29EDAA01009C1AC4 /* Aquarium.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = Aquarium.app; path = "/Users/quantf/Documents/misc/new/aquarium/Aquarium/build/Debug-iphoneos/Aquarium.app"; sourceTree = "<absolute>"; };
 		2FC8639E29EDAA01009C1AC4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -62,7 +62,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2F2091D529EEE90600FF61E7 /* AqEngine in Frameworks */,
+				2F2091D529EEE90600FF61E7 /* Engine in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -86,7 +86,7 @@
 		2FC8639229EDAA01009C1AC4 = {
 			isa = PBXGroup;
 			children = (
-				2F2091D229EEE8FD00FF61E7 /* AqEngine */,
+				2F2091D229EEE8FD00FF61E7 /* Engine */,
 				2FC8639D29EDAA01009C1AC4 /* Aquarium */,
 				2FC863B429EDAA01009C1AC4 /* AquariumTests */,
 				2FC863BE29EDAA01009C1AC4 /* AquariumUITests */,
@@ -143,7 +143,7 @@
 			);
 			name = Aquarium;
 			packageProductDependencies = (
-				2F2091D429EEE90600FF61E7 /* AqEngine */,
+				2F2091D429EEE90600FF61E7 /* Engine */,
 			);
 			productName = Aquarium;
 			productReference = 2FC8639B29EDAA01009C1AC4 /* Aquarium.app */;
@@ -608,9 +608,9 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		2F2091D429EEE90600FF61E7 /* AqEngine */ = {
+		2F2091D429EEE90600FF61E7 /* Engine */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = AqEngine;
+			productName = Engine;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
