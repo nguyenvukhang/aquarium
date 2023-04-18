@@ -23,6 +23,14 @@ struct Board {
         self.groupMat = constructGroupMat(groups: groups, rowNum: rowSums.count, colNum: colSums.count)
     }
     
+    init(from boardData: BoardData) {
+        let sums = boardData.sums.compactMap({ Int($0) })
+        let colSums = Array(sums[0..<boardData.size])
+        let rowSums = Array(sums[boardData.size...])
+        let groups = boardData.frame.compactMap({ Int($0) })
+        self.init(colSums: colSums, rowSums: rowSums, groups: groups)
+    }
+    
     private func constructGroupMat(groups: [Int], rowNum: Int, colNum: Int) -> [[Int]] {
         var gMat = [[Int]]()
         

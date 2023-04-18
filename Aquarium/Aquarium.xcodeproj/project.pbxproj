@@ -7,7 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2F2091D529EEE90600FF61E7 /* Engine in Frameworks */ = {isa = PBXBuildFile; productRef = 2F2091D429EEE90600FF61E7 /* Engine */; };
+		2F1E34EF29EEF72900279669 /* Engine in Frameworks */ = {isa = PBXBuildFile; productRef = 2F1E34EE29EEF72900279669 /* Engine */; };
+		2F1E34F129EEF82900279669 /* BoardData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F1E34F029EEF82900279669 /* BoardData.swift */; };
 		2F5C21C229EEE067005D3AED /* URLSession+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F5C21C129EEE067005D3AED /* URLSession+.swift */; };
 		2FC8639F29EDAA01009C1AC4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FC8639E29EDAA01009C1AC4 /* AppDelegate.swift */; };
 		2FC863A129EDAA01009C1AC4 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FC863A029EDAA01009C1AC4 /* SceneDelegate.swift */; };
@@ -39,9 +40,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		2F2091D229EEE8FD00FF61E7 /* Engine */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Engine; sourceTree = "<group>"; };
+		2F1E34F029EEF82900279669 /* BoardData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardData.swift; sourceTree = "<group>"; };
+		2F2091D629EEF4B800FF61E7 /* Aquarium.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Aquarium.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2F2091DA29EEF70E00FF61E7 /* Engine */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Engine; sourceTree = "<group>"; };
 		2F5C21C129EEE067005D3AED /* URLSession+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLSession+.swift"; sourceTree = "<group>"; };
-		2FC8639B29EDAA01009C1AC4 /* Aquarium.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = Aquarium.app; path = "/Users/quantf/Documents/misc/new/aquarium/Aquarium/build/Debug-iphoneos/Aquarium.app"; sourceTree = "<absolute>"; };
+		2F8C670729EF01A800BE1AB8 /* AquariumTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = AquariumTests.xctest; path = "/Users/quantf/Documents/misc/new/aquarium/Aquarium/build/Debug-iphoneos/AquariumTests.xctest"; sourceTree = "<absolute>"; };
+		2F8C670829EF01A800BE1AB8 /* AquariumUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = AquariumUITests.xctest; path = "/Users/quantf/Documents/misc/new/aquarium/Aquarium/build/Debug-iphoneos/AquariumUITests.xctest"; sourceTree = "<absolute>"; };
 		2FC8639E29EDAA01009C1AC4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2FC863A029EDAA01009C1AC4 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		2FC863A229EDAA01009C1AC4 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -49,9 +53,7 @@
 		2FC863A729EDAA01009C1AC4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2FC863AA29EDAA01009C1AC4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2FC863AC29EDAA01009C1AC4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		2FC863B129EDAA01009C1AC4 /* AquariumTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = AquariumTests.xctest; path = "/Users/quantf/Documents/misc/new/aquarium/Aquarium/build/Debug-iphoneos/AquariumTests.xctest"; sourceTree = "<absolute>"; };
 		2FC863B529EDAA01009C1AC4 /* AquariumTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AquariumTests.swift; sourceTree = "<group>"; };
-		2FC863BB29EDAA01009C1AC4 /* AquariumUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = AquariumUITests.xctest; path = "/Users/quantf/Documents/misc/new/aquarium/Aquarium/build/Debug-iphoneos/AquariumUITests.xctest"; sourceTree = "<absolute>"; };
 		2FC863BF29EDAA02009C1AC4 /* AquariumUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AquariumUITests.swift; sourceTree = "<group>"; };
 		2FC863C129EDAA02009C1AC4 /* AquariumUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AquariumUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		2FC863CE29EDAA28009C1AC4 /* Board.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Board.swift; sourceTree = "<group>"; };
@@ -62,7 +64,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2F2091D529EEE90600FF61E7 /* Engine in Frameworks */,
+				2F1E34EF29EEF72900279669 /* Engine in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -86,10 +88,11 @@
 		2FC8639229EDAA01009C1AC4 = {
 			isa = PBXGroup;
 			children = (
-				2F2091D229EEE8FD00FF61E7 /* Engine */,
+				2F2091DA29EEF70E00FF61E7 /* Engine */,
 				2FC8639D29EDAA01009C1AC4 /* Aquarium */,
 				2FC863B429EDAA01009C1AC4 /* AquariumTests */,
 				2FC863BE29EDAA01009C1AC4 /* AquariumUITests */,
+				2F2091D629EEF4B800FF61E7 /* Aquarium.app */,
 			);
 			sourceTree = "<group>";
 		};
@@ -105,6 +108,7 @@
 				2FC863AC29EDAA01009C1AC4 /* Info.plist */,
 				2FC863CE29EDAA28009C1AC4 /* Board.swift */,
 				2F5C21C129EEE067005D3AED /* URLSession+.swift */,
+				2F1E34F029EEF82900279669 /* BoardData.swift */,
 			);
 			path = Aquarium;
 			sourceTree = "<group>";
@@ -143,10 +147,10 @@
 			);
 			name = Aquarium;
 			packageProductDependencies = (
-				2F2091D429EEE90600FF61E7 /* Engine */,
+				2F1E34EE29EEF72900279669 /* Engine */,
 			);
 			productName = Aquarium;
-			productReference = 2FC8639B29EDAA01009C1AC4 /* Aquarium.app */;
+			productReference = 2F2091D629EEF4B800FF61E7 /* Aquarium.app */;
 			productType = "com.apple.product-type.application";
 		};
 		2FC863B029EDAA01009C1AC4 /* AquariumTests */ = {
@@ -164,7 +168,7 @@
 			);
 			name = AquariumTests;
 			productName = AquariumTests;
-			productReference = 2FC863B129EDAA01009C1AC4 /* AquariumTests.xctest */;
+			productReference = 2F8C670729EF01A800BE1AB8 /* AquariumTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		2FC863BA29EDAA01009C1AC4 /* AquariumUITests */ = {
@@ -182,7 +186,7 @@
 			);
 			name = AquariumUITests;
 			productName = AquariumUITests;
-			productReference = 2FC863BB29EDAA01009C1AC4 /* AquariumUITests.xctest */;
+			productReference = 2F8C670829EF01A800BE1AB8 /* AquariumUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -262,6 +266,7 @@
 			files = (
 				2FC863A329EDAA01009C1AC4 /* ViewController.swift in Sources */,
 				2FC8639F29EDAA01009C1AC4 /* AppDelegate.swift in Sources */,
+				2F1E34F129EEF82900279669 /* BoardData.swift in Sources */,
 				2F5C21C229EEE067005D3AED /* URLSession+.swift in Sources */,
 				2FC863CF29EDAA28009C1AC4 /* Board.swift in Sources */,
 				2FC863A129EDAA01009C1AC4 /* SceneDelegate.swift in Sources */,
@@ -608,7 +613,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		2F2091D429EEE90600FF61E7 /* Engine */ = {
+		2F1E34EE29EEF72900279669 /* Engine */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Engine;
 		};
