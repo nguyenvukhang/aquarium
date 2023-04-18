@@ -21,6 +21,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		0C306E1829EEE64E009E4E4C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0C306E1429EEE64E009E4E4C /* AqEngine.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0C306E0A29EEE64E009E4E4C;
+			remoteInfo = AqEngine;
+		};
 		2FC863B229EDAA01009C1AC4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 2FC8639329EDAA01009C1AC4 /* Project object */;
@@ -38,6 +45,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0C306E1429EEE64E009E4E4C /* AqEngine.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AqEngine.xcodeproj; path = AqEngine/AqEngine.xcodeproj; sourceTree = "<group>"; };
 		2F5C21C129EEE067005D3AED /* URLSession+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLSession+.swift"; sourceTree = "<group>"; };
 		2FC8639B29EDAA01009C1AC4 /* Aquarium.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Aquarium.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2FC8639E29EDAA01009C1AC4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -80,9 +88,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0C306E1529EEE64E009E4E4C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0C306E1929EEE64E009E4E4C /* AqEngine */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		2FC8639229EDAA01009C1AC4 = {
 			isa = PBXGroup;
 			children = (
+				0C306E1429EEE64E009E4E4C /* AqEngine.xcodeproj */,
 				2FC8639D29EDAA01009C1AC4 /* Aquarium */,
 				2FC863B429EDAA01009C1AC4 /* AquariumTests */,
 				2FC863BE29EDAA01009C1AC4 /* AquariumUITests */,
@@ -223,6 +240,12 @@
 			mainGroup = 2FC8639229EDAA01009C1AC4;
 			productRefGroup = 2FC8639C29EDAA01009C1AC4 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 0C306E1529EEE64E009E4E4C /* Products */;
+					ProjectRef = 0C306E1429EEE64E009E4E4C /* AqEngine.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				2FC8639A29EDAA01009C1AC4 /* Aquarium */,
@@ -231,6 +254,16 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		0C306E1929EEE64E009E4E4C /* AqEngine */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = AqEngine;
+			remoteRef = 0C306E1829EEE64E009E4E4C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		2FC8639929EDAA01009C1AC4 /* Resources */ = {
