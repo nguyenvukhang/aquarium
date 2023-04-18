@@ -1,2 +1,0 @@
-build:
-	swift build
