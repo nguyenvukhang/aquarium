@@ -1,5 +1,5 @@
 //
-//  Board.swift
+//  Board2.swift
 //  Aquarium
 //
 //  Created by Quan Teng Foong on 18/4/23.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Board {
+struct Board2 {
     var mat: [[Bool?]]
     var colSums: [Int]
     var rowSums: [Int]
@@ -30,7 +30,7 @@ struct Board {
     }
     
     /*
-    init(from boardData: BoardData) {
+    init(from boardData: Board2) {
         let sums = boardData.sums.compactMap({ Int($0) })
         let colSums = Array(sums[0..<boardData.size])
         let rowSums = Array(sums[boardData.size...])
@@ -59,7 +59,7 @@ struct Board {
     }
 }
 
-extension Board: CustomStringConvertible {
+extension Board2: CustomStringConvertible {
     var description2: String {
         var output = ""
         let groupMatAsString = groupMat.map({ $0.map({ String($0) }) })

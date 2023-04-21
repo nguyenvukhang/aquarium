@@ -13,7 +13,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var boardTextView: UITextView!
     @IBOutlet weak var urlTextField: UITextField!
     
-    var board: Board!
+    var board: Board2!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,8 +24,8 @@ class ViewController: UIViewController {
         let id = "MDo4LDM0MCw5OTA="
         let url = URL(string: link + id)
         
-        let boardData = BoardData.create(from: url)
-        let board = Board(from: boardData)
+        let boardData = Board2.create(from: url)
+        let board = Board2(from: boardData)
          */
     }
     
@@ -36,7 +36,7 @@ class ViewController: UIViewController {
             let id = "MDo4LDM0MCw5OTA="
             let url = URL(string: link + id)
             let rawServerResponse = RawServerResponse.create(from: url)
-            let board = Board(from: rawServerResponse)
+            let board = Board2(from: rawServerResponse)
             self.board = board
             print(board.description)
             boardTextView.text = board.description
@@ -44,7 +44,7 @@ class ViewController: UIViewController {
         }
         let url = URL(string: urlString)
         let rawServerResponse = RawServerResponse.create(from: url)
-        let board = Board(from: rawServerResponse)
+        let board = Board2(from: rawServerResponse)
         self.board = board
         // engine.load(board)
         // engine.solve()
