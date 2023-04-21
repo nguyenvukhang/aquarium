@@ -18,9 +18,6 @@
 		2FC863A629EDAA01009C1AC4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2FC863A429EDAA01009C1AC4 /* Main.storyboard */; };
 		2FC863A829EDAA01009C1AC4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2FC863A729EDAA01009C1AC4 /* Assets.xcassets */; };
 		2FC863AB29EDAA01009C1AC4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2FC863A929EDAA01009C1AC4 /* LaunchScreen.storyboard */; };
-		2FC863B629EDAA01009C1AC4 /* AquariumTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FC863B529EDAA01009C1AC4 /* AquariumTests.swift */; };
-		2FC863C029EDAA02009C1AC4 /* AquariumUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FC863BF29EDAA02009C1AC4 /* AquariumUITests.swift */; };
-		2FC863C229EDAA02009C1AC4 /* AquariumUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FC863C129EDAA02009C1AC4 /* AquariumUITestsLaunchTests.swift */; };
 		2FC863CF29EDAA28009C1AC4 /* Board.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FC863CE29EDAA28009C1AC4 /* Board.swift */; };
 /* End PBXBuildFile section */
 
@@ -45,8 +42,6 @@
 		2F2091D629EEF4B800FF61E7 /* Aquarium.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Aquarium.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2F2091DA29EEF70E00FF61E7 /* Engine */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Engine; sourceTree = "<group>"; };
 		2F5C21C129EEE067005D3AED /* URLSession+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLSession+.swift"; sourceTree = "<group>"; };
-		2F8C670729EF01A800BE1AB8 /* AquariumTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = AquariumTests.xctest; path = "/Users/quantf/Documents/misc/new/aquarium/Aquarium/build/Debug-iphoneos/AquariumTests.xctest"; sourceTree = "<absolute>"; };
-		2F8C670829EF01A800BE1AB8 /* AquariumUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = AquariumUITests.xctest; path = "/Users/quantf/Documents/misc/new/aquarium/Aquarium/build/Debug-iphoneos/AquariumUITests.xctest"; sourceTree = "<absolute>"; };
 		2F8C670A29EF086000BE1AB8 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		2F8C670C29EF81B500BE1AB8 /* Border.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Border.swift; sourceTree = "<group>"; };
 		2F8C670F29F0257100BE1AB8 /* RawServerResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RawServerResponse.swift; sourceTree = "<group>"; };
@@ -57,9 +52,6 @@
 		2FC863A729EDAA01009C1AC4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2FC863AA29EDAA01009C1AC4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2FC863AC29EDAA01009C1AC4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		2FC863B529EDAA01009C1AC4 /* AquariumTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AquariumTests.swift; sourceTree = "<group>"; };
-		2FC863BF29EDAA02009C1AC4 /* AquariumUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AquariumUITests.swift; sourceTree = "<group>"; };
-		2FC863C129EDAA02009C1AC4 /* AquariumUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AquariumUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		2FC863CE29EDAA28009C1AC4 /* Board.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Board.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -113,8 +105,6 @@
 			children = (
 				2F2091DA29EEF70E00FF61E7 /* Engine */,
 				2FC8639D29EDAA01009C1AC4 /* Aquarium */,
-				2FC863B429EDAA01009C1AC4 /* AquariumTests */,
-				2FC863BE29EDAA01009C1AC4 /* AquariumUITests */,
 				2F2091D629EEF4B800FF61E7 /* Aquarium.app */,
 			);
 			sourceTree = "<group>";
@@ -133,23 +123,6 @@
 				2FC863AC29EDAA01009C1AC4 /* Info.plist */,
 			);
 			path = Aquarium;
-			sourceTree = "<group>";
-		};
-		2FC863B429EDAA01009C1AC4 /* AquariumTests */ = {
-			isa = PBXGroup;
-			children = (
-				2FC863B529EDAA01009C1AC4 /* AquariumTests.swift */,
-			);
-			path = AquariumTests;
-			sourceTree = "<group>";
-		};
-		2FC863BE29EDAA01009C1AC4 /* AquariumUITests */ = {
-			isa = PBXGroup;
-			children = (
-				2FC863BF29EDAA02009C1AC4 /* AquariumUITests.swift */,
-				2FC863C129EDAA02009C1AC4 /* AquariumUITestsLaunchTests.swift */,
-			);
-			path = AquariumUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -175,42 +148,6 @@
 			productReference = 2F2091D629EEF4B800FF61E7 /* Aquarium.app */;
 			productType = "com.apple.product-type.application";
 		};
-		2FC863B029EDAA01009C1AC4 /* AquariumTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 2FC863C829EDAA02009C1AC4 /* Build configuration list for PBXNativeTarget "AquariumTests" */;
-			buildPhases = (
-				2FC863AD29EDAA01009C1AC4 /* Sources */,
-				2FC863AE29EDAA01009C1AC4 /* Frameworks */,
-				2FC863AF29EDAA01009C1AC4 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				2FC863B329EDAA01009C1AC4 /* PBXTargetDependency */,
-			);
-			name = AquariumTests;
-			productName = AquariumTests;
-			productReference = 2F8C670729EF01A800BE1AB8 /* AquariumTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		2FC863BA29EDAA01009C1AC4 /* AquariumUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 2FC863CB29EDAA02009C1AC4 /* Build configuration list for PBXNativeTarget "AquariumUITests" */;
-			buildPhases = (
-				2FC863B729EDAA01009C1AC4 /* Sources */,
-				2FC863B829EDAA01009C1AC4 /* Frameworks */,
-				2FC863B929EDAA01009C1AC4 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				2FC863BD29EDAA01009C1AC4 /* PBXTargetDependency */,
-			);
-			name = AquariumUITests;
-			productName = AquariumUITests;
-			productReference = 2F8C670829EF01A800BE1AB8 /* AquariumUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -223,14 +160,6 @@
 				TargetAttributes = {
 					2FC8639A29EDAA01009C1AC4 = {
 						CreatedOnToolsVersion = 14.3;
-					};
-					2FC863B029EDAA01009C1AC4 = {
-						CreatedOnToolsVersion = 14.3;
-						TestTargetID = 2FC8639A29EDAA01009C1AC4;
-					};
-					2FC863BA29EDAA01009C1AC4 = {
-						CreatedOnToolsVersion = 14.3;
-						TestTargetID = 2FC8639A29EDAA01009C1AC4;
 					};
 				};
 			};
@@ -248,8 +177,6 @@
 			projectRoot = "";
 			targets = (
 				2FC8639A29EDAA01009C1AC4 /* Aquarium */,
-				2FC863B029EDAA01009C1AC4 /* AquariumTests */,
-				2FC863BA29EDAA01009C1AC4 /* AquariumUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -301,7 +228,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2FC863B629EDAA01009C1AC4 /* AquariumTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -309,8 +235,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2FC863C229EDAA02009C1AC4 /* AquariumUITestsLaunchTests.swift in Sources */,
-				2FC863C029EDAA02009C1AC4 /* AquariumUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -519,82 +443,6 @@
 			};
 			name = Release;
 		};
-		2FC863C929EDAA02009C1AC4 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = HRQFZTAU2C;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = kaldius.AquariumTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Aquarium.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Aquarium";
-			};
-			name = Debug;
-		};
-		2FC863CA29EDAA02009C1AC4 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = HRQFZTAU2C;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = kaldius.AquariumTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Aquarium.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Aquarium";
-			};
-			name = Release;
-		};
-		2FC863CC29EDAA02009C1AC4 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = HRQFZTAU2C;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = kaldius.AquariumUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = Aquarium;
-			};
-			name = Debug;
-		};
-		2FC863CD29EDAA02009C1AC4 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = HRQFZTAU2C;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = kaldius.AquariumUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = Aquarium;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -612,24 +460,6 @@
 			buildConfigurations = (
 				2FC863C629EDAA02009C1AC4 /* Debug */,
 				2FC863C729EDAA02009C1AC4 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		2FC863C829EDAA02009C1AC4 /* Build configuration list for PBXNativeTarget "AquariumTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				2FC863C929EDAA02009C1AC4 /* Debug */,
-				2FC863CA29EDAA02009C1AC4 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		2FC863CB29EDAA02009C1AC4 /* Build configuration list for PBXNativeTarget "AquariumUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				2FC863CC29EDAA02009C1AC4 /* Debug */,
-				2FC863CD29EDAA02009C1AC4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
