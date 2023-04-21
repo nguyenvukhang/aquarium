@@ -37,6 +37,9 @@ public struct Board {
         let matrix: [[Int]]
     }
 
+    /**
+     * Pulls a board from the Aquarium website, and initializes it.
+     */
     public init(withProblemId: String) throws {
         let url = URL(string: "https://aquarium2.vercel.app/api/get?id=" + withProblemId)!
         let (raw, _, _) = URLSession.synchronousDataTask(with: url)
@@ -46,26 +49,27 @@ public struct Board {
     public init(withJson: String) throws {
         let decoder = JSONDecoder()
         let obj = try decoder.decode(JSONBoard.self, from: withJson.data(using: .utf8)!)
-        self.colSums = obj.sums.cols
-        self.rowSums = obj.sums.rows
-        self.groupMat = obj.matrix
-        self.mat = Board.emptyMat(size: obj.size)
+        colSums = obj.sums.cols
+        rowSums = obj.sums.rows
+        groupMat = obj.matrix
+        mat = Board.emptyMat(size: obj.size)
     }
 
     public init(colSums: [Int],
                 rowSums: [Int],
-                groups: [[Int]]) {
-        self.mat = Board.emptyMat(size: rowSums.count)
+                groups: [[Int]])
+    {
+        mat = Board.emptyMat(size: rowSums.count)
         self.colSums = colSums
         self.rowSums = rowSums
-        self.groupMat = groups
+        groupMat = groups
     }
 
     private init(size: Int) {
-        self.mat = Board.emptyMat(size: size)
-        self.colSums = [Int](repeating: 0, count: size)
-        self.rowSums = [Int](repeating: 0, count: size)
-        self.groupMat = [[Int]](repeating: [Int](repeating: 0, count: size), count: size)
+        mat = Board.emptyMat(size: size)
+        colSums = [Int](repeating: 0, count: size)
+        rowSums = [Int](repeating: 0, count: size)
+        groupMat = [[Int]](repeating: [Int](repeating: 0, count: size), count: size)
     }
 
     public static func empty(size: Int) -> Board { Board(size: size) }
@@ -77,9 +81,9 @@ public struct Board {
     private func constructGroupMat(groups: [Int], rowNum: Int, colNum: Int) -> [[Int]] {
         var gMat = [[Int]]()
 
-        for row in 0..<rowNum {
+        for row in 0 ..< rowNum {
             let start = colNum * row, end = start + colNum
-            let rowArr = Array(groups[start..<end])
+            let rowArr = Array(groups[start ..< end])
             gMat.append(rowArr)
         }
         return gMat
@@ -90,7 +94,7 @@ public struct Board {
     }
 
     public func validRows() -> (Bool, BoardState) {
-        for i in 0..<size {
+        for i in 0 ..< size {
             if rowSum(i, .water) > rowSums[i] {
                 return (false, .rowTooMuchWater(i))
             }
@@ -103,8 +107,8 @@ public struct Board {
 
     public func valid() -> Bool {
         // let pieces = Int32(0)
-        for i in 0..<size {
-            for j in 0..<size {
+        for i in 0 ..< size {
+            for j in 0 ..< size {
                 print(i, j)
             }
         }
@@ -125,7 +129,7 @@ extension Board: CustomDebugStringConvertible {
         var stdout = "Board {\n"
         let line = { (line: String) in stdout += line + "\n" }
         line("    " + spaceSeparated(colSums))
-        for i in 0..<mat.count {
+        for i in 0 ..< mat.count {
             line("  " + rowSums[i].description + " " + spaceSeparated(mat[i]))
         }
         return stdout + "}"
