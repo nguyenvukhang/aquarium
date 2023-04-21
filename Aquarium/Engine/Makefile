@@ -6,3 +6,6 @@ build:
 
 run:
 	./.build/debug/Cli
+
+test:
+	swift run Tests

@@ -7,35 +7,21 @@ let package = Package(
     name: "Engine",
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
-        .library(
-            name: "Engine",
-            targets: ["Engine"]
-        ),
-        .executable(
-            name: "Cli",
-            targets: ["Cli"]
-        )
+        .library(name: "Engine", targets: ["Engine"]),
+        .executable(name: "Cli", targets: ["Cli"]),
+        .executable(name: "Tests", targets: ["Tests"])
     ],
-    dependencies: [
-        // Dependencies declare other packages that this package depends on.
-        // .package(url: /* package url */, from: "1.0.0"),
-    ],
+    dependencies: [],
     targets: [
-        // Targets are the basic building blocks of a package. A target can define a module or a test suite.
-        // Targets can depend on other targets in this package, and on products in packages this package depends on.
-        .target(
-            name: "Engine",
-            dependencies: []
-        ),
-        .testTarget(
-            name: "EngineTests",
-            dependencies: ["Engine"]
-        ),
+        .target(name: "Engine", dependencies: []),
+        .executableTarget(
+            name: "Tests",
+            dependencies: ["Engine"],
+            path: "Tests",
+            exclude: []),
         .executableTarget(
             name: "Cli",
             dependencies: ["Engine"],
             path: "Sources/Cli",
-            exclude: []
-        ),
-    ]
-)
+            exclude: [])
+    ])
