@@ -1,4 +1,7 @@
 dev:
+	swift run Cli
+
+build:
 	swift build --product Cli
 
 run:
