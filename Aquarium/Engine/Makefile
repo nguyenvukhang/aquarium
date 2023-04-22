@@ -1,3 +1,6 @@
+current:
+	make test
+
 dev:
 	swift run Cli
 
