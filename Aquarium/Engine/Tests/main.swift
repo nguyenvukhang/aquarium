@@ -23,7 +23,7 @@ describe("Initializing a board") {
         [v, v, v, v, v, v],
         [v, v, v, v, v, v],
         [v, v, v, v, v, v],
-        [v, v, v, v, v, v]
+        [v, v, v, v, v, v],
     ])
 }
 
@@ -42,7 +42,7 @@ describe("Board sum operations") {
 
     test("water row sums") {
         let exp = [0, 4, 2, 2, 3, 0]
-        for i in 0..<board.size {
+        for i in 0 ..< board.size {
             r.currentTest = String(format: "water row sums[%d]", i)
             assertEq(board.rowSum(i, .water), exp[i])
         }
@@ -50,7 +50,7 @@ describe("Board sum operations") {
 
     test("air row sums") {
         let exp = [2, 2, 2, 4, 0, 1]
-        for i in 0..<board.size {
+        for i in 0 ..< board.size {
             r.currentTest = String(format: "air row sums[%d]", i)
             assertEq(board.rowSum(i, .air), exp[i])
         }
@@ -91,21 +91,6 @@ describe("Board row validity checks") {
     }
 }
 
-describe("Debug validator") {
-    let board = try! Board(withJson: """
-    { "id": "MDo2LDA3MCw1NzI=", "size": 6,
-      "sums": {
-        "cols": [2, 4, 5, 5, 4, 2],
-        "rows": [4, 3, 4, 4, 2, 5]
-      },
-      "matrix":[[1, 2, 2, 2, 2, 3],
-                [1, 1, 2, 4, 2, 3],
-                [1, 2, 2, 4, 4, 3],
-                [1, 2, 2, 2, 2, 3],
-                [1, 5, 5, 5, 6, 3],
-                [1, 1, 1, 5, 6, 3]]}
-    """)
-    let _ = board.valid()
-}
+border_tests()
 
 r.end()

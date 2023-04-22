@@ -104,34 +104,76 @@ public struct Board {
         }
         return (true, .ok)
     }
-
-    public func valid() -> Bool {
-        // let pieces = Int32(0)
-        for i in 0 ..< size {
-            for j in 0 ..< size {
-                print(i, j)
-            }
-        }
-        // hi
-        return true
-    }
 }
 
 extension Board: CustomDebugStringConvertible {
-    private func spaceSeparated(_ a: [Any]) -> String {
-        a.description.dropFirst().dropLast().replacingOccurrences(of: ",", with: "")
+    private func borderize(_ i: Int, _ j: Int) -> String {
+        let n = size, g = groupMat
+        if i == 0 {
+            if j == 0 { return "┌" }
+            if j == n { return "┐" }
+            return g[i][j - 1] == g[i][j] ? "─" : "┬"
+        }
+        if i == n {
+            if j == 0 { return "└" }
+            if j == n { return "┘" }
+            return g[i - 1][j - 1] == g[i - 1][j] ? "─" : "┴"
+        }
+        if j == 0 { return g[i - 1][j] == g[i][j] ? "│" : "├" }
+        if j == n { return g[i - 1][j - 1] == g[i][j - 1] ? "│" : "┤" }
+
+        // {upper/lower}-{left,right}
+        let ul = g[i - 1][j - 1], ur = g[i - 1][j]
+        let ll = g[i][j - 1], lr = g[i][j]
+
+        if ul == ur && ur == ll && ll == lr { return " " }
+        if ul == ll && ur == lr { return "│" }
+        if ul == ur && ll == lr { return "─" }
+        if ul == ur {
+            if ul == ll { return "┌" }
+            if ur == lr { return "┐" }
+            return "┬"
+        }
+        if ll == lr {
+            if ul == ll { return "└" }
+            if ur == lr { return "┘" }
+            return "┴"
+        }
+        if ul == ll { return "├" }
+        if ur == lr { return "┤" }
+        return "┼"
     }
 
-    /**
-     * TODO? add cell borders
-     */
-    public var debugDescription: String {
-        var stdout = "Board {\n"
-        let line = { (line: String) in stdout += line + "\n" }
-        line("    " + spaceSeparated(colSums))
-        for i in 0 ..< mat.count {
-            line("  " + rowSums[i].description + " " + spaceSeparated(mat[i]))
+    func joinBorderLine(_ borders: [String]) -> String {
+        var result = ""
+        let b = borders, L = ["┼", "├", "─", "┌", "┬", "└", "┴"]
+        for i in 0 ..< b.count - 1 {
+            result += b[i] + (L.contains(b[i]) ? "───" : "   ")
         }
-        return stdout + "}"
+        return result + borders[borders.count - 1]
+    }
+
+    func joinCellLine(_ borders: [String], _ cells: [Cell]) -> String {
+        var result = "│"
+        let b = borders, T = ["┼", "│", "├", "┤", "┌", "┬", "┐"]
+        for i in 0 ..< size {
+            result += " " + cells[i].description + " "
+            result += T.contains(b[i + 1]) ? "│" : " "
+        }
+        return result
+    }
+
+    public var debugDescription: String {
+        var stdout = ""
+        let print = { x in stdout += x + "\n" }
+        let N = (0 ... size)
+        let borders = N.map { i in N.map { j in borderize(i, j) } }
+        for i in 0 ... size {
+            print(joinBorderLine(borders[i]))
+            if i == size { break }
+            print(joinCellLine(borders[i], mat[i]))
+        }
+        let _ = stdout.popLast()
+        return stdout
     }
 }
