@@ -147,7 +147,7 @@ public struct Board {
     /// If there is water at (row, col) checks that the neighbouring cells
     /// in the same group receive water.
     /// If not water at (row, col) returns true.
-    private func flowValidityAt(row: Int, col: Int) -> Bool {
+    public func flowValidityAt(row: Int, col: Int) -> Bool {
         let cell = mat[row][col]
         guard cell == .water else {
             return true
@@ -159,10 +159,10 @@ public struct Board {
         let leftValid = col == 0
             || groupMat[row][col-1] != groupMat[row][col]
             || mat[row][col-1] == .water
-        let rightValid = col == mat[0].count
+        let rightValid = col == mat[0].count - 1
             || groupMat[row][col+1] != groupMat[row][col]
             || mat[row][col+1] == .water
-        let downValid = row == mat.count
+        let downValid = row == mat.count - 1
             || groupMat[row+1][col] != groupMat[row][col]
             || mat[row+1][col] == .water
         

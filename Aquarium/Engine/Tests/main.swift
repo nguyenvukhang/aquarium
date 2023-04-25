@@ -37,7 +37,6 @@ describe("Initializing a board") {
                 [1, 5, 5, 5, 6, 3],
                 [1, 1, 1, 5, 6, 3]]}
     """)
-    print("THIS IS THE BOARD \n\(board.debugDescription)")
     test("board size") { assertEq(board.size, 6) }
     test("column sums") { assertEq(board.colSums, [2, 4, 5, 5, 4, 2]) }
     test("row sums") { assertEq(board.rowSums, [4, 3, 4, 4, 2, 5]) }
@@ -208,6 +207,46 @@ describe("Test Board.allColsValid") {
         assertEq(board.allColsValid, true)
     }
 }
+
+describe("Test Board.flowValidityAt") {
+    var board = try! Board(withJson: """
+    { "id": "MDo2LDA3MCw1NzI=", "size": 6,
+      "sums": {
+        "cols": [2, 4, 5, 5, 4, 2],
+        "rows": [4, 3, 4, 4, 2, 5]
+      },
+      "matrix":[[1, 2, 2, 2, 2, 3],
+                [1, 1, 2, 4, 2, 3],
+                [1, 2, 2, 4, 4, 3],
+                [1, 2, 2, 2, 2, 3],
+                [1, 5, 5, 5, 6, 3],
+                [1, 1, 1, 5, 6, 3]]}
+    """)
+    let w = Cell.water, a = Cell.air, v = Cell.void
+    ///////////// 2, 4, 5, 5, 4, 2
+    board.mat = [[v, v, a, a, v, w], // 4
+                 [w, w, a, a, w, w], // 3
+                 [v, w, a, a, w, v], // 4
+                 [a, a, w, w, a, a], // 4
+                 [w, v, w, w, v, v], // 2
+                 [w, v, v, v, v, w]] // 5
+
+    test("invalid flow at (1, 0) [cell below should have water]") {
+        assertEq(board.flowValidityAt(row: 1, col: 0), false)
+    }
+    test("invalid flow at (5, 0) [cell on the right should have water]") {
+        assertEq(board.flowValidityAt(row: 5, col: 0), false)
+    }
+    test("valid flow at (0, 5)") {
+        assertEq(board.flowValidityAt(row: 0, col: 5), true)
+    }
+    test("valid flow at (5, 5)") {
+        assertEq(board.flowValidityAt(row: 5, col: 5), true)
+    }
+}
+
+// TODO: allFlowsValid
+// TODO: isValid
 
 border_tests()
 
