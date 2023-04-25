@@ -245,8 +245,109 @@ describe("Test Board.flowValidityAt") {
     }
 }
 
-// TODO: allFlowsValid
-// TODO: isValid
+describe("Test Board.allFlowsValid") {
+    var board = try! Board(withJson: """
+    { "id": "MDo2LDA3MCw1NzI=", "size": 6,
+      "sums": {
+        "cols": [2, 4, 5, 5, 4, 2],
+        "rows": [4, 3, 4, 4, 2, 5]
+      },
+      "matrix":[[1, 2, 2, 2, 2, 3],
+                [1, 1, 2, 4, 2, 3],
+                [1, 2, 2, 4, 4, 3],
+                [1, 2, 2, 2, 2, 3],
+                [1, 5, 5, 5, 6, 3],
+                [1, 1, 1, 5, 6, 3]]}
+    """)
+    let w = Cell.water, a = Cell.air, v = Cell.void
+    ///////////// 2, 4, 5, 5, 4, 2
+    board.mat = [[v, v, a, a, v, v], // 4
+                 [w, w, a, a, w, w], // 3
+                 [v, w, a, a, w, v], // 4
+                 [a, a, w, w, a, a], // 4
+                 [w, v, w, w, v, v], // 2
+                 [v, v, v, v, v, a]] // 5
+
+    test("invalid flows") {
+        assertEq(board.allFlowsValid, false)
+    }
+    
+    ///////////// 2, 4, 5, 5, 4, 2
+    board.mat = [[w, w, w, w, w, a], // 4
+                 [a, a, w, w, w, a], // 3
+                 [a, w, w, w, w, a], // 4
+                 [a, w, w, w, w, a], // 4
+                 [a, a, a, a, a, w], // 2
+                 [w, w, w, w, a, w]] // 5
+
+    test("invalid flows") {
+        assertEq(board.allFlowsValid, false)
+    }
+    
+    ///////////// 2, 4, 5, 5, 4, 2
+    board.mat = [[a, w, w, w, w, a], // 4
+                 [a, a, w, w, w, a], // 3
+                 [a, w, w, w, w, a], // 4
+                 [a, w, w, w, w, a], // 4
+                 [w, a, a, a, a, w], // 2
+                 [w, w, w, w, a, w]] // 5
+    
+    test("valid flows") {
+        assertEq(board.allFlowsValid, true)
+    }
+}
+
+describe("Test Board.isValid") {
+    var board = try! Board(withJson: """
+    { "id": "MDo2LDA3MCw1NzI=", "size": 6,
+      "sums": {
+        "cols": [2, 4, 5, 5, 4, 2],
+        "rows": [4, 3, 4, 4, 2, 5]
+      },
+      "matrix":[[1, 2, 2, 2, 2, 3],
+                [1, 1, 2, 4, 2, 3],
+                [1, 2, 2, 4, 4, 3],
+                [1, 2, 2, 2, 2, 3],
+                [1, 5, 5, 5, 6, 3],
+                [1, 1, 1, 5, 6, 3]]}
+    """)
+    let w = Cell.water, a = Cell.air, v = Cell.void
+    ///////////// 2, 4, 5, 5, 4, 2
+    board.mat = [[v, v, a, a, v, v], // 4
+                 [w, w, a, a, w, w], // 3
+                 [v, w, a, a, w, v], // 4
+                 [a, a, w, w, a, a], // 4
+                 [w, v, w, w, v, v], // 2
+                 [v, v, v, v, v, a]] // 5
+
+    test("invalid board") {
+        assertEq(board.isValid, false)
+    }
+    
+    ///////////// 2, 4, 5, 5, 4, 2
+    board.mat = [[w, w, w, w, w, a], // 4
+                 [a, a, w, w, w, a], // 3
+                 [a, w, w, w, w, a], // 4
+                 [a, w, w, w, w, a], // 4
+                 [a, a, a, a, a, w], // 2
+                 [w, w, w, w, a, w]] // 5
+
+    test("invalid board") {
+        assertEq(board.isValid, false)
+    }
+    
+    ///////////// 2, 4, 5, 5, 4, 2
+    board.mat = [[a, w, w, w, w, a], // 4
+                 [a, a, w, w, w, a], // 3
+                 [a, w, w, w, w, a], // 4
+                 [a, w, w, w, w, a], // 4
+                 [w, a, a, a, a, w], // 2
+                 [w, w, w, w, a, w]] // 5
+    
+    test("valid board") {
+        assertEq(board.isValid, true)
+    }
+}
 
 border_tests()
 
