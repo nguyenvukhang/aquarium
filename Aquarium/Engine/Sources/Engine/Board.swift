@@ -27,7 +27,17 @@ public struct Board {
     public var size: Int { rowSums.count }
     
     public var isValid: Bool {
-        allColsValid && allRowsValid
+        allColsValid && allRowsValid && allFlowsValid
+    }
+    
+    public var allFlowsValid: Bool {
+        var valid = true
+        for rowNum in 0 ..< size {
+            for colNum in 0 ..< size {
+                valid = valid && flowValidityAt(row: rowNum, col: colNum)
+            }
+        }
+        return valid
     }
     
     public var allColsValid: Bool {
@@ -132,6 +142,31 @@ public struct Board {
             }
         }
         return (true, .ok)
+    }
+    
+    /// If there is water at (row, col) checks that the neighbouring cells
+    /// in the same group receive water.
+    /// If not water at (row, col) returns true.
+    private func flowValidityAt(row: Int, col: Int) -> Bool {
+        let cell = mat[row][col]
+        guard cell == .water else {
+            return true
+        }
+        // for neighbouring cell, n, to be valid,
+        // 1. either the current cell is at the edge of the board
+        // 2. or n is from another group
+        // 3. or n has water
+        let leftValid = col == 0
+            || groupMat[row][col-1] != groupMat[row][col]
+            || mat[row][col-1] == .water
+        let rightValid = col == mat[0].count
+            || groupMat[row][col+1] != groupMat[row][col]
+            || mat[row][col+1] == .water
+        let downValid = row == mat.count
+            || groupMat[row+1][col] != groupMat[row][col]
+            || mat[row+1][col] == .water
+        
+        return leftValid && rightValid && downValid
     }
 }
 
