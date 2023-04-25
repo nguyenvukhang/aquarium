@@ -25,6 +25,18 @@ public struct Board {
     public var rowSums: [Int]
     public var groupMat: [[Int]]
     public var size: Int { rowSums.count }
+    
+    public var isValid: Bool {
+        allColsValid && allRowsValid
+    }
+    
+    public var allColsValid: Bool {
+        Array(0 ..< size).reduce(true) { acc, colNum in colSum(colNum, .water) == colSums[colNum] }
+    }
+
+    public var allRowsValid: Bool {
+        Array(0 ..< size).reduce(true) { acc, rowNum in rowSum(rowNum, .water) == rowSums[rowNum] }
+    }
 
     /**
      * Response structure from `https://aquarium2.vercel.app/api/get`
@@ -91,6 +103,23 @@ public struct Board {
 
     public func rowSum(_ index: Int, _ type: Cell) -> Int {
         mat[index].reduce(0) { acc, cell in acc + (cell == type ? 1 : 0) }
+    }
+    
+    public func colSum(_ index: Int, _ type: Cell) -> Int {
+        let colCells = mat.map( { row in row[index] } )
+        return colCells.reduce(0) { acc, cell in acc + (cell == type ? 1 : 0) }
+    }
+    
+    public func validCols() -> (Bool, BoardState) {
+        for i in 0 ..< size {
+            if colSum(i, .water) > colSums[i] {
+                return (false, .columnTooMuchWater(i))
+            }
+            if colSum(i, .air) > size - colSums[i] {
+                return (false, .columnTooMuchAir(i))
+            }
+        }
+        return (true, .ok)
     }
 
     public func validRows() -> (Bool, BoardState) {

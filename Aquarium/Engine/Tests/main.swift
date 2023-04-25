@@ -91,6 +91,40 @@ describe("Board row validity checks") {
     }
 }
 
+describe("Board col validity checks") {
+    var board = Board.empty(size: 6)
+    board.colSums = [2, 4, 5, 5, 4, 2]
+    board.rowSums = [4, 3, 4, 4, 2, 5]
+    let w = Cell.water, a = Cell.air, v = Cell.void
+    ///////////// 2, 4, 5, 5, 4, 2
+    board.mat = [[v, v, a, a, v, v], // 4
+                 [w, w, a, a, w, w], // 3
+                 [v, w, a, a, w, v], // 4
+                 [a, a, w, w, a, a], // 4
+                 [w, v, w, w, v, v], // 2
+                 [v, v, v, v, v, a]] // 5
+
+    test("valid cols 1") {
+        let (ok, status) = board.validCols()
+        assertEq(ok, false)
+        assertEq(status, .columnTooMuchAir(2))
+    }
+
+    ///////////// 2, 4, 5, 5, 4, 2
+    board.mat = [[v, v, a, a, v, v], // 4
+                 [w, w, a, a, v, w], // 3
+                 [v, w, a, a, w, v], // 4
+                 [a, a, w, a, a, a], // 4
+                 [w, v, w, w, v, v], // 2
+                 [v, v, v, v, v, a]] // 5
+
+    test("valid cols 2") {
+        let (ok, status) = board.validCols()
+        assertEq(ok, false)
+        assertEq(status, .columnTooMuchAir(2))
+    }
+}
+
 border_tests()
 
 r.end()
