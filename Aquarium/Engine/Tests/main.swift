@@ -114,7 +114,7 @@ describe("Board row validity checks") {
     }
 }
 
-describe("Test Board.allRowsValid") {
+describe("Test Board.allRowsSolved") {
     var board = Board.empty(size: 6)
     board.colSums = [2, 4, 5, 5, 4, 2]
     board.rowSums = [4, 3, 4, 4, 2, 5]
@@ -128,7 +128,7 @@ describe("Test Board.allRowsValid") {
                  [v, v, v, v, v, a]] // 5
 
     test("invalid rows") {
-        assertEq(board.allRowsValid, false)
+        assertEq(board.allRowsSolved, false)
     }
     
     ///////////// 2, 4, 5, 5, 4, 2
@@ -140,7 +140,7 @@ describe("Test Board.allRowsValid") {
                  [w, w, w, w, a, w]] // 5
     
     test("valid rows") {
-        assertEq(board.allRowsValid, true)
+        assertEq(board.allRowsSolved, true)
     }
 }
 
@@ -178,7 +178,7 @@ describe("Board col validity checks") {
     }
 }
 
-describe("Test Board.allColsValid") {
+describe("Test Board.allColsSolved") {
     var board = Board.empty(size: 6)
     board.colSums = [2, 4, 5, 5, 4, 2]
     board.rowSums = [4, 3, 4, 4, 2, 5]
@@ -192,7 +192,7 @@ describe("Test Board.allColsValid") {
                  [v, v, v, v, v, a]] // 5
 
     test("invalid cols") {
-        assertEq(board.allColsValid, false)
+        assertEq(board.allColsSolved, false)
     }
     
     ///////////// 2, 4, 5, 5, 4, 2
@@ -204,7 +204,7 @@ describe("Test Board.allColsValid") {
                  [w, w, w, w, a, w]] // 5
     
     test("valid cols") {
-        assertEq(board.allColsValid, true)
+        assertEq(board.allColsSolved, true)
     }
 }
 
