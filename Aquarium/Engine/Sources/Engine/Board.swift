@@ -166,6 +166,30 @@ public struct Board {
 
         return leftValid && rightValid && downValid
     }
+    
+    /// Adds water at (row, col), then automatically fills in
+    /// water at the cells it would flow into.
+    public mutating func addWaterAt(row: Int, col: Int) {
+        if row < 0
+            || col < 0
+            || row >= size
+            || col >= size
+            || mat[row][col] == .water  { return }
+        
+        mat[row][col] = .water
+        
+        if col - 1 >= 0 && groupMat[row][col - 1] == groupMat[row][col] {
+            addWaterAt(row: row, col: col - 1)
+        }
+        
+        if col + 1 < size && groupMat[row][col + 1] == groupMat[row][col] {
+            addWaterAt(row: row, col: col + 1)
+        }
+        
+        if row + 1 < size && groupMat[row + 1][col] == groupMat[row][col] {
+            addWaterAt(row: row + 1, col: col)
+        }
+    }
 }
 
 extension Board: CustomDebugStringConvertible {

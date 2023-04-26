@@ -349,6 +349,78 @@ describe("Test Board.isValid") {
     }
 }
 
+describe("Test Board.addWater") {
+    var board = try! Board(withJson: """
+    { "id": "MDo2LDA3MCw1NzI=", "size": 6,
+      "sums": {
+        "cols": [2, 4, 5, 5, 4, 2],
+        "rows": [4, 3, 4, 4, 2, 5]
+      },
+      "matrix":[[1, 2, 2, 2, 2, 3],
+                [1, 1, 2, 4, 2, 3],
+                [1, 2, 2, 4, 4, 3],
+                [1, 2, 2, 2, 2, 3],
+                [1, 5, 5, 5, 6, 3],
+                [1, 1, 1, 5, 6, 3]]}
+    """)
+    let w = Cell.water, v = Cell.void
+    ///////////// 2, 4, 5, 5, 4, 2
+    board.mat = [[v, v, v, v, v, v], // 4
+                 [v, v, v, v, v, v], // 3
+                 [v, v, v, v, v, v], // 4
+                 [v, v, v, v, v, v], // 4
+                 [v, v, v, v, v, v], // 2
+                 [v, v, v, v, v, v]] // 5
+    
+    test("empty board test") {
+        ///////////// 2, 4, 5, 5, 4, 2
+        let expectedMat = [[v, v, v, v, v, v], // 4
+                           [v, v, v, v, v, v], // 3
+                           [v, v, v, v, v, v], // 4
+                           [v, v, v, v, v, v], // 4
+                           [v, v, v, v, v, v], // 2
+                           [v, v, v, v, v, v]] // 5
+        assertEq(board.mat, expectedMat)
+    }
+    
+
+    test("addWater test 1") {
+        ///////////// 2, 4, 5, 5, 4, 2
+        let expectedMat = [[v, v, v, v, v, v], // 4
+                           [v, v, v, v, v, v], // 3
+                           [v, v, v, v, v, w], // 4
+                           [v, v, v, v, v, w], // 4
+                           [v, v, v, v, v, w], // 2
+                           [v, v, v, v, v, w]] // 5
+        board.addWaterAt(row: 2, col: 5)
+        assertEq(board.mat, expectedMat)
+    }
+    
+    test("addWater test 2") {
+        ///////////// 2, 4, 5, 5, 4, 2
+        let expectedMat = [[v, v, v, v, v, v], // 4
+                           [v, v, w, v, v, v], // 3
+                           [v, w, w, v, v, w], // 4
+                           [v, w, w, w, w, w], // 4
+                           [v, v, v, v, v, w], // 2
+                           [v, v, v, v, v, w]] // 5
+        board.addWaterAt(row: 1, col: 2)
+        assertEq(board.mat, expectedMat)
+    }
+    
+    test("addWater test 3") {
+        ///////////// 2, 4, 5, 5, 4, 2
+        let expectedMat = [[v, v, v, v, v, v], // 4
+                           [v, v, w, v, v, v], // 3
+                           [v, w, w, v, v, w], // 4
+                           [v, w, w, w, w, w], // 4
+                           [w, v, v, v, v, w], // 2
+                           [w, w, w, v, v, w]] // 5
+        board.addWaterAt(row: 4, col: 0)
+        assertEq(board.mat, expectedMat)
+    }
+}
+
 border_tests()
 
 r.end()
