@@ -25,17 +25,28 @@ public struct Board {
     public var rowSums: [Int]
     public var groupMat: [[Int]]
     public var size: Int { rowSums.count }
-    
+
     public var isValid: Bool {
-        allColsValid && allRowsValid
-    }
-    
-    public var allColsValid: Bool {
-        Array(0 ..< size).reduce(true) { acc, colNum in colSum(colNum, .water) == colSums[colNum] }
+        allColsSolved && allRowsSolved && allFlowsValid
     }
 
-    public var allRowsValid: Bool {
-        Array(0 ..< size).reduce(true) { acc, rowNum in rowSum(rowNum, .water) == rowSums[rowNum] }
+    public var allFlowsValid: Bool {
+        for rowNum in 0 ..< size {
+            for colNum in 0 ..< size {
+                if !flowValidityAt(row: rowNum, col: colNum) {
+                    return false
+                }
+            }
+        }
+        return true
+    }
+
+    public var allColsSolved: Bool {
+        (0 ..< size).allSatisfy { i in colSum(i, .water) == colSums[i] }
+    }
+
+    public var allRowsSolved: Bool {
+        (0 ..< size).allSatisfy { i in rowSum(i, .water) == rowSums[i] }
     }
 
     /**
@@ -104,12 +115,11 @@ public struct Board {
     public func rowSum(_ index: Int, _ type: Cell) -> Int {
         mat[index].reduce(0) { acc, cell in acc + (cell == type ? 1 : 0) }
     }
-    
+
     public func colSum(_ index: Int, _ type: Cell) -> Int {
-        let colCells = mat.map( { row in row[index] } )
-        return colCells.reduce(0) { acc, cell in acc + (cell == type ? 1 : 0) }
+        mat.reduce(0) { acc, row in acc + (row[index] == type ? 1 : 0) }
     }
-    
+
     public func validCols() -> (Bool, BoardState) {
         for i in 0 ..< size {
             if colSum(i, .water) > colSums[i] {
@@ -132,6 +142,29 @@ public struct Board {
             }
         }
         return (true, .ok)
+    }
+
+    /// If there is water at (row, col) checks that the neighbouring cells
+    /// in the same group receive water.
+    /// If not water at (row, col) returns true.
+    public func flowValidityAt(row: Int, col: Int) -> Bool {
+        let cell = mat[row][col]
+        if cell != .water { return true }
+        // for neighbouring cell, n, to be valid,
+        // 1. either the current cell is at the edge of the board
+        // 2. or n is from another group
+        // 3. or n has water
+        let leftValid = col == 0
+            || groupMat[row][col - 1] != groupMat[row][col]
+            || mat[row][col - 1] == .water
+        let rightValid = col == mat[0].count - 1
+            || groupMat[row][col + 1] != groupMat[row][col]
+            || mat[row][col + 1] == .water
+        let downValid = row == mat.count - 1
+            || groupMat[row + 1][col] != groupMat[row][col]
+            || mat[row + 1][col] == .water
+
+        return leftValid && rightValid && downValid
     }
 }
 
@@ -175,7 +208,7 @@ extension Board: CustomDebugStringConvertible {
 
     func joinBorderLine(_ borders: [String]) -> String {
         var result = ""
-        let b = borders, L = ["┼", "├", "─", "┌", "┬", "└", "┴"]
+        let b = borders, L = "┼├─┌┬└┴"
         for i in 0 ..< b.count - 1 {
             result += b[i] + (L.contains(b[i]) ? "───" : "   ")
         }
@@ -184,7 +217,7 @@ extension Board: CustomDebugStringConvertible {
 
     func joinCellLine(_ borders: [String], _ cells: [Cell]) -> String {
         var result = "│"
-        let b = borders, T = ["┼", "│", "├", "┤", "┌", "┬", "┐"]
+        let b = borders, T = "┼│├┤┌┬┐"
         for i in 0 ..< size {
             result += " " + cells[i].description + " "
             result += T.contains(b[i + 1]) ? "│" : " "
