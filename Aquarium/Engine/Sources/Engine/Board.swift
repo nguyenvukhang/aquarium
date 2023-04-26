@@ -31,13 +31,14 @@ public struct Board {
     }
 
     public var allFlowsValid: Bool {
-        var valid = true
         for rowNum in 0 ..< size {
             for colNum in 0 ..< size {
-                valid = valid && flowValidityAt(row: rowNum, col: colNum)
+                if !flowValidityAt(row: rowNum, col: colNum) {
+                    return false
+                }
             }
         }
-        return valid
+        return true
     }
 
     public var allColsSolved: Bool {
