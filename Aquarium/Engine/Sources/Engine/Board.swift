@@ -208,7 +208,7 @@ extension Board: CustomDebugStringConvertible {
 
     func joinBorderLine(_ borders: [String]) -> String {
         var result = ""
-        let b = borders, L = ["┼", "├", "─", "┌", "┬", "└", "┴"]
+        let b = borders, L = "┼├─┌┬└┴"
         for i in 0 ..< b.count - 1 {
             result += b[i] + (L.contains(b[i]) ? "───" : "   ")
         }
@@ -217,7 +217,7 @@ extension Board: CustomDebugStringConvertible {
 
     func joinCellLine(_ borders: [String], _ cells: [Cell]) -> String {
         var result = "│"
-        let b = borders, T = ["┼", "│", "├", "┤", "┌", "┬", "┐"]
+        let b = borders, T = "┼│├┤┌┬┐"
         for i in 0 ..< size {
             result += " " + cells[i].description + " "
             result += T.contains(b[i + 1]) ? "│" : " "
