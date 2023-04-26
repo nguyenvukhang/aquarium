@@ -117,8 +117,7 @@ public struct Board {
     }
 
     public func colSum(_ index: Int, _ type: Cell) -> Int {
-        let colCells = mat.map { row in row[index] }
-        return colCells.reduce(0) { acc, cell in acc + (cell == type ? 1 : 0) }
+        mat.reduce(0) { acc, row in acc + (row[index] == type ? 1 : 0) }
     }
 
     public func validCols() -> (Bool, BoardState) {
