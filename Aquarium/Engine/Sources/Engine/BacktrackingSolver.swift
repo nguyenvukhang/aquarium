@@ -30,14 +30,12 @@ public struct BacktrackingSolver {
     /// Returns the board in a solved state if solvable,
     /// returns `nil` otherwise.
     public func backtrack(board: Board) -> Board? {
-        print(board.debugDescription)
         var cloned_board = board
         if cloned_board.isSolved {
             cloned_board.fillAir()
             return cloned_board
         }
         if !cloned_board.isValid {
-            print("FAILED")
             return nil
         }
         var variables = order_unassigned_variables(cloned_board)
