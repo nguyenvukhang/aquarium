@@ -1,20 +1,24 @@
-import Engine
+@testable import Engine
 
-func border_tests() {
-    describe("borders: 1x1") {
+import XCTest
+
+final class BorderTests: XCTestCase {
+    private let w = Cell.water, v = Cell.void, a = Cell.air
+
+    func testBorders_1x1() throws {
         let board = Board.empty(size: 1)
-        assertEq(board.debugDescription, """
+        XCTAssertEqual(board.debugDescription, """
         ┌───┐
         │   │
         └───┘
         """)
     }
 
-    describe("borders: 2x2") {
+    func testBorders_2x2() throws {
         var board = Board.empty(size: 2)
         board.groupMat = [[1, 1], [1, 2]]
 
-        assertEq(board.debugDescription, """
+        XCTAssertEqual(board.debugDescription, """
         ┌───────┐
         │       │
         │   ┌───┤
@@ -23,7 +27,7 @@ func border_tests() {
         """)
     }
 
-    describe("borders: 6x6") {
+    func testBorders_6x6() throws {
         var board = Board.empty(size: 6)
         board.groupMat = [
             [1, 1, 2, 2, 2, 2],
@@ -34,7 +38,7 @@ func border_tests() {
             [5, 5, 5, 5, 5, 6],
         ]
 
-        assertEq(board.debugDescription, """
+        XCTAssertEqual(board.debugDescription, """
         ┌───────┬───────────────┐
         │       │               │
         │   ┌───┴───┬───────┐   │
@@ -49,19 +53,7 @@ func border_tests() {
         │                   │   │
         └───────────────────┴───┘
         """)
-    }
 
-    describe("borders: 6x6, mid-solve") {
-        var board = Board.empty(size: 6)
-        board.groupMat = [
-            [1, 1, 2, 2, 2, 2],
-            [1, 3, 3, 4, 4, 2],
-            [1, 3, 3, 4, 2, 2],
-            [5, 4, 4, 4, 6, 2],
-            [5, 4, 6, 6, 6, 6],
-            [5, 5, 5, 5, 5, 6],
-        ]
-        let w = Cell.water, v = Cell.void, a = Cell.air
         board.mat = [
             [v, v, v, v, v, v],
             [w, v, v, v, v, v],
@@ -70,7 +62,7 @@ func border_tests() {
             [a, w, v, v, v, v],
             [a, a, a, a, a, v],
         ]
-        assertEq(board.debugDescription, """
+        XCTAssertEqual(board.debugDescription, """
         ┌───────┬───────────────┐
         │       │               │
         │   ┌───┴───┬───────┐   │
