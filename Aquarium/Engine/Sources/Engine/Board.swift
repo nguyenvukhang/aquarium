@@ -202,6 +202,16 @@ public struct Board {
             addWaterAt(row: row + 1, col: col)
         }
     }
+    
+    public mutating func fillAir() {
+        for rowNum in 0 ..< mat.count {
+            for colNum in 0 ..< mat[0].count {
+                if mat[rowNum][colNum] != .water {
+                    mat[rowNum][colNum] = .air
+                }
+            }
+        }
+    }
 }
 
 extension Board: CustomDebugStringConvertible {
