@@ -34,5 +34,13 @@ final class SolveTests: XCTestCase {
             return
         }
         XCTAssertEqual(solverSolution.mat, expectedSolution)
+
+        var b2 = try! Board(withProblemId: "MDoxNCwxMTYsNzY3")
+        guard let solverSolution = solver.backtrack(board: b2) else {
+            XCTAssertEqual(true, false)
+            return
+        }
+        b2.mat = solverSolution.mat
+        print(b2)
     }
 }
