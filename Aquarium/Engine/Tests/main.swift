@@ -114,6 +114,48 @@ describe("Board row validity checks") {
     }
 }
 
+describe("Test Board.allRowsValid") {
+    var board = Board.empty(size: 6)
+    board.colSums = [2, 4, 5, 5, 4, 2]
+    board.rowSums = [4, 3, 4, 4, 2, 5]
+    let w = Cell.water, a = Cell.air, v = Cell.void
+    ///////////// 2, 4, 5, 5, 4, 2
+    board.mat = [[v, v, a, a, v, v], // 4
+                 [w, w, a, a, a, w], // 3
+                 [v, w, a, a, w, v], // 4
+                 [a, a, w, w, a, a], // 4
+                 [w, v, w, a, v, v], // 2
+                 [v, v, v, v, v, a]] // 5
+
+    test("less than max amount") {
+        assertEq(board.allRowsValid, true)
+    }
+    
+    ///////////// 2, 4, 5, 5, 4, 2
+    board.mat = [[v, v, a, a, v, v], // 4
+                 [w, w, a, a, w, w], // 3
+                 [v, w, a, a, w, v], // 4
+                 [a, a, w, w, a, a], // 4
+                 [w, v, w, a, v, v], // 2
+                 [v, v, v, v, v, a]] // 5
+
+    test("more than max amount") {
+        assertEq(board.allRowsValid, false)
+    }
+    
+    ///////////// 2, 4, 5, 5, 4, 2
+    board.mat = [[a, w, w, w, w, a], // 4
+                 [a, a, w, w, w, a], // 3
+                 [a, w, w, w, w, a], // 4
+                 [a, w, w, w, w, a], // 4
+                 [w, a, a, a, a, w], // 2
+                 [w, w, w, w, a, w]] // 5
+    
+    test("valid rows") {
+        assertEq(board.allRowsValid, true)
+    }
+}
+
 describe("Test Board.allRowsSolved") {
     var board = Board.empty(size: 6)
     board.colSums = [2, 4, 5, 5, 4, 2]
@@ -175,6 +217,48 @@ describe("Board col validity checks") {
         let (ok, status) = board.validCols()
         assertEq(ok, false)
         assertEq(status, .columnTooMuchAir(2))
+    }
+}
+
+describe("Test Board.allColsValid") {
+    var board = Board.empty(size: 6)
+    board.colSums = [2, 4, 5, 5, 4, 2]
+    board.rowSums = [4, 3, 4, 4, 2, 5]
+    let w = Cell.water, a = Cell.air, v = Cell.void
+    ///////////// 2, 4, 5, 5, 4, 2
+    board.mat = [[v, v, a, a, v, v], // 4
+                 [w, w, a, a, w, w], // 3
+                 [v, w, a, a, w, v], // 4
+                 [a, a, w, w, a, a], // 4
+                 [w, v, w, w, v, v], // 2
+                 [v, v, v, v, v, a]] // 5
+
+    test("less than max amount") {
+        assertEq(board.allColsValid, true)
+    }
+    
+    ///////////// 2, 4, 5, 5, 4, 2
+    board.mat = [[v, v, a, a, v, v], // 4
+                 [w, w, a, a, w, w], // 3
+                 [v, w, a, a, w, w], // 4
+                 [a, a, w, w, a, w], // 4
+                 [w, v, w, w, v, v], // 2
+                 [v, v, v, v, v, a]] // 5
+
+    test("more than max amount") {
+        assertEq(board.allColsValid, false)
+    }
+    
+    ///////////// 2, 4, 5, 5, 4, 2
+    board.mat = [[a, w, w, w, w, a], // 4
+                 [a, a, w, w, w, a], // 3
+                 [a, w, w, w, w, a], // 4
+                 [a, w, w, w, w, a], // 4
+                 [w, a, a, a, a, w], // 2
+                 [w, w, w, w, a, w]] // 5
+    
+    test("solved cols") {
+        assertEq(board.allColsValid, true)
     }
 }
 
@@ -346,6 +430,58 @@ describe("Test Board.isValid") {
     
     test("valid board") {
         assertEq(board.isValid, true)
+    }
+}
+
+describe("Test Board.isSolved") {
+    var board = try! Board(withJson: """
+    { "id": "MDo2LDA3MCw1NzI=", "size": 6,
+      "sums": {
+        "cols": [2, 4, 5, 5, 4, 2],
+        "rows": [4, 3, 4, 4, 2, 5]
+      },
+      "matrix":[[1, 2, 2, 2, 2, 3],
+                [1, 1, 2, 4, 2, 3],
+                [1, 2, 2, 4, 4, 3],
+                [1, 2, 2, 2, 2, 3],
+                [1, 5, 5, 5, 6, 3],
+                [1, 1, 1, 5, 6, 3]]}
+    """)
+    let w = Cell.water, a = Cell.air, v = Cell.void
+    ///////////// 2, 4, 5, 5, 4, 2
+    board.mat = [[v, v, a, a, v, v], // 4
+                 [w, w, a, a, w, w], // 3
+                 [v, w, a, a, w, v], // 4
+                 [a, a, w, w, a, a], // 4
+                 [w, v, w, w, v, v], // 2
+                 [v, v, v, v, v, a]] // 5
+
+    test("unsolved board") {
+        assertEq(board.isSolved, false)
+    }
+    
+    ///////////// 2, 4, 5, 5, 4, 2
+    board.mat = [[w, w, w, w, w, a], // 4
+                 [a, a, w, w, w, a], // 3
+                 [a, w, w, w, w, a], // 4
+                 [a, w, w, w, w, a], // 4
+                 [a, a, a, a, a, w], // 2
+                 [w, w, w, w, a, w]] // 5
+
+    test("unsolved board") {
+        assertEq(board.isSolved, false)
+    }
+    
+    ///////////// 2, 4, 5, 5, 4, 2
+    board.mat = [[a, w, w, w, w, a], // 4
+                 [a, a, w, w, w, a], // 3
+                 [a, w, w, w, w, a], // 4
+                 [a, w, w, w, w, a], // 4
+                 [w, a, a, a, a, w], // 2
+                 [w, w, w, w, a, w]] // 5
+    
+    test("solved board") {
+        assertEq(board.isSolved, true)
     }
 }
 

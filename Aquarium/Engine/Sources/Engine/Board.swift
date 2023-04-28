@@ -26,8 +26,12 @@ public struct Board {
     public var groupMat: [[Int]]
     public var size: Int { rowSums.count }
 
-    public var isValid: Bool {
+    public var isSolved: Bool {
         allColsSolved && allRowsSolved && allFlowsValid
+    }
+    
+    public var isValid: Bool {
+        allColsValid && allRowsValid && allFlowsValid
     }
 
     public var allFlowsValid: Bool {
@@ -39,6 +43,14 @@ public struct Board {
             }
         }
         return true
+    }
+    
+    public var allColsValid: Bool {
+        (0 ..< size).allSatisfy { i in colSum(i, .water) <= colSums[i] }
+    }
+    
+    public var allRowsValid: Bool {
+        (0 ..< size).allSatisfy { i in rowSum(i, .water) <= rowSums[i] }
     }
 
     public var allColsSolved: Bool {
