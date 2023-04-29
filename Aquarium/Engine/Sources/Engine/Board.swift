@@ -25,6 +25,7 @@ public struct Board {
     public var rowSums: [Int]
     public var groupMat: [[Int]]
     public var size: Int { rowSums.count }
+    // private let iter: [[Int]]
 
     /**
      * Pulls a board from the Aquarium website, and initializes it.
@@ -53,6 +54,11 @@ public struct Board {
         colSums = [Int](repeating: 0, count: size)
         rowSums = [Int](repeating: 0, count: size)
         groupMat = [[Int]](repeating: [Int](repeating: 0, count: size), count: size)
+    }
+
+    private static func newIter(_ n: Int) -> [(Int, Int)] {
+        let it = (0 ..< n)
+        return it.flatMap { r in it.map { c in (r, c) }}
     }
 
     public var isSolved: Bool {
