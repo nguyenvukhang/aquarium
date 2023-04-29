@@ -24,7 +24,7 @@ final class SolveTests: XCTestCase {
                                 [w, a, a, a, a, w],
                                 [w, w, w, w, a, w]]
 
-        let solution = board.backtrack()
+        let solution = board.solve()
         XCTAssertNotNil(solution)
         XCTAssertEqual(solution!.mat, expectedSolution)
     }

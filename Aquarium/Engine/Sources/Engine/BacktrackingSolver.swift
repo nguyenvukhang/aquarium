@@ -31,12 +31,12 @@ public extension Board {
             cloned_board.fillAir()
             return cloned_board
         }
+
         if !cloned_board.isValid {
             return nil
         }
-        var variables = cloned_board.order_unassigned_variables()
-        while !variables.isEmpty {
-            let (row, col) = variables.removeFirst()
+
+        for (row, col) in cloned_board.order_unassigned_variables() {
             cloned_board.addWaterAt(row: row, col: col)
             if let result = backtrack(board: cloned_board) {
                 return result
@@ -47,7 +47,7 @@ public extension Board {
         return nil
     }
 
-    func backtrack() -> Board? {
+    func solve() -> Board? {
         backtrack(board: self)
     }
 }
