@@ -1,5 +1,6 @@
 import Foundation
 
+
 public struct Board {
     public var mat: [[Cell]]
     public var colSums: [Int]
@@ -34,6 +35,16 @@ public struct Board {
         self.rowSums = rowSums
         groupMat = groups
         mat = Board.emptyMat(rowSums.count)
+    }
+
+    /**
+     * Purely for pretty-printing
+     */
+    public init(withMatrix: [[Cell]]) {
+        colSums = []
+        rowSums = []
+        groupMat = []
+        mat = withMatrix
     }
 
     public static func empty(size: Int) -> Board { Board(size: size) }
