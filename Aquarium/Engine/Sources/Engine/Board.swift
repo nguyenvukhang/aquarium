@@ -6,7 +6,6 @@ public struct Board {
     public var rowSums: [Int]
     public var groupMat: [[Int]]
     public var size: Int { rowSums.count }
-    // private let iter: [[Int]]
 
     /**
      * Pulls a board from the Aquarium website, and initializes it.
@@ -24,7 +23,7 @@ public struct Board {
     }
 
     private init(size: Int) {
-        mat = Board.emptyMat(size: size)
+        mat = Board.emptyMat(size)
         colSums = [Int](repeating: 0, count: size)
         rowSums = [Int](repeating: 0, count: size)
         groupMat = [[Int]](repeating: [Int](repeating: 0, count: size), count: size)
@@ -34,12 +33,13 @@ public struct Board {
         self.colSums = colSums
         self.rowSums = rowSums
         groupMat = groups
-        mat = Board.emptyMat(size: rowSums.count)
+        mat = Board.emptyMat(rowSums.count)
     }
 
-    private static func newIter(_ n: Int) -> [(Int, Int)] {
-        let it = (0 ..< n)
-        return it.flatMap { r in it.map { c in (r, c) }}
+    public static func empty(size: Int) -> Board { Board(size: size) }
+
+    private static func emptyMat(_ size: Int) -> [[Cell]] {
+        [[Cell]](repeating: [Cell](repeating: .void, count: size), count: size)
     }
 
     public var isSolved: Bool {
@@ -75,12 +75,6 @@ public struct Board {
 
     public var allRowsSolved: Bool {
         (0 ..< size).allSatisfy { i in rowSum(i, .water) == rowSums[i] }
-    }
-
-    public static func empty(size: Int) -> Board { Board(size: size) }
-
-    private static func emptyMat(size: Int) -> [[Cell]] {
-        [[Cell]](repeating: [Cell](repeating: .void, count: size), count: size)
     }
 
     public func rowSum(_ index: Int, _ type: Cell) -> Int {
@@ -223,9 +217,9 @@ extension Board: CustomDebugStringConvertible {
         let ul = g[i - 1][j - 1], ur = g[i - 1][j]
         let ll = g[i][j - 1], lr = g[i][j]
 
-        if ul == ur && ur == ll && ll == lr { return " " }
-        if ul == ll && ur == lr { return "│" }
-        if ul == ur && ll == lr { return "─" }
+        if ul == ur, ur == ll, ll == lr { return " " }
+        if ul == ll, ur == lr { return "│" }
+        if ul == ur, ll == lr { return "─" }
         if ul == ur {
             if ul == ll { return "┌" }
             if ur == lr { return "┐" }
