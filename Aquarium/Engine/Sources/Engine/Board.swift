@@ -29,7 +29,7 @@ public struct Board {
     public var isSolved: Bool {
         allColsSolved && allRowsSolved && allFlowsValid
     }
-    
+
     public var isValid: Bool {
         allColsValid && allRowsValid && allFlowsValid
     }
@@ -44,11 +44,11 @@ public struct Board {
         }
         return true
     }
-    
+
     public var allColsValid: Bool {
         (0 ..< size).allSatisfy { i in colSum(i, .water) <= colSums[i] }
     }
-    
+
     public var allRowsValid: Bool {
         (0 ..< size).allSatisfy { i in rowSum(i, .water) <= rowSums[i] }
     }
@@ -178,7 +178,7 @@ public struct Board {
 
         return leftValid && rightValid && downValid
     }
-    
+
     /// Adds water at (row, col), then automatically fills in
     /// water at the cells it would flow into.
     public mutating func addWaterAt(row: Int, col: Int) {
@@ -186,26 +186,26 @@ public struct Board {
             || col < 0
             || row >= size
             || col >= size
-            || mat[row][col] == .water  { return }
-        
+            || mat[row][col] == .water { return }
+
         mat[row][col] = .water
-        
-        if col - 1 >= 0 && groupMat[row][col - 1] == groupMat[row][col] {
+
+        if col - 1 >= 0, groupMat[row][col - 1] == groupMat[row][col] {
             addWaterAt(row: row, col: col - 1)
         }
-        
-        if col + 1 < size && groupMat[row][col + 1] == groupMat[row][col] {
+
+        if col + 1 < size, groupMat[row][col + 1] == groupMat[row][col] {
             addWaterAt(row: row, col: col + 1)
         }
-        
-        if row + 1 < size && groupMat[row + 1][col] == groupMat[row][col] {
+
+        if row + 1 < size, groupMat[row + 1][col] == groupMat[row][col] {
             addWaterAt(row: row + 1, col: col)
         }
     }
-    
+
     public mutating func fillAir() {
-        for rowNum in 0 ..< mat.count {
-            for colNum in 0 ..< mat[0].count {
+        for rowNum in 0 ..< size {
+            for colNum in 0 ..< size {
                 if mat[rowNum][colNum] != .water {
                     mat[rowNum][colNum] = .air
                 }
