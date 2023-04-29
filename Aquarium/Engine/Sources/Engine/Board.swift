@@ -1,24 +1,5 @@
 import Foundation
 
-public enum BoardState: CustomStringConvertible, Equatable {
-    case rowTooMuchWater(Int)
-    case rowTooMuchAir(Int)
-    case columnTooMuchWater(Int)
-    case columnTooMuchAir(Int)
-    case ok
-
-    public var description: String {
-        let fmt = { (s: String, r: String, i: Int) in String(format: "Too much %@ at %@[%d]", s, r, i) }
-        switch self {
-        case let .columnTooMuchAir(i): return fmt("air", "column", i)
-        case let .columnTooMuchWater(i): return fmt("water", "column", i)
-        case let .rowTooMuchAir(i): return fmt("air", "row", i)
-        case let .rowTooMuchWater(i): return fmt("water", "row", i)
-        case _: return "Ok!"
-        }
-    }
-}
-
 public struct Board {
     public var mat: [[Cell]]
     public var colSums: [Int]
@@ -96,17 +77,6 @@ public struct Board {
         (0 ..< size).allSatisfy { i in rowSum(i, .water) == rowSums[i] }
     }
 
-    /**
-     * Response structure from `https://aquarium2.vercel.app/api/get`
-     */
-    private struct JSONBoard: Codable {
-        struct Sums: Codable { let cols: [Int]; let rows: [Int] }
-        let id: String
-        let size: Int
-        let sums: Sums
-        let matrix: [[Int]]
-    }
-
     public static func empty(size: Int) -> Board { Board(size: size) }
 
     private static func emptyMat(size: Int) -> [[Cell]] {
@@ -121,7 +91,7 @@ public struct Board {
         mat.reduce(0) { acc, row in acc + (row[index] == type ? 1 : 0) }
     }
 
-    public func validCols() -> (Bool, BoardState) {
+    public func validCols() -> (Bool, Status) {
         for i in 0 ..< size {
             if colSum(i, .water) > colSums[i] {
                 return (false, .columnTooMuchWater(i))
@@ -133,7 +103,7 @@ public struct Board {
         return (true, .ok)
     }
 
-    public func validRows() -> (Bool, BoardState) {
+    public func validRows() -> (Bool, Status) {
         for i in 0 ..< size {
             if rowSum(i, .water) > rowSums[i] {
                 return (false, .rowTooMuchWater(i))
@@ -198,6 +168,36 @@ public struct Board {
                 if mat[rowNum][colNum] != .water {
                     mat[rowNum][colNum] = .air
                 }
+            }
+        }
+    }
+
+    /**
+     * Response structure from `https://aquarium2.vercel.app/api/get`
+     */
+    private struct JSONBoard: Codable {
+        struct Sums: Codable { let cols: [Int]; let rows: [Int] }
+        let id: String
+        let size: Int
+        let sums: Sums
+        let matrix: [[Int]]
+    }
+
+    public enum Status: CustomStringConvertible, Equatable {
+        case rowTooMuchWater(Int)
+        case rowTooMuchAir(Int)
+        case columnTooMuchWater(Int)
+        case columnTooMuchAir(Int)
+        case ok
+
+        public var description: String {
+            let fmt = { s, r, i in String(format: "Too much %@ at %@[%d]", s, r, i) }
+            switch self {
+            case let .columnTooMuchAir(i): return fmt("air", "column", i)
+            case let .columnTooMuchWater(i): return fmt("water", "column", i)
+            case let .rowTooMuchAir(i): return fmt("air", "row", i)
+            case let .rowTooMuchWater(i): return fmt("water", "row", i)
+            case _: return "Ok!"
             }
         }
     }

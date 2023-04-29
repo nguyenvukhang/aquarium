@@ -92,7 +92,7 @@ final class BoardTests: XCTestCase {
                      [w, v, w, w, v, v],
                      [v, v, v, v, v, a]]
 
-        var (ok, status): (Bool, BoardState)
+        var (ok, status): (Bool, Board.Status)
 
         (ok, status) = board.validRows()
         XCTAssertEqual(ok, false)
@@ -116,7 +116,7 @@ final class BoardTests: XCTestCase {
                      [w, v, w, w, v, v],
                      [v, v, v, v, v, a]]
 
-        var (ok, status): (Bool, BoardState)
+        var (ok, status): (Bool, Board.Status)
 
         (ok, status) = board.validCols()
         XCTAssertEqual(ok, false)
