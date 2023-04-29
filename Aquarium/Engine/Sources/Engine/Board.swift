@@ -169,10 +169,10 @@ public struct Board {
         let leftValid = col == 0
             || groupMat[row][col - 1] != groupMat[row][col]
             || mat[row][col - 1] == .water
-        let rightValid = col == mat[0].count - 1
+        let rightValid = col == size - 1
             || groupMat[row][col + 1] != groupMat[row][col]
             || mat[row][col + 1] == .water
-        let downValid = row == mat.count - 1
+        let downValid = row == size - 1
             || groupMat[row + 1][col] != groupMat[row][col]
             || mat[row + 1][col] == .water
 
