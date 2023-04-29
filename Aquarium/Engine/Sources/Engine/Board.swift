@@ -38,20 +38,14 @@ public struct Board {
     public init(withJson: String) throws {
         let decoder = JSONDecoder()
         let obj = try decoder.decode(JSONBoard.self, from: withJson.data(using: .utf8)!)
-        colSums = obj.sums.cols
-        rowSums = obj.sums.rows
-        groupMat = obj.matrix
-        mat = Board.emptyMat(size: obj.size)
+        self.init(colSums: obj.sums.cols, rowSums: obj.sums.rows, groups: obj.matrix)
     }
 
-    public init(colSums: [Int],
-                rowSums: [Int],
-                groups: [[Int]])
-    {
-        mat = Board.emptyMat(size: rowSums.count)
+    public init(colSums: [Int], rowSums: [Int], groups: [[Int]]) {
         self.colSums = colSums
         self.rowSums = rowSums
         groupMat = groups
+        mat = Board.emptyMat(size: rowSums.count)
     }
 
     private init(size: Int) {
