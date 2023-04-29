@@ -56,7 +56,6 @@ public struct Board {
         mat = Board.emptyMat(size: rowSums.count)
     }
 
-
     private static func newIter(_ n: Int) -> [(Int, Int)] {
         let it = (0 ..< n)
         return it.flatMap { r in it.map { c in (r, c) }}
@@ -112,17 +111,6 @@ public struct Board {
 
     private static func emptyMat(size: Int) -> [[Cell]] {
         [[Cell]](repeating: [Cell](repeating: .void, count: size), count: size)
-    }
-
-    private func constructGroupMat(groups: [Int], rowNum: Int, colNum: Int) -> [[Int]] {
-        var gMat = [[Int]]()
-
-        for row in 0 ..< rowNum {
-            let start = colNum * row, end = start + colNum
-            let rowArr = Array(groups[start ..< end])
-            gMat.append(rowArr)
-        }
-        return gMat
     }
 
     public func rowSum(_ index: Int, _ type: Cell) -> Int {
