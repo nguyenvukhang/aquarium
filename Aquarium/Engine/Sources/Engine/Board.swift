@@ -42,6 +42,13 @@ public struct Board {
         self.init(colSums: obj.sums.cols, rowSums: obj.sums.rows, groups: obj.matrix)
     }
 
+    private init(size: Int) {
+        mat = Board.emptyMat(size: size)
+        colSums = [Int](repeating: 0, count: size)
+        rowSums = [Int](repeating: 0, count: size)
+        groupMat = [[Int]](repeating: [Int](repeating: 0, count: size), count: size)
+    }
+
     public init(colSums: [Int], rowSums: [Int], groups: [[Int]]) {
         self.colSums = colSums
         self.rowSums = rowSums
@@ -49,12 +56,6 @@ public struct Board {
         mat = Board.emptyMat(size: rowSums.count)
     }
 
-    private init(size: Int) {
-        mat = Board.emptyMat(size: size)
-        colSums = [Int](repeating: 0, count: size)
-        rowSums = [Int](repeating: 0, count: size)
-        groupMat = [[Int]](repeating: [Int](repeating: 0, count: size), count: size)
-    }
 
     private static func newIter(_ n: Int) -> [(Int, Int)] {
         let it = (0 ..< n)
