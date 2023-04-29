@@ -1,23 +1,5 @@
 import Foundation
 
-public enum BoardState: CustomStringConvertible, Equatable {
-    case rowTooMuchWater(Int)
-    case rowTooMuchAir(Int)
-    case columnTooMuchWater(Int)
-    case columnTooMuchAir(Int)
-    case ok
-
-    public var description: String {
-        let fmt = { (s: String, r: String, i: Int) in String(format: "Too much %@ at %@[%d]", s, r, i) }
-        switch self {
-        case let .columnTooMuchAir(i): return fmt("air", "column", i)
-        case let .columnTooMuchWater(i): return fmt("water", "column", i)
-        case let .rowTooMuchAir(i): return fmt("air", "row", i)
-        case let .rowTooMuchWater(i): return fmt("water", "row", i)
-        case _: return "Ok!"
-        }
-    }
-}
 
 public struct Board {
     public var mat: [[Cell]]
@@ -26,10 +8,55 @@ public struct Board {
     public var groupMat: [[Int]]
     public var size: Int { rowSums.count }
 
+    /**
+     * Pulls a board from the Aquarium website, and initializes it.
+     */
+    public init(withProblemId: String) throws {
+        let url = URL(string: "https://aquarium2.vercel.app/api/get?id=" + withProblemId)!
+        let (raw, _, _) = URLSession.synchronousDataTask(with: url)
+        try self.init(withJson: String(data: raw!, encoding: .utf8)!)
+    }
+
+    public init(withJson: String) throws {
+        let decoder = JSONDecoder()
+        let obj = try decoder.decode(JSONBoard.self, from: withJson.data(using: .utf8)!)
+        self.init(colSums: obj.sums.cols, rowSums: obj.sums.rows, groups: obj.matrix)
+    }
+
+    private init(size: Int) {
+        mat = Board.emptyMat(size)
+        colSums = [Int](repeating: 0, count: size)
+        rowSums = [Int](repeating: 0, count: size)
+        groupMat = [[Int]](repeating: [Int](repeating: 0, count: size), count: size)
+    }
+
+    public init(colSums: [Int], rowSums: [Int], groups: [[Int]]) {
+        self.colSums = colSums
+        self.rowSums = rowSums
+        groupMat = groups
+        mat = Board.emptyMat(rowSums.count)
+    }
+
+    /**
+     * Purely for pretty-printing
+     */
+    public init(withMatrix: [[Cell]]) {
+        colSums = []
+        rowSums = []
+        groupMat = []
+        mat = withMatrix
+    }
+
+    public static func empty(size: Int) -> Board { Board(size: size) }
+
+    private static func emptyMat(_ size: Int) -> [[Cell]] {
+        [[Cell]](repeating: [Cell](repeating: .void, count: size), count: size)
+    }
+
     public var isSolved: Bool {
         allColsSolved && allRowsSolved && allFlowsValid
     }
-    
+
     public var isValid: Bool {
         allColsValid && allRowsValid && allFlowsValid
     }
@@ -44,11 +71,11 @@ public struct Board {
         }
         return true
     }
-    
+
     public var allColsValid: Bool {
         (0 ..< size).allSatisfy { i in colSum(i, .water) <= colSums[i] }
     }
-    
+
     public var allRowsValid: Bool {
         (0 ..< size).allSatisfy { i in rowSum(i, .water) <= rowSums[i] }
     }
@@ -61,69 +88,6 @@ public struct Board {
         (0 ..< size).allSatisfy { i in rowSum(i, .water) == rowSums[i] }
     }
 
-    /**
-     * Response structure from `https://aquarium2.vercel.app/api/get`
-     */
-    private struct JSONBoard: Codable {
-        struct Sums: Codable { let cols: [Int]; let rows: [Int] }
-        let id: String
-        let size: Int
-        let sums: Sums
-        let matrix: [[Int]]
-    }
-
-    /**
-     * Pulls a board from the Aquarium website, and initializes it.
-     */
-    public init(withProblemId: String) throws {
-        let url = URL(string: "https://aquarium2.vercel.app/api/get?id=" + withProblemId)!
-        let (raw, _, _) = URLSession.synchronousDataTask(with: url)
-        try self.init(withJson: String(data: raw!, encoding: .utf8)!)
-    }
-
-    public init(withJson: String) throws {
-        let decoder = JSONDecoder()
-        let obj = try decoder.decode(JSONBoard.self, from: withJson.data(using: .utf8)!)
-        colSums = obj.sums.cols
-        rowSums = obj.sums.rows
-        groupMat = obj.matrix
-        mat = Board.emptyMat(size: obj.size)
-    }
-
-    public init(colSums: [Int],
-                rowSums: [Int],
-                groups: [[Int]])
-    {
-        mat = Board.emptyMat(size: rowSums.count)
-        self.colSums = colSums
-        self.rowSums = rowSums
-        groupMat = groups
-    }
-
-    private init(size: Int) {
-        mat = Board.emptyMat(size: size)
-        colSums = [Int](repeating: 0, count: size)
-        rowSums = [Int](repeating: 0, count: size)
-        groupMat = [[Int]](repeating: [Int](repeating: 0, count: size), count: size)
-    }
-
-    public static func empty(size: Int) -> Board { Board(size: size) }
-
-    private static func emptyMat(size: Int) -> [[Cell]] {
-        [[Cell]](repeating: [Cell](repeating: .void, count: size), count: size)
-    }
-
-    private func constructGroupMat(groups: [Int], rowNum: Int, colNum: Int) -> [[Int]] {
-        var gMat = [[Int]]()
-
-        for row in 0 ..< rowNum {
-            let start = colNum * row, end = start + colNum
-            let rowArr = Array(groups[start ..< end])
-            gMat.append(rowArr)
-        }
-        return gMat
-    }
-
     public func rowSum(_ index: Int, _ type: Cell) -> Int {
         mat[index].reduce(0) { acc, cell in acc + (cell == type ? 1 : 0) }
     }
@@ -132,7 +96,7 @@ public struct Board {
         mat.reduce(0) { acc, row in acc + (row[index] == type ? 1 : 0) }
     }
 
-    public func validCols() -> (Bool, BoardState) {
+    public func validCols() -> (Bool, Status) {
         for i in 0 ..< size {
             if colSum(i, .water) > colSums[i] {
                 return (false, .columnTooMuchWater(i))
@@ -144,7 +108,7 @@ public struct Board {
         return (true, .ok)
     }
 
-    public func validRows() -> (Bool, BoardState) {
+    public func validRows() -> (Bool, Status) {
         for i in 0 ..< size {
             if rowSum(i, .water) > rowSums[i] {
                 return (false, .rowTooMuchWater(i))
@@ -169,16 +133,16 @@ public struct Board {
         let leftValid = col == 0
             || groupMat[row][col - 1] != groupMat[row][col]
             || mat[row][col - 1] == .water
-        let rightValid = col == mat[0].count - 1
+        let rightValid = col == size - 1
             || groupMat[row][col + 1] != groupMat[row][col]
             || mat[row][col + 1] == .water
-        let downValid = row == mat.count - 1
+        let downValid = row == size - 1
             || groupMat[row + 1][col] != groupMat[row][col]
             || mat[row + 1][col] == .water
 
         return leftValid && rightValid && downValid
     }
-    
+
     /// Adds water at (row, col), then automatically fills in
     /// water at the cells it would flow into.
     public mutating func addWaterAt(row: Int, col: Int) {
@@ -186,29 +150,59 @@ public struct Board {
             || col < 0
             || row >= size
             || col >= size
-            || mat[row][col] == .water  { return }
-        
+            || mat[row][col] == .water { return }
+
         mat[row][col] = .water
-        
-        if col - 1 >= 0 && groupMat[row][col - 1] == groupMat[row][col] {
+
+        if col - 1 >= 0, groupMat[row][col - 1] == groupMat[row][col] {
             addWaterAt(row: row, col: col - 1)
         }
-        
-        if col + 1 < size && groupMat[row][col + 1] == groupMat[row][col] {
+
+        if col + 1 < size, groupMat[row][col + 1] == groupMat[row][col] {
             addWaterAt(row: row, col: col + 1)
         }
-        
-        if row + 1 < size && groupMat[row + 1][col] == groupMat[row][col] {
+
+        if row + 1 < size, groupMat[row + 1][col] == groupMat[row][col] {
             addWaterAt(row: row + 1, col: col)
         }
     }
-    
+
     public mutating func fillAir() {
-        for rowNum in 0 ..< mat.count {
-            for colNum in 0 ..< mat[0].count {
+        for rowNum in 0 ..< size {
+            for colNum in 0 ..< size {
                 if mat[rowNum][colNum] != .water {
                     mat[rowNum][colNum] = .air
                 }
+            }
+        }
+    }
+
+    /**
+     * Response structure from `https://aquarium2.vercel.app/api/get`
+     */
+    private struct JSONBoard: Codable {
+        struct Sums: Codable { let cols: [Int]; let rows: [Int] }
+        let id: String
+        let size: Int
+        let sums: Sums
+        let matrix: [[Int]]
+    }
+
+    public enum Status: CustomStringConvertible, Equatable {
+        case rowTooMuchWater(Int)
+        case rowTooMuchAir(Int)
+        case columnTooMuchWater(Int)
+        case columnTooMuchAir(Int)
+        case ok
+
+        public var description: String {
+            let fmt = { s, r, i in String(format: "Too much %@ at %@[%d]", s, r, i) }
+            switch self {
+            case let .columnTooMuchAir(i): return fmt("air", "column", i)
+            case let .columnTooMuchWater(i): return fmt("water", "column", i)
+            case let .rowTooMuchAir(i): return fmt("air", "row", i)
+            case let .rowTooMuchWater(i): return fmt("water", "row", i)
+            case _: return "Ok!"
             }
         }
     }
@@ -234,9 +228,9 @@ extension Board: CustomDebugStringConvertible {
         let ul = g[i - 1][j - 1], ur = g[i - 1][j]
         let ll = g[i][j - 1], lr = g[i][j]
 
-        if ul == ur && ur == ll && ll == lr { return " " }
-        if ul == ll && ur == lr { return "│" }
-        if ul == ur && ll == lr { return "─" }
+        if ul == ur, ur == ll, ll == lr { return " " }
+        if ul == ll, ur == lr { return "│" }
+        if ul == ur, ll == lr { return "─" }
         if ul == ur {
             if ul == ll { return "┌" }
             if ur == lr { return "┐" }
