@@ -26,6 +26,41 @@ public struct Board {
     public var groupMat: [[Int]]
     public var size: Int { rowSums.count }
 
+    /**
+     * Pulls a board from the Aquarium website, and initializes it.
+     */
+    public init(withProblemId: String) throws {
+        let url = URL(string: "https://aquarium2.vercel.app/api/get?id=" + withProblemId)!
+        let (raw, _, _) = URLSession.synchronousDataTask(with: url)
+        try self.init(withJson: String(data: raw!, encoding: .utf8)!)
+    }
+
+    public init(withJson: String) throws {
+        let decoder = JSONDecoder()
+        let obj = try decoder.decode(JSONBoard.self, from: withJson.data(using: .utf8)!)
+        colSums = obj.sums.cols
+        rowSums = obj.sums.rows
+        groupMat = obj.matrix
+        mat = Board.emptyMat(size: obj.size)
+    }
+
+    public init(colSums: [Int],
+                rowSums: [Int],
+                groups: [[Int]])
+    {
+        mat = Board.emptyMat(size: rowSums.count)
+        self.colSums = colSums
+        self.rowSums = rowSums
+        groupMat = groups
+    }
+
+    private init(size: Int) {
+        mat = Board.emptyMat(size: size)
+        colSums = [Int](repeating: 0, count: size)
+        rowSums = [Int](repeating: 0, count: size)
+        groupMat = [[Int]](repeating: [Int](repeating: 0, count: size), count: size)
+    }
+
     public var isSolved: Bool {
         allColsSolved && allRowsSolved && allFlowsValid
     }
@@ -70,41 +105,6 @@ public struct Board {
         let size: Int
         let sums: Sums
         let matrix: [[Int]]
-    }
-
-    /**
-     * Pulls a board from the Aquarium website, and initializes it.
-     */
-    public init(withProblemId: String) throws {
-        let url = URL(string: "https://aquarium2.vercel.app/api/get?id=" + withProblemId)!
-        let (raw, _, _) = URLSession.synchronousDataTask(with: url)
-        try self.init(withJson: String(data: raw!, encoding: .utf8)!)
-    }
-
-    public init(withJson: String) throws {
-        let decoder = JSONDecoder()
-        let obj = try decoder.decode(JSONBoard.self, from: withJson.data(using: .utf8)!)
-        colSums = obj.sums.cols
-        rowSums = obj.sums.rows
-        groupMat = obj.matrix
-        mat = Board.emptyMat(size: obj.size)
-    }
-
-    public init(colSums: [Int],
-                rowSums: [Int],
-                groups: [[Int]])
-    {
-        mat = Board.emptyMat(size: rowSums.count)
-        self.colSums = colSums
-        self.rowSums = rowSums
-        groupMat = groups
-    }
-
-    private init(size: Int) {
-        mat = Board.emptyMat(size: size)
-        colSums = [Int](repeating: 0, count: size)
-        rowSums = [Int](repeating: 0, count: size)
-        groupMat = [[Int]](repeating: [Int](repeating: 0, count: size), count: size)
     }
 
     public static func empty(size: Int) -> Board { Board(size: size) }
