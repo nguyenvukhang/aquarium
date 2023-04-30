@@ -7,7 +7,7 @@ use crate::piece::Piece;
 use crate::quota::Quota;
 
 pub struct Grid<'a> {
-    pieces: Vec<Piece<'a>>,
+    pieces: Vec<Piece>,
     qcol: Vec<Quota>,
     qrow: Vec<Quota>,
     row_pieces: Vec<Vec<(u8, usize)>>,
@@ -19,7 +19,7 @@ impl<'a> Grid<'a> {
     pub fn new(
         cols: &Vec<i32>,
         rows: &Vec<i32>,
-        pieces: Vec<Piece<'a>>,
+        pieces: Vec<Piece>,
         groups: &'a Vec<Vec<u8>>,
     ) -> Self {
         let size = cols.len();

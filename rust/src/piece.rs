@@ -1,15 +1,15 @@
 #[derive(Debug)]
-pub struct Piece<'a> {
+pub struct Piece {
     pub group: u8,
     pub height: usize,
     pub water_level: usize,
-    coords: &'a Vec<Vec<usize>>,
+    coords: Vec<Vec<usize>>,
 }
 
-impl<'a> Piece<'a> {
-    pub fn new(group: u8, coords: &'a Vec<Vec<usize>>) -> Self {
+impl Piece {
+    pub fn new(group: u8, coords: &Vec<Vec<usize>>) -> Self {
         let height = coords.iter().filter(|v| !v.is_empty()).count();
-        Self { group, water_level: 0, height, coords }
+        Self { group, water_level: 0, height, coords: coords.clone() }
     }
 
     fn flat(&self) -> Vec<(usize, usize)> {

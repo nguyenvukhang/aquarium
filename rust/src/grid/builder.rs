@@ -21,11 +21,11 @@ pub fn row_pieces(grps: &Grid<u8>) -> Freq {
     rows.collect()
 }
 
-pub fn pieces<'a>(
+pub fn pieces(
     size: usize,
-    groups: &'a Grid<u8>,
-    coords: &'a mut Vec<Grid<usize>>,
-) -> Vec<Piece<'a>> {
+    groups: &Grid<u8>,
+    coords: &mut Vec<Grid<usize>>,
+) -> Vec<Piece> {
     // maximum group number
     let max_g = max_g(groups);
 
