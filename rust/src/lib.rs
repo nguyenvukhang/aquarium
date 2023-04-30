@@ -46,17 +46,10 @@ impl Game {
         Ok(Self::new(data.sums.cols, data.sums.rows, data.matrix))
     }
 
-    pub fn solve(&self) {
-        let mut grid = Grid::new(
-            &self.col_sums,
-            &self.row_sums,
-            &self.group_matrix,
-        );
+    pub fn solve(&self) -> (Grid, bool) {
+        let mut grid =
+            Grid::new(&self.col_sums, &self.row_sums, &self.group_matrix);
         let solved = grid.solve();
-        grid.debug();
-        match solved {
-            true => println!("Successful solve!"),
-            false => println!("Failed to solve."),
-        }
+        (grid, solved)
     }
 }

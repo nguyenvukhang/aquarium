@@ -60,9 +60,7 @@ impl<'a> Grid<'a> {
                 // break the water constraint. Hence, fill it with
                 // air.
                 if freq as i32 > self.qrow[row].water {
-                    println!("FILL ROW {row} WITH AIR ({group})");
-                    // println!("forcing! water overflow @ group {group}");
-                    // self.debug();
+                    // println!("FILL ROW {row} WITH AIR ({group})");
                     let piece = &self.pieces[group as usize];
                     if let Some(d) = piece.eq_and_above(row) {
                         return self.to_air_many(&d);
@@ -73,9 +71,7 @@ impl<'a> Grid<'a> {
                 // break the air constraint. Hence, fill it with
                 // air.
                 if freq as i32 > self.qrow[row].air {
-                    println!("FILL ROW {row} WITH WATER ({group})");
-                    // println!("forcing! air overflow @ group {group}");
-                    // self.debug();
+                    // println!("FILL ROW {row} WITH WATER ({group})");
                     let piece = &self.pieces[group as usize];
                     if let Some(d) = piece.eq_and_below(row) {
                         return self.to_water_many(&d);
@@ -92,7 +88,7 @@ impl<'a> Grid<'a> {
         for col in 0..self.size() {
             if self.qcol[col].water == 0 && self.qcol[col].air > 0 {
                 // fill that entire column with air
-                println!("FILL COLUMN {col} WITH AIR");
+                // println!("FILL COLUMN {col} WITH AIR");
                 let mut filled = false;
                 for row in 0..self.size() {
                     filled |= self.to_air_smart(row, col);
@@ -103,7 +99,7 @@ impl<'a> Grid<'a> {
             }
             if self.qcol[col].air == 0 && self.qcol[col].water > 0 {
                 // fill that entire column with water
-                println!("FILL COLUMN {col} WITH WATER");
+                // println!("FILL COLUMN {col} WITH WATER");
                 let mut filled = false;
                 for row in 0..self.size() {
                     filled |= self.to_water_smart(row, col);
