@@ -1,7 +1,7 @@
 use crate::cell::Cell;
-use crate::grid2::Grid2;
+use crate::grid::Grid;
 
-impl<'a> Grid2<'a> {
+impl<'a> Grid<'a> {
     // returns true on change
     pub fn to_water(&mut self, row: usize, col: usize) -> bool {
         if !self.cells[row][col].is_none() {

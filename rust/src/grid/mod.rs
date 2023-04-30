@@ -6,7 +6,7 @@ use crate::cell::Cell;
 use crate::piece::Piece;
 use crate::quota::Quota;
 
-pub struct Grid2<'a> {
+pub struct Grid<'a> {
     pieces: Vec<Piece<'a>>,
     qcol: Vec<Quota>,
     qrow: Vec<Quota>,
@@ -15,7 +15,7 @@ pub struct Grid2<'a> {
     groups: &'a Vec<Vec<u8>>,
 }
 
-impl<'a> Grid2<'a> {
+impl<'a> Grid<'a> {
     pub fn new(
         cols: &Vec<i32>,
         rows: &Vec<i32>,
@@ -154,7 +154,7 @@ pub fn run() {
 
     let mut coords = vec![];
     let pieces = builder::pieces(6, &groups, &mut coords);
-    let mut grid = Grid2::new(&cols, &rows, pieces, &groups);
+    let mut grid = Grid::new(&cols, &rows, pieces, &groups);
 
     let mut x = true;
     grid.debug();

@@ -1,7 +1,7 @@
 use crate::cell::Cell;
-use crate::grid2::Grid2;
+use crate::grid::Grid;
 
-impl<'a> Grid2<'a> {
+impl<'a> Grid<'a> {
     pub fn max_g(&self) -> u8 {
         *self.groups.iter().flat_map(|r| r.iter().max()).max().unwrap_or(&0)
     }
