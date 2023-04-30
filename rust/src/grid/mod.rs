@@ -26,7 +26,7 @@ impl<'a> Grid<'a> {
         let qcol = cols.iter().map(|v| Quota::new(*v, size)).collect();
         let qrow = rows.iter().map(|v| Quota::new(*v, size)).collect();
 
-        let row_pieces = builder::row_pieces(size, groups);
+        let row_pieces = builder::row_pieces(groups);
         let cells = vec![vec![Cell::None; size]; size];
 
         Self { pieces, qcol, qrow, row_pieces, cells, groups }

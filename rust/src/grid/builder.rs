@@ -1,4 +1,4 @@
-use crate::{cell::Cell, piece::Piece};
+use crate::piece::Piece;
 
 type Grid<T> = Vec<Vec<T>>;
 type Freq = Grid<(u8, usize)>;
@@ -7,7 +7,7 @@ fn max_g(grps: &Grid<u8>) -> u8 {
     *grps.iter().flat_map(|r| r.iter().max()).max().unwrap_or(&0)
 }
 
-pub fn row_pieces(size: usize, grps: &Grid<u8>) -> Freq {
+pub fn row_pieces(grps: &Grid<u8>) -> Freq {
     let max_g = max_g(grps);
     let rows = grps.iter().map(|row| {
         let mut f = vec![0; max_g as usize + 1];
