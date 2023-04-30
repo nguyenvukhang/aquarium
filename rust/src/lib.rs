@@ -6,7 +6,6 @@ pub mod piece;
 pub mod quota;
 
 use error::Result;
-use grid::builder;
 use grid::Grid;
 use serde::Deserialize;
 
@@ -47,28 +46,10 @@ impl Game {
         Ok(Self::new(data.sums.cols, data.sums.rows, data.matrix))
     }
 
-    fn size(&self) -> usize {
-        self.col_sums.len()
-    }
-
     pub fn solve(&self) {
-        let mut coords = vec![];
-        let pieces =
-            builder::pieces(self.size(), &self.group_matrix, &mut coords);
-        println!("cols: {:?}", self.col_sums);
-        println!("rows: {:?}", self.row_sums);
-        println!("-----------------------");
-        for line in &self.group_matrix {
-            println!("  {:?}", line);
-        }
-        println!("-----------------------");
-        for line in &coords {
-            println!("  {:?}", line);
-        }
         let mut grid = Grid::new(
             &self.col_sums,
             &self.row_sums,
-            pieces,
             &self.group_matrix,
         );
         let solved = grid.solve();

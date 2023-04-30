@@ -19,13 +19,13 @@ impl<'a> Grid<'a> {
     pub fn new(
         cols: &Vec<i32>,
         rows: &Vec<i32>,
-        pieces: Vec<Piece>,
         groups: &'a Vec<Vec<u8>>,
     ) -> Self {
         let size = cols.len();
         let qcol = cols.iter().map(|v| Quota::new(*v, size)).collect();
         let qrow = rows.iter().map(|v| Quota::new(*v, size)).collect();
 
+        let pieces = builder::pieces(size, groups);
         let row_pieces = builder::row_pieces(groups);
         let cells = vec![vec![Cell::None; size]; size];
 
@@ -142,49 +142,4 @@ impl<'a> Grid<'a> {
         self.qcol.iter().all(|v| v.is_solved())
             && self.qrow.iter().all(|v| v.is_solved())
     }
-}
-
-pub fn run() {
-    // let cols = vec![4, 4, 5, 4, 3, 1];
-    // let rows = vec![3, 4, 4, 5, 1, 4];
-    // let groups = vec![
-    //     //   4, 4, 5, 4, 3, 1
-    //     vec![1, 1, 1, 2, 3, 3], // 3
-    //     vec![1, 1, 1, 2, 3, 3], // 4
-    //     vec![1, 4, 4, 2, 3, 3], // 4
-    //     vec![1, 5, 5, 5, 5, 3], // 5
-    //     vec![6, 6, 6, 6, 5, 3], // 1
-    //     vec![6, 6, 5, 5, 5, 3], // 4
-    // ];
-
-    // slower test case
-    let cols = vec![5, 4, 2, 1, 3, 5];
-    let rows = vec![1, 5, 3, 4, 3, 4];
-    #[rustfmt::skip]
-    let groups = vec![
-        //    5,  4 , 2,  1,  3,  5
-        vec![ 1,  1,  2,  3,  3,  4], // 1
-        vec![ 5,  5,  2,  6,  6,  4], // 5
-        vec![ 7,  8,  9,  9, 10, 10], // 3
-        vec![11,  8, 12, 12, 13, 13], // 4
-        vec![11, 14, 14, 12, 12, 15], // 3
-        vec![16, 16, 17, 18, 18, 15], // 4
-    ];
-
-    let mut coords = vec![];
-    let pieces = builder::pieces(6, &groups, &mut coords);
-    let mut grid = Grid::new(&cols, &rows, pieces, &groups);
-
-    let mut x = true;
-    grid.debug();
-
-    while x {
-        x = false;
-        x |= grid.column_forcing_move();
-        if x {
-            continue;
-        }
-        x |= grid.row_forcing_move();
-    }
-    grid.debug();
 }

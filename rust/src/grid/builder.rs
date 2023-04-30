@@ -21,16 +21,12 @@ pub fn row_pieces(grps: &Grid<u8>) -> Freq {
     rows.collect()
 }
 
-pub fn pieces(
-    size: usize,
-    groups: &Grid<u8>,
-    coords: &mut Vec<Grid<usize>>,
-) -> Vec<Piece> {
+pub fn pieces(size: usize, groups: &Grid<u8>) -> Vec<Piece> {
     // maximum group number
     let max_g = max_g(groups);
 
     // clear coordinate source
-    coords.clear();
+    let mut coords = vec![];
     (0..max_g as usize + 1).for_each(|_| coords.push(vec![vec![]; size]));
 
     // populate coordinate source
