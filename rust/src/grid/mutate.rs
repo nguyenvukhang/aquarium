@@ -109,4 +109,30 @@ impl<'a> Grid<'a> {
     pub fn to_air_smart(&mut self, row: usize, col: usize) -> bool {
         self._to_air_smart(row, col, self.groups[row][col])
     }
+
+    // turns all cells of a certain group to air ABOVE a specified row
+    pub fn group_to_air(&mut self, group: u8, row: usize) {
+        let n = self.size();
+        let iter = (0..n).flat_map(|r| (0..n).map(move |c| (r, c)));
+
+        for (row, col) in iter.filter(|(r, _)| *r <= row) {
+            if self.groups[row][col] != group {
+                continue;
+            }
+            self.to_air(row, col);
+        }
+    }
+
+    // turns all cells of a certain group to water BELOW a specified row
+    pub fn group_to_water(&mut self, group: u8, row: usize) {
+        let n = self.size();
+        let iter = (0..n).flat_map(|r| (0..n).map(move |c| (r, c)));
+
+        for (row, col) in iter.filter(|(r, _)| *r >= row) {
+            if self.groups[row][col] != group {
+                continue;
+            }
+            self.to_water(row, col);
+        }
+    }
 }
