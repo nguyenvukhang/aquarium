@@ -160,15 +160,12 @@ pub fn run() {
     grid.debug();
 
     while x {
-        println!("-----------------------------------");
         x = false;
         x |= grid.column_forcing_move();
         if x {
-            grid.debug();
             continue;
         }
         x |= grid.row_forcing_move();
-        grid.debug();
     }
     grid.debug();
 }
