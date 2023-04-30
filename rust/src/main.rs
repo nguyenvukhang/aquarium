@@ -1,15 +1,22 @@
 use aquarium::error::Result;
 use aquarium::Game;
 
-async fn try_main() -> Result<()> {
-    let game = Game::from_id("MzoxLDU5OSwxOTc=").await?;
+async fn try_main(id: &str) -> Result<()> {
+    let game = Game::from_id(id).await?;
     game.solve();
     Ok(())
 }
 
 #[tokio::main]
 async fn main() {
-    match try_main().await {
+    let id = match std::env::args().skip(1).next() {
+        Some(v) => v,
+        None => {
+            println!("Please provide an id to test");
+            return;
+        }
+    };
+    match try_main(&id).await {
         Ok(_) => {}
         Err(e) => println!("Error: {e:?}"),
     }
