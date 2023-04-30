@@ -3,7 +3,12 @@ use aquarium::Game;
 
 async fn try_main(id: &str) -> Result<()> {
     let game = Game::from_id(id).await?;
-    game.solve();
+    let (grid, solved) = game.solve();
+    match solved {
+        true => println!("Successful solve!"),
+        false => println!("Failed to solve."),
+    }
+    grid.debug();
     Ok(())
 }
 
@@ -19,6 +24,6 @@ async fn main() {
     match try_main(&id).await {
         Ok(_) => {}
         Err(e) => println!("Error: {e:?}"),
-    }
+    };
     println!("aquarium-rust: done execution!");
 }
