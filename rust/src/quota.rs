@@ -8,7 +8,7 @@ pub struct Quota {
 
 impl<'a> fmt::Debug for Quota {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "({}|{})", self.water, self.air)
+        write!(f, "{},{}", self.water, self.air)
     }
 }
 
@@ -23,10 +23,6 @@ impl Quota {
 
     pub fn is_valid(&self) -> bool {
         self.water >= 0 && self.air >= 0
-    }
-
-    pub fn is_one_off(&self) -> bool {
-        self.water == 1 || self.air == 1
     }
 
     pub fn all_valid(rows: &Vec<Quota>, cols: &Vec<Quota>) -> bool {

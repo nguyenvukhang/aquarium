@@ -8,7 +8,7 @@ async fn try_main(id: &str) -> Result<()> {
         true => println!("Successful solve!"),
         false => println!("Failed to solve."),
     }
-    grid.debug();
+    println!("{:?}", grid);
     Ok(())
 }
 

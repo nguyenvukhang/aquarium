@@ -1,4 +1,5 @@
 pub mod builder;
+mod debug;
 mod freq;
 mod mutate;
 
@@ -60,7 +61,6 @@ impl<'a> Grid<'a> {
                 // break the water constraint. Hence, fill it with
                 // air.
                 if freq as i32 > self.qrow[row].water {
-                    // println!("FILL ROW {row} WITH AIR ({group})");
                     let piece = &self.pieces[group as usize];
                     if let Some(d) = piece.eq_and_above(row) {
                         return self.to_air_many(&d);
@@ -71,7 +71,6 @@ impl<'a> Grid<'a> {
                 // break the air constraint. Hence, fill it with
                 // air.
                 if freq as i32 > self.qrow[row].air {
-                    // println!("FILL ROW {row} WITH WATER ({group})");
                     let piece = &self.pieces[group as usize];
                     if let Some(d) = piece.eq_and_below(row) {
                         return self.to_water_many(&d);
