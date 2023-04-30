@@ -90,7 +90,8 @@ impl<'a> Grid<'a> {
                 // println!("FILL COLUMN {col} WITH AIR");
                 let mut filled = false;
                 for row in 0..self.size() {
-                    filled |= self.to_air_smart(row, col);
+                    let g = self.groups[row][col];
+                    filled |= self.group_to_air(g, row);
                 }
                 if filled {
                     return true;
@@ -101,7 +102,8 @@ impl<'a> Grid<'a> {
                 // println!("FILL COLUMN {col} WITH WATER");
                 let mut filled = false;
                 for row in 0..self.size() {
-                    filled |= self.to_water_smart(row, col);
+                    let g = self.groups[row][col];
+                    filled |= self.group_to_water(g, row);
                 }
                 if filled {
                     return true;

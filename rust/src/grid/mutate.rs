@@ -111,28 +111,32 @@ impl<'a> Grid<'a> {
     }
 
     // turns all cells of a certain group to air ABOVE a specified row
-    pub fn group_to_air(&mut self, group: u8, row: usize) {
+    pub fn group_to_air(&mut self, group: u8, row: usize) -> bool {
         let n = self.size();
         let iter = (0..n).flat_map(|r| (0..n).map(move |c| (r, c)));
+        let mut delta = false;
 
         for (row, col) in iter.filter(|(r, _)| *r <= row) {
             if self.groups[row][col] != group {
                 continue;
             }
-            self.to_air(row, col);
+            delta |= self.to_air(row, col);
         }
+        delta
     }
 
     // turns all cells of a certain group to water BELOW a specified row
-    pub fn group_to_water(&mut self, group: u8, row: usize) {
+    pub fn group_to_water(&mut self, group: u8, row: usize) -> bool {
         let n = self.size();
         let iter = (0..n).flat_map(|r| (0..n).map(move |c| (r, c)));
+        let mut delta = false;
 
         for (row, col) in iter.filter(|(r, _)| *r >= row) {
             if self.groups[row][col] != group {
                 continue;
             }
-            self.to_water(row, col);
+            delta |= self.to_water(row, col);
         }
+        delta
     }
 }
