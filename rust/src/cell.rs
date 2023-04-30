@@ -23,14 +23,6 @@ impl Cell {
 
 impl fmt::Debug for Cell {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(
-            f,
-            "{}",
-            match self {
-                Cell::Water => '■',
-                Cell::Air => '×',
-                Cell::None => ' ',
-            }
-        )
+        write!(f, "{}", self.as_char())
     }
 }
