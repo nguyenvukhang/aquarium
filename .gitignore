@@ -3,3 +3,4 @@ xcuserdata
 dist
 .DS_Store
 .build/
+target/
