@@ -1,4 +1,4 @@
-mod builder;
+pub mod builder;
 mod freq;
 mod mutate;
 
@@ -122,6 +122,25 @@ impl<'a> Grid<'a> {
         for line in &self.cells {
             println!("{:?}", line);
         }
+    }
+
+    // returns true on successful solve
+    pub fn solve(&mut self) -> bool {
+        let mut delta = true;
+        while delta {
+            delta = false;
+            delta |= self.column_forcing_move();
+            if delta {
+                continue;
+            }
+            delta |= self.row_forcing_move();
+        }
+        self.is_solved()
+    }
+
+    fn is_solved(&self) -> bool {
+        self.qcol.iter().all(|v| v.is_solved())
+            && self.qrow.iter().all(|v| v.is_solved())
     }
 }
 
