@@ -12,6 +12,7 @@ class ViewController: UIViewController {
     @IBOutlet var boardTextView: UITextView!
     @IBOutlet var urlTextField: UITextField!
 
+    /*
     var board: Board2!
 
     override func viewDidLoad() {
@@ -44,4 +45,5 @@ class ViewController: UIViewController {
         print(board.description)
         boardTextView.text = board.description
     }
+     */
 }
