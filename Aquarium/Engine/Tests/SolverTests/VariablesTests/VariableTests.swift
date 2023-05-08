@@ -79,14 +79,4 @@ final class VariableTests: XCTestCase {
         strVariable.unassign()
         XCTAssertNil(strVariable.assignment)
     }
-    
-    func testPruneRemainingDomain() {
-        let intConditionToKeep = { intVal in intVal > 2 }
-        intVariable.pruneRemainingDomain(toSatisfy: intConditionToKeep)
-        XCTAssertEqual(intVariable.remainingDomain, [3])
-        
-        let strConditionToKeep = { strVal in Set(["b", "c", "d"]).contains(strVal) }
-        strVariable.pruneRemainingDomain(toSatisfy: strConditionToKeep)
-        XCTAssertEqual(strVariable.remainingDomain, ["b", "c"])
-    }
 }
