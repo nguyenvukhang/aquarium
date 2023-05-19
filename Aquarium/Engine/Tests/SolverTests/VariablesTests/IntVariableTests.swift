@@ -1,5 +1,5 @@
 //
-//  VariableTests.swift
+//  IntVariableTests.swift
 //  
 //
 //  Created by Quan Teng Foong on 4/5/23.
@@ -8,7 +8,7 @@
 
 import XCTest
 
-final class VariableTests: XCTestCase {
+final class IntVariableTests: XCTestCase {
     var intVariableDomain: Set<Int>!
     var intVariable: IntVariable!
     
@@ -28,25 +28,40 @@ final class VariableTests: XCTestCase {
         XCTAssertFalse(intVariable.canAssign(to: 5))
     }
     
-    func testAssignment_possibleValue_getsAssigned() throws {
+    func testAssignTo_possibleValue_getsAssigned() throws {
         for intValue in intVariableDomain {
-            intVariable.assignment = intValue
+            XCTAssertTrue(intVariable.assign(to: intValue))
             let intValue = try XCTUnwrap(intVariable.assignment)
             XCTAssertEqual(intValue, intValue)
         }
     }
     
-    func testAssignment_impossibleValue_notAssigned() throws {
-        intVariable.assignment = 4
+    func testAssignTo_impossibleValue_notAssigned() throws {
+        XCTAssertFalse(intVariable.assign(to: 4))
         XCTAssertNil(intVariable.assignment)
-        intVariable.assignment = 3
-        intVariable.assignment = 5
+        intVariable.assign(to: 3)
+        XCTAssertFalse(intVariable.assign(to: 5))
         let intValue = try XCTUnwrap(intVariable.assignment)
         XCTAssertEqual(intValue, 3)
     }
     
+    func testSetDomain_validDomain() {
+        let newValidDomain = [10, 9, 8]
+        intVariable.setDomain(newDomain: newValidDomain)
+        XCTAssertEqual(intVariable.domain, Set(newValidDomain))
+    }
+    
+    // TODO: put back after introducing errors messages
+    /*
+    func testSetDomain_invalidDomain_throwsError() {
+        let invalidDomain = ["a", "b", "c"]
+        XCTAssertThrowsError(intVariable.setDomain(newDomain: invalidDomain))
+        XCTAssertEqual(intVariable.domain, intVariableDomain)
+    }
+     */
+    
     func testUnassign_assignmentSetToNil() throws {
-        intVariable.assignment = 2
+        intVariable.assign(to: 2)
         let intValue = try XCTUnwrap(intVariable.assignment)
         XCTAssertEqual(intValue, 2)
         intVariable.unassign()
