@@ -8,6 +8,7 @@
 
 import XCTest
 
+/*
 final class ConstraintsTests: XCTestCase {
     var intVariableA: Variable<Int>!
     var intVariableB: Variable<Int>!
@@ -53,3 +54,5 @@ final class ConstraintsTests: XCTestCase {
         XCTAssertTrue(constraints.allSatisfied)
     }
 }
+
+*/

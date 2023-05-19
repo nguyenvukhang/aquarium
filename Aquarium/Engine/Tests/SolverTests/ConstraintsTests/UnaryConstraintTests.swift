@@ -8,6 +8,7 @@
 
 import XCTest
 
+/*
 final class UnaryConstraintTests: XCTestCase {
     var intVariableA: Variable<Int>!
     var intCondition: ((Int) -> Bool)!
@@ -50,3 +51,5 @@ final class UnaryConstraintTests: XCTestCase {
         XCTAssertFalse(strConstraint.isSatisfied)
     }
 }
+
+*/

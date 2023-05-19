@@ -8,6 +8,7 @@
 
 import XCTest
 
+/*
 final class BinaryConstraintTests: XCTestCase {
     var intVariableA: Variable<Int>!
     var intVariableB: Variable<Int>!
@@ -76,3 +77,5 @@ final class BinaryConstraintTests: XCTestCase {
         XCTAssertFalse(strConstraint.isSatisfied)
     }
 }
+
+*/

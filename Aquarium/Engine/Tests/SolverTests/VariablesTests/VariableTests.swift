@@ -10,31 +10,22 @@ import XCTest
 
 final class VariableTests: XCTestCase {
     var intVariableDomain: Set<Int>!
-    var intVariable: Variable<Int>!
-    var strVariableDomain: Set<String>!
-    var strVariable: Variable<String>!
+    var intVariable: IntVariable!
     
     override func setUp() {
         intVariableDomain = [1, 2, 3]
-        intVariable = Variable(name: "int", domain: intVariableDomain)
-        strVariableDomain = ["a", "b", "c"]
-        strVariable = Variable(name: "str", domain: strVariableDomain)
+        intVariable = IntVariable(name: "int", domain: intVariableDomain)
     }
     
     func testCanAssign_possibleValue_returnsTrue() {
         for intValue in intVariableDomain {
             XCTAssertTrue(intVariable.canAssign(to: intValue))
         }
-        for strValue in strVariableDomain {
-            XCTAssertTrue(strVariable.canAssign(to: strValue))
-        }
     }
     
     func testCanAssign_impossibleValue_returnsFalse() {
         XCTAssertFalse(intVariable.canAssign(to: 4))
         XCTAssertFalse(intVariable.canAssign(to: 5))
-        XCTAssertFalse(strVariable.canAssign(to: "d"))
-        XCTAssertFalse(strVariable.canAssign(to: "e"))
     }
     
     func testAssignment_possibleValue_getsAssigned() throws {
@@ -42,11 +33,6 @@ final class VariableTests: XCTestCase {
             intVariable.assignment = intValue
             let intValue = try XCTUnwrap(intVariable.assignment)
             XCTAssertEqual(intValue, intValue)
-        }
-        for strValue in strVariableDomain {
-            strVariable.assignment = strValue
-            let strValue = try XCTUnwrap(strVariable.assignment)
-            XCTAssertEqual(strValue, strValue)
         }
     }
     
@@ -57,13 +43,6 @@ final class VariableTests: XCTestCase {
         intVariable.assignment = 5
         let intValue = try XCTUnwrap(intVariable.assignment)
         XCTAssertEqual(intValue, 3)
-        
-        strVariable.assignment = "d"
-        XCTAssertNil(strVariable.assignment)
-        strVariable.assignment = "c"
-        strVariable.assignment = "e"
-        let strValue = try XCTUnwrap(strVariable.assignment)
-        XCTAssertEqual(strValue, "c")
     }
     
     func testUnassign_assignmentSetToNil() throws {
@@ -72,11 +51,5 @@ final class VariableTests: XCTestCase {
         XCTAssertEqual(intValue, 2)
         intVariable.unassign()
         XCTAssertNil(intVariable.assignment)
-        
-        strVariable.assignment = "b"
-        let strValue = try XCTUnwrap(strVariable.assignment)
-        XCTAssertEqual(strValue, "b")
-        strVariable.unassign()
-        XCTAssertNil(strVariable.assignment)
     }
 }

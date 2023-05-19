@@ -10,35 +10,27 @@ import XCTest
 
 final class InferenceTests: XCTestCase {
     var intVariableDomain: Set<Int>!
-    var intVariable: Variable<Int>!
-    var intInference: Inference<Int>!
-    var strVariableDomain: Set<String>!
-    var strVariable: Variable<String>!
-    var strInference: Inference<String>!
+    var intVariable: IntVariable!
+    var inference: Inference!
     
     override func setUp() {
         intVariableDomain = [1, 2, 3]
-        intVariable = Variable(name: "int", domain: intVariableDomain)
-        intInference = Inference(variableToDomain: [intVariable: intVariableDomain])
-        strVariableDomain = ["a", "b", "c"]
-        strVariable = Variable(name: "str", domain: strVariableDomain)
-        strInference = Inference(variableToDomain: [strVariable: strVariableDomain])
+        intVariable = IntVariable(name: "int", domain: intVariableDomain)
+        inference = Inference()
+        inference.addDomain(for: intVariable, domain: Array(intVariableDomain))
     }
     
     func testLeadsToFailure() {
         let emptyDomain = Set<Int>()
-        let testVariable = Variable(name: "test", domain: emptyDomain)
-        var testInference = Inference<Int>()
-        testInference.addDomain(for: testVariable, domain: emptyDomain)
+        let testIntVariable = IntVariable(name: "test", domain: emptyDomain)
+        var testInference = Inference()
+        testInference.addDomain(for: testIntVariable, domain: Array(emptyDomain))
         XCTAssertTrue(testInference.leadsToFailure)
     }
     
     func testNumConsistentDomainValues() {
         let expectedValue = 3
-        let fromIntInference = intInference.numConsistentDomainValues
-        XCTAssertEqual(fromIntInference, expectedValue)
-        
-        let fromStrInference = strInference.numConsistentDomainValues
-        XCTAssertEqual(fromStrInference, expectedValue)
+        let fromInference = inference.numConsistentDomainValues
+        XCTAssertEqual(fromInference, expectedValue)
     }
 }
