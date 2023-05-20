@@ -1,4 +1,4 @@
-public enum Cell: CustomStringConvertible, CustomDebugStringConvertible, Equatable {
+public enum State: CustomStringConvertible, CustomDebugStringConvertible, Equatable {
     case void
     case air
     case water

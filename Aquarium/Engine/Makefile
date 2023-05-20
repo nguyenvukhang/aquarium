@@ -1,5 +1,5 @@
 current:
-	make test
+	swift run EngineCli
 
 dev:
 	swift run Cli

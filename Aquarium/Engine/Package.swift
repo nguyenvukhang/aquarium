@@ -5,14 +5,24 @@ import PackageDescription
 
 let package = Package(
     name: "Engine",
-    products: [.library(name: "Engine", targets: ["Engine"])],
+    products: [
+        .library(name: "Engine", targets: ["Engine"]),
+        .executable(name: "EngineCli", targets: ["EngineCli"]),
+    ],
     dependencies: [],
     targets: [
-        .target(name: "Engine", dependencies: []),
+        .target(
+            name: "Engine",
+            dependencies: []
+        ),
         .testTarget(
             name: "EngineTests",
             dependencies: ["Engine"],
             path: "Tests"
+        ),
+        .executableTarget(
+            name: "EngineCli",
+            dependencies: ["Engine"]
         ),
     ]
 )
