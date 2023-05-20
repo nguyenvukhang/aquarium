@@ -1,25 +1,20 @@
-mod action;
 pub mod builder;
-mod cell;
+mod structs;
 mod debug;
-mod forcing_moves;
 mod grid;
 mod instance;
-mod point;
 mod pour_point;
 mod quota;
-mod state;
 
-use action::Action;
-use cell::Cell;
-use point::Point;
+use structs::{Point, Cell, State};
 use quota::{Checkable, Quota};
-use state::State;
 
 pub use grid::Grid;
 
 use instance::Instance;
 use pour_point::PourPoint;
+
+use std::mem::swap;
 
 /// Exposed API
 impl Grid {
@@ -34,37 +29,77 @@ impl Grid {
             .collect();
         let qrow = Quota::vec(rows);
         let qcol = Quota::vec(cols);
-        let key_points = builder::get_key_points(&cells);
-        let pour_points =
-            key_points.into_iter().map(|v| PourPoint::new(v, &cells)).collect();
+        let pour_points = builder::get_key_points(&cells);
 
         Self { cells, qrow, qcol, pour_points, groups: groups.clone() }
+    }
+
+    pub fn backtrack(&self, inst: &mut Instance) -> bool {
+        // println!(">>> RECURSE >>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+
+        self.make_all_forcing_moves(inst);
+
+        if !inst.is_valid() {
+            return false;
+        }
+
+        if inst.is_solved() {
+            return true;
+        }
+
+        println!("after forcing moves: {inst:?}");
+
+        // backtrack with water-pouring
+        for point in self.pour_points.iter() {
+            let delta = inst.pour_water(point);
+
+            if delta.is_empty() || !inst.is_valid() {
+                inst.undo_pour_water(delta);
+                continue;
+            }
+
+            let mut copy = inst.clone();
+            if self.backtrack(&mut copy) {
+                swap(inst, &mut copy);
+                return true;
+            }
+        }
+
+        // backtrack with air-pouring (do from bottom for quicker elimination)
+        for point in self.pour_points.iter().rev() {
+            let delta = inst.pour_air(point);
+
+            if delta.is_empty() || !inst.is_valid() {
+                inst.undo_pour_air(delta);
+                continue;
+            }
+
+            let mut copy = inst.clone();
+            if self.backtrack(&mut copy) {
+                swap(inst, &mut copy);
+                return true;
+            }
+        }
+        false
     }
 
     // returns true on successful solve
     pub fn solve(&mut self) -> bool {
         let mut inst = Instance::new(&self.groups, &self.qrow, &self.qcol);
-        self.make_all_forcing_moves(&mut inst);
+        self.backtrack(&mut inst);
+
+        // consolidation
         for r in 0..self.size() {
             for c in 0..self.size() {
                 self.cells[r][c].state = inst.state[r][c].clone()
             }
         }
+        self.qcol = inst.qcol.clone();
+        self.qrow = inst.qrow.clone();
         inst.is_solved()
     }
 }
 
 impl Grid {
-    pub fn debug_run(&self) {
-        println!("hello world!");
-        self.debug();
-
-        let mut inst = Instance::new(&self.groups, &self.qrow, &self.qcol);
-
-        self.make_all_forcing_moves(&mut inst);
-
-        println!("INSTANCE: {inst:?}");
-
-        println!("{:?}", self.pour_points[2])
-    }
+    pub fn debug_run(&self) {}
 }

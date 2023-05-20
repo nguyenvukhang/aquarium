@@ -1,5 +1,6 @@
 current:
-	@make test
+	@cargo run --release > dist && nvim dist
+	# @cargo run --release
 
 test:
 	cargo test

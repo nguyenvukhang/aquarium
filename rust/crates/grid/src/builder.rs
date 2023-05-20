@@ -1,9 +1,9 @@
-use crate::{Cell, Point};
+use crate::{Cell, Point, PourPoint};
 
 // Cells that perform uniquely when air/water is poured from them
 // (e.g. if two cells are of the same group on the same row, only
 // one of them should be included in the output)
-pub fn get_key_points(cells: &Vec<Vec<Cell>>) -> Vec<Point> {
+pub fn get_key_points(cells: &Vec<Vec<Cell>>) -> Vec<PourPoint> {
     let size = cells.len();
     let mut points: Vec<Point> = vec![];
     for r in 0..size {
@@ -18,5 +18,5 @@ pub fn get_key_points(cells: &Vec<Vec<Cell>>) -> Vec<Point> {
             }
         }
     }
-    points
+    points.into_iter().map(|v| PourPoint::new(v, &cells)).collect()
 }

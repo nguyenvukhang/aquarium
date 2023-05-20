@@ -6,8 +6,8 @@ use std::fmt;
 #[derive(Clone)]
 pub struct Instance<'a> {
     pub state: Vec<Vec<State>>,
-    qrow: Vec<Quota>,
-    qcol: Vec<Quota>,
+    pub qrow: Vec<Quota>,
+    pub qcol: Vec<Quota>,
     groups: &'a Vec<Vec<usize>>,
 }
 
@@ -33,6 +33,7 @@ impl<'a> Instance<'a> {
 
     /// Pours water and returns the affected points
     pub fn pour_water<'b>(&mut self, point: &'b PourPoint) -> Vec<&'b Point> {
+        // println!("pouring water into -> {:?}", self);
         let mut affected = vec![];
         for p in &point.water_flow {
             match self.state[p.row][p.col] {
@@ -45,6 +46,7 @@ impl<'a> Instance<'a> {
                 _ => continue,
             }
         }
+        // println!("result: {self:?}\naffected: {:?}", affected);
         affected
     }
 
@@ -65,20 +67,29 @@ impl<'a> Instance<'a> {
         affected
     }
 
-    pub fn undo_pour_water(&mut self, points: Vec<&Point>) {
-        for p in points {
-            self.state[p.row][p.col] = State::None;
-            self.qrow[p.row].water += 1;
-            self.qcol[p.col].water += 1;
+    pub fn restore(&mut self, point: &Point) {
+        let (r, c) = (point.row, point.col);
+        match self.state[point.row][point.col] {
+            State::None => {}
+            State::Air => {
+                self.state[r][c] = State::None;
+                self.qrow[r].air += 1;
+                self.qcol[c].air += 1;
+            }
+            State::Water => {
+                self.state[r][c] = State::None;
+                self.qrow[r].water += 1;
+                self.qcol[c].water += 1;
+            }
         }
     }
 
+    pub fn undo_pour_water(&mut self, points: Vec<&Point>) {
+        points.iter().for_each(|p| self.restore(p));
+    }
+
     pub fn undo_pour_air(&mut self, points: Vec<&Point>) {
-        for p in points {
-            self.state[p.row][p.col] = State::None;
-            self.qrow[p.row].air += 1;
-            self.qcol[p.col].air += 1;
-        }
+        points.iter().for_each(|p| self.restore(p));
     }
 }
 

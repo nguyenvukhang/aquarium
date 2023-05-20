@@ -1,4 +1,4 @@
-use crate::{Action, Cell, Point, PourPoint, Quota};
+use crate::{Cell, Checkable, Instance, PourPoint, Quota};
 
 pub struct Grid {
     pub(crate) qcol: Vec<Quota>,
@@ -14,64 +14,37 @@ impl Grid {
         self.qcol.len()
     }
 
-    pub fn all_points(&self) -> Vec<Point> {
-        let mut pts = vec![];
-        for r in 0..self.size() {
-            for c in 0..self.size() {
-                pts.push(Point::new(r, c));
-            }
-        }
-        pts
-    }
-
-    /// Get reference to cell at a point
-    pub fn cell_at(&self, point: &Point) -> &Cell {
-        &self.cells[point.row][point.col]
-    }
-
-    /// Get a list of possible water-pouring Actions.
-    /// Use when no forcing moves are available.
-    pub fn get_next_water_moves(&self) -> Vec<Action> {
-        vec![]
-    }
-
-    /// Get a list of possible air-pouring Actions.
-    /// Use when no forcing moves are available.
-    pub fn get_next_air_moves(&self) -> Vec<Action> {
-        vec![]
-    }
-
-    /// Get a list of all possible Actions. (Water + Air pouring)
-    /// Use when no forcing moves are available.
-    pub fn get_all_next_moves(&self) -> Vec<Action> {
-        let mut moves = self.get_next_water_moves();
-        moves.extend(self.get_next_air_moves());
-        moves
-    }
-
-    pub(crate) fn is_solved(&self) -> bool {
-        false
-    }
-}
-
-impl Grid {
-    // Cells that perform uniquely when air/water is poured from them
-    // (e.g. if two cells are of the same group on the same row, only
-    // one of them should be included in the output)
-    pub(crate) fn get_key_points(&self) -> Vec<Point> {
-        let mut points: Vec<Point> = vec![];
-        for r in 0..self.size() {
-            for c in 0..self.size() {
-                let g = self.cells[r][c].group;
-                if points
-                    .iter()
-                    .find(|p| p.row == r && self.cell_at(p).group == g)
-                    .is_none()
-                {
-                    points.push(Point::new(r, c));
+    /// Make all forcing moves. Might lead to an invalid state.
+    pub fn make_all_forcing_moves(&self, inst: &mut Instance) {
+        let mut changed = true;
+        while changed {
+            changed = false;
+            for pp in &self.pour_points {
+                // Try to pour air at the point. If the instance
+                // turns invalid immediately, when we are forced to
+                // pour water there
+                let delta = inst.pour_air(pp);
+                if inst.is_valid() {
+                    inst.undo_pour_air(delta);
+                } else {
+                    inst.undo_pour_air(delta);
+                    changed |= !inst.pour_water(pp).is_empty();
+                }
+                // Try to pour water at the point. If the instance
+                // turns invalid immediately, when we are forced to
+                // pour air there
+                let delta = inst.pour_water(pp);
+                if inst.is_valid() {
+                    inst.undo_pour_water(delta);
+                } else {
+                    inst.undo_pour_water(delta);
+                    changed |= !inst.pour_air(pp).is_empty();
                 }
             }
+            if !inst.is_valid() {
+                return;
+            }
+            // println!("FORCING {:?}", inst);
         }
-        points
     }
 }

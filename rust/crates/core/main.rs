@@ -12,32 +12,52 @@ async fn try_main(id: &str) -> Result<()> {
     Ok(())
 }
 
-// #[tokio::main]
-// async fn main() {
-//     let cols = [];
-//     let rows = [];
-//     let grps = [[]];
-//     let (cols, rows) = (cols.to_vec(), rows.to_vec());
-//     let grps = grps.iter().map(|v| v.to_vec()).collect();
-//     let game = Game::new(cols, rows, grps);
-//     game.debug_run();
-// }
-
 #[tokio::main]
 async fn main() {
-    let id = match std::env::args().skip(1).next() {
-        Some(v) => v,
-        None => {
-            return println!("Please provide an id to test");
-        }
-    };
-    match try_main(&id).await {
-        Ok(_) => {}
-        Err(e) => println!("Error: {e:?}"),
-    };
-
-    println!("aquarium-rust: done execution!");
+    let cols = [3, 5, 3, 3, 3, 4, 4, 5, 6, 6, 8, 8, 7, 10, 7];
+    let rows = [3, 2, 5, 4, 8, 8, 3, 5, 3, 3, 7, 4, 5, 13, 9];
+    let grps = [
+        [1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3],
+        [1, 4, 4, 5, 5, 5, 1, 1, 2, 2, 2, 6, 6, 7, 7],
+        [1, 1, 4, 5, 4, 5, 1, 2, 2, 2, 8, 8, 6, 6, 6],
+        [1, 1, 4, 4, 4, 5, 5, 9, 9, 9, 9, 9, 6, 10, 10],
+        [1, 1, 11, 11, 11, 12, 9, 9, 13, 13, 14, 14, 15, 16, 17],
+        [18, 11, 11, 12, 12, 12, 12, 19, 19, 20, 15, 15, 15, 16, 17],
+        [18, 11, 11, 21, 22, 22, 19, 19, 20, 20, 23, 23, 15, 24, 17],
+        [18, 25, 11, 21, 22, 22, 22, 19, 20, 20, 20, 20, 26, 24, 26],
+        [18, 25, 11, 21, 27, 27, 22, 19, 20, 28, 20, 29, 26, 26, 26],
+        [18, 18, 30, 31, 31, 27, 22, 28, 28, 28, 32, 29, 29, 26, 26],
+        [33, 33, 30, 34, 34, 35, 22, 28, 36, 28, 32, 32, 29, 26, 29],
+        [37, 38, 38, 38, 34, 35, 39, 36, 36, 36, 32, 40, 29, 29, 29],
+        [37, 37, 41, 41, 34, 39, 39, 39, 39, 32, 32, 40, 29, 29, 29],
+        [37, 34, 34, 34, 34, 37, 42, 43, 43, 43, 32, 43, 44, 44, 45],
+        [37, 37, 37, 37, 37, 37, 42, 42, 42, 43, 43, 43, 45, 45, 45],
+    ];
+    let (cols, rows) = (cols.to_vec(), rows.to_vec());
+    let grps = grps.iter().map(|v| v.to_vec()).collect();
+    let game = Game::new(cols, rows, grps);
+    println!("----------- START SOLVE -----------");
+    let (grid, solved) = game.solve();
+    println!("solved: {solved}");
+    println!("grid: {grid:?}");
+    println!("------------ END SOLVE ------------");
 }
+
+// #[tokio::main]
+// async fn main() {
+//     let id = match std::env::args().skip(1).next() {
+//         Some(v) => v,
+//         None => {
+//             return println!("Please provide an id to test");
+//         }
+//     };
+//     match try_main(&id).await {
+//         Ok(_) => {}
+//         Err(e) => println!("Error: {e:?}"),
+//     };
+//
+//     println!("aquarium-rust: done execution!");
+// }
 
 #[cfg(test)]
 mod tests {
