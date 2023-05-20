@@ -1,30 +1,33 @@
-use crate::cell::Cell;
-use crate::grid::Grid;
+use crate::Cell;
+use crate::Grid;
 use std::fmt;
 
+const JOIN_UP: &str = "┼│├┤┌┬┐";
+const JOIN_RIGHT: &str = "┼├─┌┬└┴";
+
 /// Debugging methods
-impl<'a> Grid<'a> {
+impl Grid {
     /// Get the surrounding groups of a border point.
     /// Bounds belong to group 0.
     /// [<upper-left>, <upper-right>, <lower-left>, <lower-right>]
-    fn surrounding_groups(&self, r: usize, c: usize) -> [u8; 4] {
-        let (n, g) = (self.size(), self.groups);
+    fn surrounding_groups(&self, r: usize, c: usize) -> [usize; 4] {
+        let (n, g) = (self.size(), &self.cells);
         //           ↖︎  ↗︎  ↙︎  ↘︎
         let mut t = [0, 0, 0, 0];
         if r > 0 {
             if c > 0 {
-                t[0] = g[r - 1][c - 1]; // ↖︎
+                t[0] = g[r - 1][c - 1].group; // ↖︎
             }
             if c < n {
-                t[1] = g[r - 1][c]; // ↗︎
+                t[1] = g[r - 1][c].group; // ↗︎
             }
         }
         if r < self.size() {
             if c > 0 {
-                t[2] = g[r][c - 1]; // ↙︎
+                t[2] = g[r][c - 1].group; // ↙︎
             }
             if c < n {
-                t[3] = g[r][c]; // ↘︎
+                t[3] = g[r][c].group; // ↘︎
             }
         }
         t
@@ -95,33 +98,39 @@ impl<'a> Grid<'a> {
 
     fn join_cell_line(&self, borders: &Vec<char>, cells: &Vec<Cell>) -> String {
         let mut result = String::from("│");
-        let c = "┼│├┤┌┬┐";
         for i in 0..self.size() {
             result.push(' ');
-            result.push(cells[i].as_char());
+            result.push(cells[i].state.as_char());
             result.push(' ');
-            result.push(if c.contains(borders[i + 1]) { '│' } else { ' ' })
+            result.push(match JOIN_UP.contains(borders[i + 1]) {
+                true => '│',
+                false => ' ',
+            });
         }
         result
     }
 
     fn join_border_line(&self, borders: &Vec<char>) -> String {
         let mut result = String::new();
-        let c = "┼├─┌┬└┴";
         for i in 0..self.size() {
             result.push(borders[i]);
-            result.push_str(if c.contains(borders[i]) {
-                "───"
-            } else {
-                "   "
+            result.push_str(match JOIN_RIGHT.contains(borders[i]) {
+                true => "───",
+                false => "   ",
             })
         }
         result.push(borders[borders.len() - 1]);
         result
     }
+
+    /// Debug everything about the Grid
+    pub fn debug(&self) {
+        self.cells.iter().for_each(|v| println!("{v:?}"));
+        println!("{:?}", self);
+    }
 }
 
-impl<'a> fmt::Debug for Grid<'a> {
+impl fmt::Debug for Grid {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let mut stdout = String::new();
         let mut print = |v: String| stdout.push_str(&(v + "\n"));

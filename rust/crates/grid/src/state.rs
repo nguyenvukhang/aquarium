@@ -1,27 +1,27 @@
 use std::fmt;
 
 #[derive(Clone, PartialEq, Eq)]
-pub enum Cell {
+pub enum State {
     Water,
     Air,
     None,
 }
 
-impl Cell {
+impl State {
     pub fn as_char(&self) -> char {
         match self {
-            Cell::Water => '■',
-            Cell::Air => '×',
-            Cell::None => ' ',
+            State::Water => '■',
+            State::Air => '×',
+            State::None => ' ',
         }
     }
 
     pub fn is_none(&self) -> bool {
-        *self == Cell::None
+        self == &State::None
     }
 }
 
-impl fmt::Debug for Cell {
+impl fmt::Debug for State {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}", self.as_char())
     }
