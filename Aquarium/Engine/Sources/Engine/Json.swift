@@ -3,7 +3,7 @@ import Foundation
 /**
  * Enable parsing a JSON string into a Game
  */
-public extension Game {
+extension Game {
     /**
      * Response structure from `https://aquarium2.vercel.app/api/get`
      */
@@ -18,7 +18,7 @@ public extension Game {
     /**
      * Initialize using a string that is JSON.
      */
-    init(withJson json: String) throws {
+    public init(withJson json: String) throws {
         let decoder = JSONDecoder()
         let j = try decoder.decode(JSONBoard.self, from: json.data(using: .utf8)!)
         self.init(colSums: j.sums.cols, rowSums: j.sums.rows, groups: j.matrix)
@@ -27,7 +27,7 @@ public extension Game {
     /**
      * Initialize by reading a file.
      */
-    init(withJsonFile path: String) throws {
+    public init(withJsonFile path: String) throws {
         let cwd = URL(fileURLWithPath: FileManager.default.currentDirectoryPath)
         let fileUrl = cwd.appendingPathComponent(path)
         let json = try String(contentsOf: fileUrl, encoding: .utf8)

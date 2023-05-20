@@ -5,8 +5,8 @@ struct Quota {
     var air: Int
 
     init(size: Int, waterQuota: Int) {
-        water = waterQuota
-        air = size - waterQuota
+        self.water = waterQuota
+        self.air = size - waterQuota
     }
 
     mutating func increment(_ state: State) {

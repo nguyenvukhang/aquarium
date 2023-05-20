@@ -15,8 +15,8 @@ struct PourPoint {
 
         let size = groups.count
 
-        for row in 0 ..< size {
-            for col in 0 ..< size {
+        for row in 0..<size {
+            for col in 0..<size {
                 if groups[row][col] != group {
                     continue
                 }

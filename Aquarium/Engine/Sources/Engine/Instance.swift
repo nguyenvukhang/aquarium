@@ -10,7 +10,7 @@ public struct Instance {
         self.groups = groups
         self.rowQuota = rowQuota
         self.colQuota = colQuota
-        state = groups.val.map { r in r.map { _ in State.none }}
+        self.state = groups.val.map { r in r.map { _ in State.none }}
     }
 
     init(rowSums: [Int], colSums: [Int], groups: [[Int]]) {
@@ -23,6 +23,8 @@ public struct Instance {
     /**
      * Copies self, but critically passes groups by reference,
      * and quotas by value
+     *
+     * Use for backtracking.
      */
     func copy() -> Self {
         Self(rowQuota: rowQuota, colQuota: colQuota, groups: groups)
@@ -49,6 +51,11 @@ public struct Instance {
         }
     }
 
+    /**
+     * Makes all forcing moves based on the current state.
+     * WARNING: may lead to an invalid state. This happens when pouring
+     * both air and water into a particular point leads to an invalid state
+     */
     mutating func fastForward(using pourPoints: [PourPoint]) {
         var changed = true
         while changed {
@@ -60,6 +67,8 @@ public struct Instance {
                 } else {
                     changed = changed || tryPour(.air, at: pourPoint)
                 }
+                // break off early if invalid state is already reached
+                if !isValid() { return }
             }
         }
     }
@@ -87,7 +96,7 @@ public struct Instance {
      * Undo the changes created by pour(). Set all the points to .none
      */
     mutating func undo(_ state: State, _ points: [Point]) {
-        points.forEach { p in self.unset(state, at: p) }
+        points.forEach { p in unset(state, at: p) }
     }
 
     /**

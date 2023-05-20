@@ -10,14 +10,14 @@ public struct Game {
         self.colSums = colSums
         self.rowSums = rowSums
         self.groups = groups
-        pourPoints = Game.getPourPoints(groups: groups)
+        self.pourPoints = Game.getPourPoints(groups: groups)
     }
 
     private static func getPourPoints(groups: [[Int]]) -> [PourPoint] {
         let size = groups.count
         var points = [Point]()
-        for r in 0 ..< size {
-            for c in 0 ..< size {
+        for r in 0..<size {
+            for c in 0..<size {
                 let g = groups[r][c]
                 if !points.contains(where: { p in p.row == r && groups[p] == g }) {
                     points.append(Point(r, c))

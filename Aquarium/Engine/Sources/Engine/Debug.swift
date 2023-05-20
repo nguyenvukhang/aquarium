@@ -56,7 +56,7 @@ extension Instance: CustomDebugStringConvertible {
     private func join_state_line(_ borders: [Character], _ state: [State]) -> String {
         var result = "│"
         let JOIN_UP = "┼│├┤┌┬┐"
-        for i in 0 ..< size {
+        for i in 0..<size {
             result.append(" \(state[i].description) ")
             result.append(JOIN_UP.contains(borders[i + 1]) ? "│" : " ")
         }
@@ -66,7 +66,7 @@ extension Instance: CustomDebugStringConvertible {
     private func join_border_line(_ borders: [Character]) -> String {
         var result = ""
         let JOIN_RIGHT = "┼├─┌┬└┴"
-        for i in 0 ..< size {
+        for i in 0..<size {
             result.append(borders[i])
             result.append(JOIN_RIGHT.contains(borders[i]) ? "───" : "   ")
         }
@@ -77,7 +77,7 @@ extension Instance: CustomDebugStringConvertible {
     public var debugDescription: String {
         var stdout = ""
         let print = { v in stdout.append(v + "\n") }
-        let it = (0 ... size)
+        let it = (0...size)
         let borders = it.map { r in it.map { c in border(r, c) }}
 
         let margin = String(repeatElement(" ", count: 12))
@@ -87,7 +87,7 @@ extension Instance: CustomDebugStringConvertible {
 
         print("\(margin) \(colQuotaStr)")
 
-        for i in 0 ... size {
+        for i in 0...size {
             print("\(margin) \(join_border_line(borders[i]))")
             if i < size {
                 let q = "\(rowQuota[i].debugDescription)".leftPadding(by: 12)
