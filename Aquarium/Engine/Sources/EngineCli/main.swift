@@ -1,5 +1,8 @@
 import Engine
 
-let game = Game(colSums: [], rowSums: [], groups: [])
+print("--- START EngineCli ---\n")
 
-print("Hello from EngineCli")
+let game = try Game(withJsonFile: "../../problems/problem-db/6x6_hard_v3.json")
+game.solve()
+
+print("\n--- END EngineCli ---")
