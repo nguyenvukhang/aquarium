@@ -8,8 +8,8 @@ struct PourPoint {
     init(point: Point, groups: [[Int]]) {
         self.point = point
 
-        var waterFlow = [Point]()
-        var airFlow = [Point]()
+        var waterFlow = [point]
+        var airFlow = [point]
 
         let group = groups[point]
 
@@ -17,12 +17,20 @@ struct PourPoint {
 
         for row in 0..<size {
             for col in 0..<size {
+                // skip points that are in different groups
                 if groups[row][col] != group {
                     continue
                 }
+
+                // skip points that are the same as the first
+                if row == point.row && col == point.col {
+                    continue
+                }
+
                 if row >= point.row {
                     waterFlow.append(Point(row, col))
                 }
+
                 if row <= point.row {
                     airFlow.append(Point(row, col))
                 }

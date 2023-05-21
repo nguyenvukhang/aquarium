@@ -1,10 +1,11 @@
 # the command that runs when `make` is ran without arguments
 current:
-	swift run EngineCli
+	# @make dev > dist && nvim dist
+	@make dev
 
 # build + run EngineCli in one command
 dev:
-	swift run EngineCli
+	swift run -c release EngineCli
 
 # build EngineCli
 build:

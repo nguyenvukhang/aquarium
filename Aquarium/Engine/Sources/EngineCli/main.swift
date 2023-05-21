@@ -7,9 +7,9 @@ enum Difficulty: String { case easy; case normal; case hard }
 /**
  * SET CONFIGS HERE
  */
-let size: Size = .ten
+let size: Size = .fifteen
 let difficulty: Difficulty = .hard
-let number = 6 // a number from 1 to 6 (inclusive)
+let number = 1 // a number from 1 to 6 (inclusive)
 
 /**
  * Using the really clutch config above, this program will look into
@@ -21,7 +21,7 @@ let filename = "../../problems/problem-db/\(s)x\(s)_\(d)_v\(number).json"
 
 print("--- START EngineCli ---\n")
 
-let game = try Game(withJsonFile: filename)
+var game = try Game(withJsonFile: filename)
 game.solve()
 
 print("\n--- END EngineCli ---")
