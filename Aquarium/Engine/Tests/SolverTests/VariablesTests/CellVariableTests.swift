@@ -1,9 +1,3 @@
-//
-//  CellVariableTests.swift
-//  
-//
-//  Created by Quan Teng Foong on 20/5/23.
-//
 @testable import Engine
 
 import XCTest
@@ -16,40 +10,41 @@ final class CellVariableTests: XCTestCase {
     }
     
     func testCanAssign_possibleValue_returnsTrue() {
-        XCTAssertTrue(cellVariable.canAssign(to: true))
-        XCTAssertTrue(cellVariable.canAssign(to: false))
+        XCTAssertTrue(cellVariable.canAssign(to: CellState.water))
+        XCTAssertTrue(cellVariable.canAssign(to: CellState.air))
     }
     
     func testCanAssign_impossibleValue_returnsFalse() {
         XCTAssertFalse(cellVariable.canAssign(to: 1))
         XCTAssertFalse(cellVariable.canAssign(to: "fail"))
+        XCTAssertFalse(cellVariable.canAssign(to: true))
     }
     
     func testAssignTo_possibleValue_getsAssigned() throws {
-        cellVariable.assign(to: true)
-        let cellValueTrue = try XCTUnwrap(cellVariable.assignment)
-        XCTAssertEqual(cellValueTrue, true)
+        cellVariable.assign(to: CellState.water)
+        let cellValueWater = try XCTUnwrap(cellVariable.assignment)
+        XCTAssertEqual(cellValueWater, .water)
         
-        cellVariable.assign(to: false)
-        let cellValueFalse = try XCTUnwrap(cellVariable.assignment)
-        XCTAssertEqual(cellValueFalse, false)
+        cellVariable.assign(to: CellState.air)
+        let cellValueAir = try XCTUnwrap(cellVariable.assignment)
+        XCTAssertEqual(cellValueAir, .air)
     }
     
     func testAssignTo_impossibleValue_notAssigned() throws {
         // restricting domain only to true, so setting to false should fail
-        cellVariable.domain = Set([true])
+        cellVariable.domain = Set([CellState.water])
         
-        cellVariable.assign(to: false)
+        cellVariable.assign(to: CellState.air)
         XCTAssertNil(cellVariable.assignment)
         
-        cellVariable.assign(to: true)
-        cellVariable.assign(to: false)
+        cellVariable.assign(to: CellState.water)
+        cellVariable.assign(to: CellState.air)
         let cellValue = try XCTUnwrap(cellVariable.assignment)
-        XCTAssertEqual(cellValue, true)
+        XCTAssertEqual(cellValue, CellState.water)
     }
     
     func testSetDomain_validDomain() {
-        let newValidDomain = [true]
+        let newValidDomain = [CellState.water]
         cellVariable.setDomain(newDomain: newValidDomain)
         XCTAssertEqual(cellVariable.domain, Set(newValidDomain))
     }
@@ -59,14 +54,14 @@ final class CellVariableTests: XCTestCase {
     func testSetDomain_invalidDomain_throwsError() {
         let invalidDomain = ["a", "b", "c"]
         XCTAssertThrowsError(cellVariable.setDomain(newDomain: invalidDomain))
-        XCTAssertEqual(cellVariable.domain, Set([true, false]))
+        XCTAssertEqual(cellVariable.domain, Set(CellState.allCases))
     }
      */
     
     func testUnassign_assignmentSetToNil() throws {
-        cellVariable.assign(to: false)
+        cellVariable.assign(to: CellState.air)
         let cellValue = try XCTUnwrap(cellVariable.assignment)
-        XCTAssertEqual(cellValue, false)
+        XCTAssertEqual(cellValue, .air)
         cellVariable.unassign()
         XCTAssertNil(cellVariable.assignment)
     }
