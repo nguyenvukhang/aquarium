@@ -1,18 +1,17 @@
-import Foundation
-
 struct PourPoint {
-    let point: Point
+    /**
+     * The more damaging fluid to pour
+     */
+    let fluid: State
     let waterFlow: [Point]
     let airFlow: [Point]
 
-    init(point: Point, groups: [[Int]]) {
-        self.point = point
+    var startPoint: Point { waterFlow.first! }
+    var maxDamage: Int { max(waterFlow.count, airFlow.count) }
 
-        var waterFlow = [point]
-        var airFlow = [point]
-
+    init(at point: Point, groups: [[Int]]) {
+        var flow = (water: [point], air: [point])
         let group = groups[point]
-
         let size = groups.count
 
         for row in 0..<size {
@@ -23,21 +22,23 @@ struct PourPoint {
                 }
 
                 // skip points that are the same as the first
-                if row == point.row && col == point.col {
+                if row == point.row, col == point.col {
                     continue
                 }
 
                 if row >= point.row {
-                    waterFlow.append(Point(row, col))
+                    flow.water.append(Point(row, col))
                 }
 
                 if row <= point.row {
-                    airFlow.append(Point(row, col))
+                    flow.air.append(Point(row, col))
                 }
             }
         }
-        self.waterFlow = waterFlow
-        self.airFlow = airFlow
+
+        self.waterFlow = flow.water
+        self.airFlow = flow.air
+        self.fluid = waterFlow.count > airFlow.count ? .water : .air
     }
 
     func getPoints(_ state: State) -> [Point] {
@@ -47,10 +48,18 @@ struct PourPoint {
         case .none: return []
         }
     }
+
+    func getPoints() -> [Point] {
+        getPoints(fluid)
+    }
+
+    func getAltPoints() -> [Point] {
+        getPoints(fluid.next)
+    }
 }
 
-extension PourPoint: CustomDebugStringConvertible {
-    var debugDescription: String {
-        "PourPoint\(point) { water: \(waterFlow)}, air: \(airFlow)"
+extension PourPoint: CustomStringConvertible {
+    var description: String {
+        "PourPoint\(startPoint) { water: \(waterFlow), air: \(airFlow) }"
     }
 }

@@ -1,13 +1,18 @@
 public struct Game {
-    enum GameError: Error {
-        case unsolved
-    }
-
     let groups: [[Int]]
     let colSums: [Int]
     let rowSums: [Int]
+    let debugBorders: [[Character]]
+
+    public var backtrackCounter = 0
+
+    /**
+     * A list of points that pouring can start from, where each point
+     * produces a unique result after the fluid flows.
+     *
+     * Used for making forcing moves. Sorted by most damaging first
+     */
     var pourPoints: [PourPoint]
-    var pourActions: [PourAction]
 
     var size: Int { groups.count }
 
@@ -17,17 +22,14 @@ public struct Game {
         self.groups = groups
         self.pourPoints = Game.getPourPoints(groups: groups)
 
-        var pourActions = [PourAction]()
-
-        for pp in pourPoints {
-            pourActions.append(PourAction(.water, flow: pp.waterFlow, alt: pp.airFlow))
-            pourActions.append(PourAction(.air, flow: pp.airFlow, alt: pp.waterFlow))
-        }
-
-        // sort by most damaging first
-        self.pourActions = pourActions.sorted { $0.flow.count > $1.flow.count }
+        // generate borders to debug with
+        let it = (0...groups.count)
+        self.debugBorders = it.map { r in it.map { c in Game.border(groups, r, c) }}
     }
 
+    /**
+     * Get a list of pouring points from a group matrix.size
+     */
     private static func getPourPoints(groups: [[Int]]) -> [PourPoint] {
         let size = groups.count
         var points = [Point]()
@@ -39,16 +41,46 @@ public struct Game {
                 }
             }
         }
-        return points.map { point in PourPoint(point: point, groups: groups) }
+        return points
+            .map { PourPoint(at: $0, groups: groups) }
+            .sorted { $0.maxDamage > $1.maxDamage }
     }
 
-    func backtrack(_ clone: Instance) -> Instance? {
-        var inst = clone
+    /**
+     * Create a new Instance from the Game's initial state.
+     * Useful for printing a game board from the outside.
+     *
+     * ```
+     * print(game.makeInstance())
+     * ```
+     */
+    public func makeInstance() -> Instance {
+        Instance(
+            rowSums: rowSums,
+            colSums: colSums,
+            groups: groups,
+            debugBorders: Box(debugBorders))
+    }
 
-        let delta = inst.fastForward(using: pourPoints)
+    /**
+     * Recursive solver using a backtracking method.
+     * 1. Apply all forcing moves to the current state
+     * 2. DFS on all next possible moves
+     */
+    private mutating func backtrack(_ prev: Instance) -> Instance? {
+        backtrackCounter += 1
+        if !prev.isValid() { return nil }
+
+        // Insanely (but conveniently in this case), `inst` is a deep
+        // copy of `prev` but its groups remain as a reference to
+        // `self.groups`. Insane because this is a result of mere
+        // variable assignment.
+        var inst = prev
+
+        // Make all forcing moves on the cloned instance
+        inst.fastForward(using: pourPoints)
 
         if !inst.isValid() {
-            inst.undoFastForward(using: delta)
             return nil
         }
 
@@ -56,38 +88,44 @@ public struct Game {
             return inst
         }
 
-        let nextActions = pourActions.filter { a in inst.state[a.startPoint].isNone }
+        // get a list of possible actions to take from this juncture.
+        //
+        // filter out those actions whose starting point (the point
+        // at which the fluid is poured) is already occupied.
+        let pours = pourPoints.filter { inst.state[$0.startPoint].isNone }
 
-        for pourAction in nextActions {
-            let state = pourAction.state
-            let delta = inst.pour(state, into: pourAction.flow)
+        for pour in pours {
+            let delta = inst.pour(pour.fluid, into: pour.getPoints())
             if let result = backtrack(inst) {
                 return result
             } else {
-                inst.undo(state, delta)
-                // Reaching here means the entire subtree of backtracking into
-                // pouring the hypothetical fluid fails.
+                inst.unpour(pour.fluid, from: delta)
+                // Reaching here means the entire subtree of
+                // backtracking into pouring the first fluid fails.
                 //
                 // Hence we are forced to pour the other fluid
-                inst.pour(state.next, into: pourAction.alt)
+                inst.pour(pour.fluid.next, into: pour.getAltPoints())
+
+                // and of course, if we are forced into an invalid state,
+                // break out of the loop
+                if !inst.isValid() {
+                    return nil
+                }
             }
         }
 
         return nil
     }
 
-    public func makeInstance() -> Instance {
-        Instance(rowSums: rowSums, colSums: colSums, groups: groups)
-    }
-
+    /**
+     * Public API to solve a game.
+     */
     public mutating func solve() throws -> Instance {
         var inst = makeInstance()
-        let savedQuota = (inst.rowQuota, inst.colQuota)
 
         // the first big pass
         inst.fastForward(using: pourPoints)
-        pourPoints = pourPoints.filter { p in inst.state[p.point].isNone }
-        pourActions = pourActions.filter { p in inst.state[p.startPoint].isNone }
+        pourPoints = pourPoints.filter { p in inst.state[p.startPoint].isNone }
 
         if let result = backtrack(inst) {
             inst = result
@@ -97,9 +135,13 @@ public struct Game {
             throw GameError.unsolved
         }
 
-        // restore the quotas for final display
-        (inst.rowQuota, inst.colQuota) = savedQuota
+        var pretty = makeInstance()
+        pretty.state = inst.state
 
-        return inst
+        return pretty
+    }
+
+    private enum GameError: Error {
+        case unsolved
     }
 }

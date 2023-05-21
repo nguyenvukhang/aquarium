@@ -1,6 +1,4 @@
-import Foundation
-
-struct Quota {
+struct Quota: Checkable, CustomStringConvertible {
     var water: Int
     var air: Int
 
@@ -24,9 +22,7 @@ struct Quota {
         default: ()
         }
     }
-}
 
-extension Quota: Checkable {
     func isValid() -> Bool {
         water >= 0 && air >= 0
     }
@@ -34,6 +30,8 @@ extension Quota: Checkable {
     func isSolved() -> Bool {
         water == 0 && air == 0
     }
+
+    var description: String { "\(water),\(air)" }
 }
 
 extension [Quota]: Checkable {
@@ -43,14 +41,5 @@ extension [Quota]: Checkable {
 
     func isSolved() -> Bool {
         allSatisfy { q in q.isSolved() }
-    }
-}
-
-extension Quota: CustomDebugStringConvertible {
-    var debugDescription: String {
-        "\(water),\(air)"
-        // let w = State.water.description
-        // let a = State.air.description
-        // return "\(water)(\(w)), \(air)(\(a))"
     }
 }

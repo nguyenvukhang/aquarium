@@ -1,6 +1,5 @@
 # the command that runs when `make` is ran without arguments
 current:
-	# @make dev > dist && nvim dist
 	@make dev
 
 # build + run EngineCli in one command

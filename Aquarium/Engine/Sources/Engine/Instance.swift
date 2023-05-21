@@ -3,52 +3,37 @@ public struct Instance {
     var rowQuota: [Quota]
     var colQuota: [Quota]
     let groups: Box<[[Int]]>
+    let debugBorders: Box<[[Character]]>
 
     var size: Int { groups.val.count }
 
-    init(rowQuota: [Quota], colQuota: [Quota], groups: Box<[[Int]]>) {
-        self.groups = groups
-        self.rowQuota = rowQuota
-        self.colQuota = colQuota
-        self.state = groups.val.map { r in r.map { _ in State.none }}
-    }
-
-    init(rowSums: [Int], colSums: [Int], groups: [[Int]]) {
+    init(rowSums: [Int], colSums: [Int], groups: [[Int]], debugBorders: Box<[[Character]]>) {
         let size = groups.count
-        let rowQuota = rowSums.map { v in Quota(size: size, waterQuota: v) }
-        let colQuota = colSums.map { v in Quota(size: size, waterQuota: v) }
-        self.init(rowQuota: rowQuota, colQuota: colQuota, groups: Box(groups))
+        self.groups = Box(groups)
+        self.rowQuota = rowSums.map { Quota(size: size, waterQuota: $0) }
+        self.colQuota = colSums.map { Quota(size: size, waterQuota: $0) }
+        self.state = groups.map { $0.map { _ in State.none }}
+        self.debugBorders = debugBorders
     }
 
     /**
-     * Copies self, but critically passes groups by reference,
-     * and quotas by value
-     *
-     * Use for backtracking.
-     */
-    func copy() -> Self {
-        Self(rowQuota: rowQuota, colQuota: colQuota, groups: groups)
-    }
-
-    /**
-     * Tries to pour a certain fluid. If it's valid, the pour is undone,
+     * Tries to pour a certain fluid. If it's valid, the pour is unpourne,
      * since there is no immediate conclusion.
      *
      * If the result is invalid, we know for sure that the first fluid
      * can't be poured there, so we lock in the second fluid.
      *
-     * Returns a list of points affected
+     * Returns a true if changes were made
      */
-    @discardableResult
-    mutating func tryPour(_ fluid: State, at pourPoint: PourPoint) -> [Point] {
+    mutating func tryPour(_ fluid: State, at pourPoint: PourPoint) -> Bool {
         let delta = pour(fluid, at: pourPoint)
 
         if isValid() {
-            undo(fluid, delta)
-            return []
+            unpour(fluid, from: delta)
+            return false
         } else {
-            undo(fluid, delta)
-            return pour(fluid.next, at: pourPoint)
+            unpour(fluid, from: delta)
+            return !pour(fluid.next, at: pourPoint).isEmpty
         }
     }
 
@@ -57,77 +42,46 @@ public struct Instance {
      * WARNING: may lead to an invalid state. This happens when pouring
      * both air and water into a particular point leads to an invalid state
      */
-    @discardableResult
-    mutating func fastForward(using pourPoints: [PourPoint]) -> [PourAction] {
-        var affected = [PourAction]()
-
+    mutating func fastForward(using pourPoints: [PourPoint]) {
         var changed = true
         while changed {
             changed = false
             for pourPoint in pourPoints {
-                if state[pourPoint.point].isFluid {
+                if state[pourPoint.startPoint].isFluid {
                     continue
                 }
 
-                let deltaAir = tryPour(.water, at: pourPoint)
-                changed = changed || !deltaAir.isEmpty
+                var delta = tryPour(.water, at: pourPoint)
+                changed = changed || delta
 
-                if !deltaAir.isEmpty {
-                    affected.append(PourAction(.air, flow: deltaAir))
-                }
-
-                let deltaWater = tryPour(.air, at: pourPoint)
-                changed = changed || !deltaWater.isEmpty
-
-                if !deltaWater.isEmpty {
-                    affected.append(PourAction(.water, flow: deltaWater))
-                }
+                delta = tryPour(.air, at: pourPoint)
+                changed = changed || delta
 
                 // break off early if invalid state is already reached
-                if !isValid() { return affected }
+                if !isValid() { return }
             }
         }
-        return affected
-    }
-
-    mutating func undoFastForward(using actions: [PourAction]) {
-        actions.forEach { action in undo(action) }
     }
 
     /**
+     * Pours a fluid into a set of points.
      * Returns a list of affected points
      */
     @discardableResult
     mutating func pour(_ state: State, at pourPoint: PourPoint) -> [Point] {
-        if !(state == .water || state == .air) { return [] }
-        var affected = [Point]()
-
-        for point in pourPoint.getPoints(state) {
-            if !self.state[point].isNone {
-                continue
-            }
-            affected.append(point)
-            set(state, at: point)
-        }
-
-        return affected
+        pour(state, into: pourPoint.getPoints(state))
     }
 
     /**
-     * Returns a list of affected points
+     * Pours a fluid into a set of points.
+     * Returns a list of affected points.
      */
     @discardableResult
     mutating func pour(_ state: State, into points: [Point]) -> [Point] {
-        if !(state == .water || state == .air) { return [] }
-        var affected = [Point]()
+        assert(state.isFluid)
 
-        for point in points {
-            if !self.state[point].isNone {
-                continue
-            }
-            affected.append(point)
-            set(state, at: point)
-        }
+        let affected = points.filter { self.state[$0].isNone }
+        affected.forEach { set(state, at: $0) }
 
         return affected
     }
@@ -135,15 +89,8 @@ public struct Instance {
     /**
      * Undo the changes created by pour(). Set all the points to .none
      */
-    mutating func undo(_ state: State, _ points: [Point]) {
-        points.forEach { p in unset(state, at: p) }
-    }
-
-    /**
-     * Undo the changes created a pour action. Set all the points to .none
-     */
-    mutating func undo(_ action: PourAction) {
-        undo(action.state, action.flow)
+    mutating func unpour(_ state: State, from points: [Point]) {
+        points.forEach { unset(state, at: $0) }
     }
 
     /**
@@ -151,31 +98,29 @@ public struct Instance {
      *
      * unchecked precondition: state is one of water/air
      */
-    private mutating func set(_ state: State, at point: Point) {
-        // do nothing if the state has already been set
-        if self.state[point] != .none { return }
+    private mutating func set(_ fluid: State, at point: Point) {
+        assert(fluid.isFluid)
 
         // update the state
-        self.state[point] = state
+        state[point] = fluid
 
         // update the quotas
-        rowQuota[point.row].decrement(state)
-        colQuota[point.col].decrement(state)
+        rowQuota[point.row].decrement(fluid)
+        colQuota[point.col].decrement(fluid)
     }
 
     /**
      * Unset a point (from water/air back to none)
      */
-    private mutating func unset(_ state: State, at point: Point) {
-        // do nothing if the target state matches current state
-        if self.state[point] == .none { return }
+    private mutating func unset(_ fluid: State, at point: Point) {
+        assert(fluid.isFluid)
 
         // update the state
-        self.state[point] = .none
+        state[point] = .none
 
         // update the quotas
-        rowQuota[point.row].increment(state)
-        colQuota[point.col].increment(state)
+        rowQuota[point.row].increment(fluid)
+        colQuota[point.col].increment(fluid)
     }
 }
 

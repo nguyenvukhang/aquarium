@@ -29,7 +29,7 @@ class Runner {
         // print(game.makeInstance())
 
         print("SOLVED STATE:")
-        print(try! game.solve())
+        print(try! game.solve(), game.backtrackCounter)
     }
 
     static func all() -> [Runner] {
