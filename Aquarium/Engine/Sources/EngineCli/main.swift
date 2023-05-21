@@ -1,27 +1,58 @@
 import Engine
 
-// one-off enums
-enum Size: Int { case six = 6; case ten = 10; case fifteen = 15 }
-enum Difficulty: String { case easy; case normal; case hard }
+class Runner {
+    enum Size: Int { case six = 6; case ten = 10; case fifteen = 15 }
+    enum Difficulty: String { case easy; case normal; case hard }
 
-/**
- * SET CONFIGS HERE
- */
-let size: Size = .fifteen
-let difficulty: Difficulty = .hard
-let number = 1 // a number from 1 to 6 (inclusive)
+    let size: Size
+    let difficulty: Difficulty
+    let id: Int
 
-/**
- * Using the really clutch config above, this program will look into
- * the ../../problems/problem-db folder for a pre-downloaded problem
- * to solve.
- */
-let (s, d) = (size.rawValue, difficulty.rawValue)
-let filename = "../../problems/problem-db/\(s)x\(s)_\(d)_v\(number).json"
+    init(_ size: Size, _ difficulty: Difficulty, _ id: Int) {
+        self.size = size
+        self.difficulty = difficulty
+        self.id = id
+    }
+
+    /**
+     * Reaches into a relative directory to read a pre-pulled game of aquarium
+     */
+    func filename() -> String {
+        let (s, d) = (size.rawValue, difficulty.rawValue)
+        return "../../problems/problem-db/\(s)x\(s)_\(d)_v\(id).json"
+    }
+
+    func run() throws {
+        var game = try! Game(withJsonFile: filename())
+
+        // print("START STATE:")
+        // print(game.makeInstance())
+
+        print("SOLVED STATE:")
+        print(try! game.solve())
+    }
+
+    static func all() -> [Runner] {
+        let sizes: [Size] = [.six, .ten, .fifteen]
+        let difficulties: [Difficulty] = [.easy, .normal, .hard]
+        var runners = [Runner]()
+
+        for s in sizes {
+            for d in difficulties {
+                for id in 1...6 {
+                    runners.append(Runner(s, d, id))
+                }
+            }
+        }
+
+        return runners
+    }
+}
 
 print("--- START EngineCli ---\n")
 
-var game = try Game(withJsonFile: filename)
-game.solve()
+for runner in Runner.all() {
+    try runner.run()
+}
 
 print("\n--- END EngineCli ---")

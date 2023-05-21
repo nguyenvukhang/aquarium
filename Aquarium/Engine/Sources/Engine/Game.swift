@@ -1,4 +1,8 @@
 public struct Game {
+    enum GameError: Error {
+        case unsolved
+    }
+
     let groups: [[Int]]
     let colSums: [Int]
     let rowSums: [Int]
@@ -15,9 +19,9 @@ public struct Game {
 
         var pourActions = [PourAction]()
 
-        for pourPoint in pourPoints {
-            pourActions.append(PourAction(.water, flow: pourPoint.waterFlow))
-            pourActions.append(PourAction(.air, flow: pourPoint.airFlow))
+        for pp in pourPoints {
+            pourActions.append(PourAction(.water, flow: pp.waterFlow, alt: pp.airFlow))
+            pourActions.append(PourAction(.air, flow: pp.airFlow, alt: pp.waterFlow))
         }
 
         // sort by most damaging first
@@ -38,7 +42,9 @@ public struct Game {
         return points.map { point in PourPoint(point: point, groups: groups) }
     }
 
-    func backtrack(inst: inout Instance) -> Instance? {
+    func backtrack(_ clone: Instance) -> Instance? {
+        var inst = clone
+
         let delta = inst.fastForward(using: pourPoints)
 
         if !inst.isValid() {
@@ -52,33 +58,48 @@ public struct Game {
 
         let nextActions = pourActions.filter { a in inst.state[a.startPoint].isNone }
 
-        print(inst)
-
         for pourAction in nextActions {
             let state = pourAction.state
             let delta = inst.pour(state, into: pourAction.flow)
-            if let result = backtrack(inst: &inst) {
+            if let result = backtrack(inst) {
                 return result
             } else {
                 inst.undo(state, delta)
+                // Reaching here means the entire subtree of backtracking into
+                // pouring the hypothetical fluid fails.
+                //
+                // Hence we are forced to pour the other fluid
+                inst.pour(state.next, into: pourAction.alt)
             }
         }
 
         return nil
     }
 
-    public mutating func solve() {
-        var inst = Instance(rowSums: rowSums, colSums: colSums, groups: groups)
+    public func makeInstance() -> Instance {
+        Instance(rowSums: rowSums, colSums: colSums, groups: groups)
+    }
+
+    public mutating func solve() throws -> Instance {
+        var inst = makeInstance()
+        let savedQuota = (inst.rowQuota, inst.colQuota)
 
         // the first big pass
         inst.fastForward(using: pourPoints)
         pourPoints = pourPoints.filter { p in inst.state[p.point].isNone }
         pourActions = pourActions.filter { p in inst.state[p.startPoint].isNone }
 
-        print(inst)
-        if let result = backtrack(inst: &inst) {
+        if let result = backtrack(inst) {
             inst = result
         }
-        print(inst)
+
+        if !inst.isSolved() {
+            throw GameError.unsolved
+        }
+
+        // restore the quotas for final display
+        (inst.rowQuota, inst.colQuota) = savedQuota
+
+        return inst
     }
 }
