@@ -1,9 +1,3 @@
-//
-//  IntVariableTests.swift
-//  
-//
-//  Created by Quan Teng Foong on 4/5/23.
-//
 @testable import Engine
 
 import XCTest
