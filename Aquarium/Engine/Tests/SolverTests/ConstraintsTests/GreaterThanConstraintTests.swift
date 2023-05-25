@@ -24,6 +24,22 @@ final class GreaterThanConstraintTests: XCTestCase {
         }
     }
 
+    func testContainsAssignedVariable_allUnassigned_returnsFalse() {
+        XCTAssertFalse(aGreaterThanBConstraint.containsAssignedVariable)
+    }
+
+    func testContainsAssignedVariable_someAssigned_returnsFalse() {
+        intVariableA.assignment = 1
+        XCTAssertEqual(intVariableA.assignment, 1)
+
+        XCTAssertTrue(aGreaterThanBConstraint.containsAssignedVariable)
+
+        intVariableB.assignment = 2
+        XCTAssertEqual(intVariableB.assignment, 2)
+        
+        XCTAssertTrue(aGreaterThanBConstraint.containsAssignedVariable)
+    }
+
     // MARK: tests for isSatisfied
     func testIsSatisfied_bothUnassigned_returnsFalse() {
         XCTAssertFalse(aGreaterThanBConstraint.isSatisfied)

@@ -17,6 +17,11 @@ final class StringVariableTests: XCTestCase {
         XCTAssertEqual(stringVariable.domain, stringVariableDomain)
     }
     
+    func testDomain_getter_variableAssigned_returnsOnlyOneValue() {
+        stringVariable.assignment = "b"
+        XCTAssertEqual(stringVariable.domain, ["b"])
+    }
+
     func testDomain_setter_validNewDomain_reflectedInDomainUndoStack() {
         // set to ["b", "c"]
         var newDomain = Set(["b", "c"])

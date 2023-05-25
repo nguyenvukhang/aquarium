@@ -16,7 +16,12 @@ final class IntVariableTests: XCTestCase {
     func testDomain_getter() {
         XCTAssertEqual(intVariable.domain, intVariableDomain)
     }
-    
+
+    func testDomain_getter_variableAssigned_returnsOnlyOneValue() {
+        intVariable.assignment = 1
+        XCTAssertEqual(intVariable.domain, [1])
+    }
+
     func testDomain_setter_validNewDomain_reflectedInDomainUndoStack() {
         // set to [1, 2]
         var newDomain = Set([1, 2])
@@ -50,7 +55,7 @@ final class IntVariableTests: XCTestCase {
     func testAssignment_getter_initialAssignmentNil() {
         XCTAssertNil(intVariable.assignment)
     }
-    
+
     func testAssignment_setter_validNewAssignment() {
         for domainValue in intVariableDomain {
             intVariable.unassign()

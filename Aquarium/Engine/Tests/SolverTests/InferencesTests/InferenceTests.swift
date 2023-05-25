@@ -54,10 +54,10 @@ final class InferenceTests: XCTestCase {
         XCTAssertEqual(actualValue, expectedValue)
     }
 
-    func testAddDomainAndGetDomain_overwritesPreviousValue() throws {
+    func testAddDomainAndGetDomain_overwritesPreviousValue() {
         let newDomain = Set([1, 2])
         inference.addDomain(for: intVariable, domain: Array(newDomain))
-        let newInferredDomainAsArray = try XCTUnwrap(inference.getDomain(for: intVariable))
+        let newInferredDomainAsArray = inference.getDomain(for: intVariable)
         let newInferredDomainAsSet = intVariable.createValueTypeSet(from: newInferredDomainAsArray)
         XCTAssertEqual(newInferredDomainAsSet, newDomain)
     }
@@ -66,9 +66,16 @@ final class InferenceTests: XCTestCase {
         // TODO: implement after errors are implemented
     }
 
-    func testGetDomain_getsValueCorrectly() throws {
-        let inferredDomainAsArray = try XCTUnwrap(inference.getDomain(for: intVariable))
+    func testGetDomain_getsValueCorrectly() {
+        let inferredDomainAsArray = inference.getDomain(for: intVariable)
         let inferredDomainAsSet = intVariable.createValueTypeSet(from: inferredDomainAsArray)
         XCTAssertEqual(inferredDomainAsSet, intVariableDomain)
+    }
+
+    func testGetDomain_nonexistentDomain_returnsNil() {
+        let nonExistentVariable = IntVariable(name: "nonExistentVariable", domain: [100])
+        let nonExistentVariableDomain = inference.getDomain(for: nonExistentVariable)
+        let nonExistentVariableDomainAsSet = nonExistentVariable.createValueTypeSet(from: nonExistentVariableDomain)
+        XCTAssertEqual(nonExistentVariableDomainAsSet, [100])
     }
 }

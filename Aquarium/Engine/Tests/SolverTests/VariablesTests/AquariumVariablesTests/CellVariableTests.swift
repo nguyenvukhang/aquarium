@@ -18,12 +18,11 @@ final class CellVariableTests: XCTestCase {
     }
     
     func testIsAir_water_returnsFalse() {
-        cellVariable.assign(to: CellState.water)
+        cellVariable.assignment = .water
         XCTAssertFalse(cellVariable.isAir)
     }
         
     func testIsAir_air_returnsTrue() {
-        // cellVariable.assign(to: CellState.air)
         cellVariable.assignment = .air
         XCTAssertTrue(cellVariable.isAir)
     }
@@ -33,12 +32,12 @@ final class CellVariableTests: XCTestCase {
     }
         
     func testIsWater_air_returnsFalse() {
-        cellVariable.assign(to: CellState.air)
+        cellVariable.assignment = .air
         XCTAssertFalse(cellVariable.isWater)
     }
     
     func testIsWater_water_returnsTrue() {
-        cellVariable.assign(to: CellState.water)
+        cellVariable.assignment = .water
         XCTAssertTrue(cellVariable.isWater)
     }
     
@@ -46,7 +45,12 @@ final class CellVariableTests: XCTestCase {
     func testDomain_getter() {
         XCTAssertEqual(cellVariable.domain, cellVariableDomain)
     }
-    
+
+    func testDomain_getter_variableAssigned_returnsOnlyOneValue() {
+        cellVariable.assignment = .water
+        XCTAssertEqual(cellVariable.domain, [.water])
+    }
+
     func testDomain_setter_validNewDomain_reflectedInDomainUndoStack() {
         // set to [.water]
         let newDomain = Set([CellState.water])
