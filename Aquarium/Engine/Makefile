@@ -1,6 +1,6 @@
 # the command that runs when `make` is ran without arguments
 current:
-	@make dev
+	swift run -c release Csp
 
 # build + run EngineCli in one command
 dev:

@@ -1,3 +1,4 @@
+use crate::game::{Checkable, State};
 use std::fmt;
 
 #[derive(Clone, PartialEq, Eq)]
@@ -22,14 +23,21 @@ impl Quota {
         Self { water: water_limit, air: size as i32 - water_limit }
     }
 
-    pub fn all_valid(rows: &Vec<Quota>, cols: &Vec<Quota>) -> bool {
-        rows.iter().all(|v| v.is_valid()) && cols.iter().all(|v| v.is_valid())
+    fn state_mut(&mut self, fluid: &State) -> &mut i32 {
+        match fluid {
+            State::Air => &mut self.air,
+            State::Water => &mut self.water,
+            _ => panic!("Use either water or air."),
+        }
     }
-}
 
-pub trait Checkable {
-    fn is_valid(&self) -> bool;
-    fn is_solved(&self) -> bool;
+    pub fn increment(&mut self, fluid: &State) {
+        *self.state_mut(fluid) += 1;
+    }
+
+    pub fn decrement(&mut self, fluid: &State) {
+        *self.state_mut(fluid) -= 1;
+    }
 }
 
 impl Checkable for Quota {

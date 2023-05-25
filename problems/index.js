@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { mkdirSync, writeFileSync } from 'fs'
+import { mkdirSync, writeFileSync, rmSync } from 'fs'
 import { join } from 'path'
 
 const api = axios.create({ baseURL: 'https://aquarium2.vercel.app/api/' })
@@ -77,21 +77,41 @@ const idLibrary = {
       'Nzo3LDMyNywxNTg=',
     ],
     hard: [
+      'ODo1LDY0Miw4NTg=',
+      'ODo1LDk4NywyNTk=',
+      'ODo2LDE1MSwzMzY=',
+      'ODo2LDIwMCwyMTE=',
+      'ODo2LDQ2Nyw3MzY=',
+      'ODo2LDY0NSwxMDc=',
+      'ODo2LDc3MCwyODg=',
+      'ODo2LDc3Myw1MzQ=',
+      'ODo3LDQ2MSwyNDY=',
+      'ODo3LDU5OCw0ODc=',
+      'ODo3LDYyNywzNTQ=',
+      'ODo3LDg0Nyw0MzQ=',
+      'ODo3LDgzMSwyNTk=',
+      'ODo3LDkwOSw3MzI=',
+      'ODo4LDAxMywxMTA=',
+      'ODo4LDI1NSw0NjM=',
+      'ODo4LDM3OSwyMjQ=',
+      'ODo4LDUwOSw4ODY=',
+      'ODoxLDAxMyw1Mzk=',
+      'ODoxLDg3NCwzNzk=',
+      'ODoyLDI0MywwOTI=',
       'ODoyLDU2NywyOTY=',
+      'ODoyLDYxMywyMjU=',
+      'ODozLDY1OSw0Nzg=',
+      'ODozLDg0Miw3MTg=',
       'ODozLDgyMyw4OTk=',
       'ODozLDk0MCwwMzM=',
-      'ODo4LDAxMywxMTA=',
-      'ODo2LDIwMCwyMTE=',
-      'ODo3LDkwOSw3MzI=',
     ],
   },
 }
 
 const DB_DIR = 'problem-db'
 
+rmSync(DB_DIR, { recursive: true })
 mkdirSync(DB_DIR, { recursive: true })
-
-get(idLibrary['6x6'].normal[3]).then(console.log)
 
 function download(title, idList) {
   idList.forEach((id, i) => {
@@ -105,14 +125,18 @@ function download(title, idList) {
   })
 }
 
-download('6x6_easy', idLibrary['6x6'].easy)
-download('10x10_easy', idLibrary['10x10'].easy)
-download('15x15_easy', idLibrary['15x15'].easy)
+function downloadAll() {
+  download('6x6_easy', idLibrary['6x6'].easy)
+  download('10x10_easy', idLibrary['10x10'].easy)
+  download('15x15_easy', idLibrary['15x15'].easy)
 
-download('6x6_normal', idLibrary['6x6'].normal)
-download('10x10_normal', idLibrary['10x10'].normal)
-download('15x15_normal', idLibrary['15x15'].normal)
+  download('6x6_normal', idLibrary['6x6'].normal)
+  download('10x10_normal', idLibrary['10x10'].normal)
+  download('15x15_normal', idLibrary['15x15'].normal)
 
-download('6x6_hard', idLibrary['6x6'].hard)
-download('10x10_hard', idLibrary['10x10'].hard)
-download('15x15_hard', idLibrary['15x15'].hard)
+  download('6x6_hard', idLibrary['6x6'].hard)
+  download('10x10_hard', idLibrary['10x10'].hard)
+  download('15x15_hard', idLibrary['15x15'].hard)
+}
+
+downloadAll()

@@ -7,7 +7,8 @@ let package = Package(
     name: "Engine",
     products: [
         .library(name: "Engine", targets: ["Engine"]),
-        .executable(name: "EngineCli", targets: ["EngineCli"])
+        .executable(name: "EngineCli", targets: ["EngineCli"]),
+        .executable(name: "Csp", targets: ["Csp"])
     ],
     dependencies: [],
     targets: [
@@ -20,5 +21,8 @@ let package = Package(
             path: "Tests"),
         .executableTarget(
             name: "EngineCli",
-            dependencies: ["Engine"])
+            dependencies: ["Engine"]),
+        .executableTarget(
+            name: "Csp",
+            dependencies: [])
     ])
