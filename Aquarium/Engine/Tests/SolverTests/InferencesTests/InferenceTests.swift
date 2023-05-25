@@ -1,9 +1,3 @@
-//
-//  InferencesTests.swift
-//  
-//
-//  Created by Quan Teng Foong on 9/5/23.
-//
 @testable import Engine
 
 import XCTest
