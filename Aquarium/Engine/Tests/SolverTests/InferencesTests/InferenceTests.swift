@@ -48,23 +48,27 @@ final class InferenceTests: XCTestCase {
         
         // reduce stringVariable domain size
         let newStringVariableDomain = Set(["c", "a"])
-        inference.addDomain(for: stringVariable, domain: Array(newIntVariableDomain))
+        inference.addDomain(for: stringVariable, domain: Array(newStringVariableDomain))
         expectedValue -= 1
         actualValue = inference.numConsistentDomainValues
         XCTAssertEqual(actualValue, expectedValue)
     }
-    
-    func testGetDomain_getsValueCorrectly() throws {
-        let inferredDomainAsArray = try XCTUnwrap(inference.getDomain(for: intVariable))
-        let inferredDomainAsSet = intVariable.createValueTypeSet(from: inferredDomainAsArray)
-        XCTAssertEqual(inferredDomainAsSet, intVariableDomain)
-    }
-        
+
     func testAddDomainAndGetDomain_overwritesPreviousValue() throws {
         let newDomain = Set([1, 2])
         inference.addDomain(for: intVariable, domain: Array(newDomain))
         let newInferredDomainAsArray = try XCTUnwrap(inference.getDomain(for: intVariable))
         let newInferredDomainAsSet = intVariable.createValueTypeSet(from: newInferredDomainAsArray)
         XCTAssertEqual(newInferredDomainAsSet, newDomain)
+    }
+
+    func testAddDomain_invalidDomain_throwsError() {
+        // TODO: implement after errors are implemented
+    }
+
+    func testGetDomain_getsValueCorrectly() throws {
+        let inferredDomainAsArray = try XCTUnwrap(inference.getDomain(for: intVariable))
+        let inferredDomainAsSet = intVariable.createValueTypeSet(from: inferredDomainAsArray)
+        XCTAssertEqual(inferredDomainAsSet, intVariableDomain)
     }
 }

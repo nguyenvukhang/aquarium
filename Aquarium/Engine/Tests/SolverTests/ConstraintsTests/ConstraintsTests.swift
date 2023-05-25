@@ -1,58 +1,76 @@
-//
-//  ConstraintsTests.swift
-//  
-//
-//  Created by Quan Teng Foong on 4/5/23.
-//
 @testable import Engine
 
 import XCTest
 
-/*
 final class ConstraintsTests: XCTestCase {
-    var intVariableA: Variable<Int>!
-    var intVariableB: Variable<Int>!
-    
-    var intUnaryCondition: ((Int) -> Bool)!
-    var intBinaryCondition: ((Int, Int) -> Bool)!
-    
-    var intUnaryConstraint: UnaryConstraint<Int>!
-    var intBinaryConstraint: BinaryConstraint<Int>!
-    
+    var intVariableA: IntVariable!
+    var intVariableB: IntVariable!
+    var intVariableC: IntVariable!
+
+    var aGreaterThanB: GreaterThanConstraint!
+    var cGreaterThanA: GreaterThanConstraint!
+
     var constraints: Constraints!
     
     override func setUp() {
-        intVariableA = Variable(name: "A", domain: [1, 2, 3])
-        intVariableB = Variable(name: "B", domain: [1, 2, 3])
-        
-        intUnaryCondition = { $0 == 2 }
-        intBinaryCondition = { $0 + $1 == 5 }
-        
-        intUnaryConstraint = UnaryConstraint(variable: intVariableA,
-                                             condition: intUnaryCondition)
-        intBinaryConstraint = BinaryConstraint(variable1: intVariableA,
-                                               variable2: intVariableB,
-                                               condition: intBinaryCondition)
-        
-        constraints = Constraints(allConstraints: [intUnaryConstraint, intBinaryConstraint])
+        intVariableA = IntVariable(name: "intA", domain: [1, 3, 4, 5])
+        intVariableB = IntVariable(name: "intB", domain: [1, 2, 3])
+        intVariableC = IntVariable(name: "intC", domain: [2, 3, 4, 5])
+
+        aGreaterThanB = GreaterThanConstraint(intVariableA, isGreaterThan: intVariableB)
+        cGreaterThanA = GreaterThanConstraint(intVariableC, isGreaterThan: intVariableA)
+
+        constraints = Constraints(allConstraints: [aGreaterThanB, cGreaterThanA])
     }
-    
-    func testAllSatisfied_onlyUnaryConstraintSatisfied_returnsFalse() {
-        intVariableA.assignment = 2
+
+    func testAllConstraints_returnsAllConstraints() {
+        var expectedConstraintArray = [aGreaterThanB, cGreaterThanA]
+        var actualConstraintArray = constraints.allConstraints
+
+        XCTAssertEqual(actualConstraintArray.count, expectedConstraintArray.count)
+        for expectedConstraint in expectedConstraintArray {
+            XCTAssertTrue(actualConstraintArray.contains(where: { $0.isEqual(expectedConstraint) }))
+        }
+    }
+
+    func testAdd_constraintGetsAdded() {
+        let newConstraint = GreaterThanConstraint(intVariableC, isGreaterThan: intVariableB)
+        constraints.add(constraint: newConstraint)
+
+        let expectedConstraintArray = [aGreaterThanB, cGreaterThanA, newConstraint]
+        let actualConstraintArray = constraints.allConstraints
+
+        XCTAssertEqual(actualConstraintArray.count, expectedConstraintArray.count)
+        for expectedConstraint in expectedConstraintArray {
+            XCTAssertTrue(actualConstraintArray.contains(where: { $0.isEqual(expectedConstraint) }))
+        }
+    }
+
+    func testAllSatisfied_allNotSatisfied_returnsFalse() {
+        intVariableA.assignment = 3
+        intVariableB.assignment = 3
+        intVariableC.assignment = 2
+        XCTAssertFalse(aGreaterThanB.isSatisfied)
+        XCTAssertFalse(cGreaterThanA.isSatisfied)
+
         XCTAssertFalse(constraints.allSatisfied)
     }
-    
-    func testAllSatisfied_onlyBinaryConstraintSatisfied_returnsFalse() {
+
+    func testAllSatisfied_oneNotSatisfied_returnsFalse() {
+        intVariableA.assignment = 5
+        intVariableB.assignment = 2
+        XCTAssertTrue(aGreaterThanB.isSatisfied)
+
+        XCTAssertFalse(constraints.allSatisfied)
+    }
+
+    func testAllSatisfied_allSatisfied_returnsTrue() {
         intVariableA.assignment = 3
         intVariableB.assignment = 2
-        XCTAssertFalse(constraints.allSatisfied)
-    }
-    
-    func testAllSatisfied_bothConstraintsSatisfied_returnsTrue() {
-        intVariableA.assignment = 2
-        intVariableB.assignment = 3
+        intVariableC.assignment = 4
+        XCTAssertTrue(aGreaterThanB.isSatisfied)
+        XCTAssertTrue(cGreaterThanA.isSatisfied)
+
         XCTAssertTrue(constraints.allSatisfied)
     }
 }
-
-*/

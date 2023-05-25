@@ -18,8 +18,9 @@ final class FlowToOthersConstraintTests: XCTestCase {
     func testVariables_returnsAllCells() {
         let expectedVariables = adjacentCells + [mainCell]
         let actualVariables = flowToOthersConstraint.variables
-        for actualVariable in actualVariables {
-            XCTAssertTrue(expectedVariables.contains(where: { $0 === actualVariable }))
+        XCTAssertEqual(actualVariables.count, expectedVariables.count)
+        for expectedVariable in expectedVariables {
+            XCTAssertTrue(actualVariables.contains(where: { $0 === expectedVariable}))
         }
     }
     

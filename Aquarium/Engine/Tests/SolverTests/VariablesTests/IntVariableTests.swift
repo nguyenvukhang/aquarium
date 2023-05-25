@@ -43,10 +43,6 @@ final class IntVariableTests: XCTestCase {
         XCTAssertEqual(previousDomain, expectedPreviousDomain)
     }
     
-    func testDomain_setter_emptyDomain_throwsError() {
-        
-    }
-    
     func testDomain_setter_notSubsetOfCurrentDomain_throwsError() {
         
     }
@@ -102,7 +98,22 @@ final class IntVariableTests: XCTestCase {
         XCTAssertEqual(intValue, 3)
          */
     }
-    
+
+    func testCanSetDomain_validNewDomain_returnsTrue() {
+        let newDomain = [1, 2]
+        XCTAssertTrue(intVariable.canSetDomain(to: newDomain))
+    }
+
+    func testCanSetDomain_emptyDomain_returnsTrue() {
+        let newDomain = [Int]()
+        XCTAssertTrue(intVariable.canSetDomain(to: newDomain))
+    }
+
+    func testCanSetDomain_setter_notSubsetOfCurrentDomain_returnsFalse() {
+        let newDomain = [2, 3, 4]
+        XCTAssertFalse(intVariable.canSetDomain(to: newDomain))
+    }
+
     func testUndoSetDomain_oneLevel() {
         // set domain to [1, 2]
         let newDomain = Set([1, 2])

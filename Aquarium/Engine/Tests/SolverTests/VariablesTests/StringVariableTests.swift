@@ -43,10 +43,6 @@ final class StringVariableTests: XCTestCase {
         XCTAssertEqual(previousDomain, expectedPreviousDomain)
     }
     
-    func testDomain_setter_emptyDomain_throwsError() {
-        
-    }
-    
     func testDomain_setter_notSubsetOfCurrentDomain_throwsError() {
         
     }
@@ -103,6 +99,21 @@ final class StringVariableTests: XCTestCase {
          */
     }
     
+    func testCanSetDomain_validNewDomain_returnsTrue() {
+        let newDomain = ["b", "c"]
+        XCTAssertTrue(stringVariable.canSetDomain(to: newDomain))
+    }
+
+    func testCanSetDomain_emptyDomain_returnsTrue() {
+        let newDomain = [String]()
+        XCTAssertTrue(stringVariable.canSetDomain(to: newDomain))
+    }
+
+    func testCanSetDomain_setter_notSubsetOfCurrentDomain_returnsFalse() {
+        let newDomain = ["a", "b", "c", "d"]
+        XCTAssertFalse(stringVariable.canSetDomain(to: newDomain))
+    }
+
     func testUndoSetDomain_oneLevel() {
         // set domain to ["b", "a"]
         let newDomain = Set(["b", "a"])
