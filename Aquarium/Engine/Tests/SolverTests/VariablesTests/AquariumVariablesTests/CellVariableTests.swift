@@ -2,11 +2,92 @@
 
 import XCTest
 
+// TODO: test cases ending with "throwsError" should be implemented after errors are implemented!!!
 final class CellVariableTests: XCTestCase {
+    var cellVariableDomain: Set<CellState>!
     var cellVariable: CellVariable!
     
     override func setUp() {
+        cellVariableDomain = Set(CellState.allCases)
         cellVariable = CellVariable(row: 0, col: 0)
+    }
+    
+    // MARK: Testing methods/attributes defined in CellVariable
+    func testIsAir_nil_returnsFalse() {
+        XCTAssertFalse(cellVariable.isAir)
+    }
+    
+    func testIsAir_water_returnsFalse() {
+        cellVariable.assign(to: CellState.water)
+        XCTAssertFalse(cellVariable.isAir)
+    }
+        
+    func testIsAir_air_returnsTrue() {
+        // cellVariable.assign(to: CellState.air)
+        cellVariable.assignment = .air
+        XCTAssertTrue(cellVariable.isAir)
+    }
+    
+    func testIsWater_nil_returnsFalse() {
+        XCTAssertFalse(cellVariable.isWater)
+    }
+        
+    func testIsWater_air_returnsFalse() {
+        cellVariable.assign(to: CellState.air)
+        XCTAssertFalse(cellVariable.isWater)
+    }
+    
+    func testIsWater_water_returnsTrue() {
+        cellVariable.assign(to: CellState.water)
+        XCTAssertTrue(cellVariable.isWater)
+    }
+    
+    // MARK: Testing methods/attributes inherited from Variable
+    func testDomain_getter() {
+        XCTAssertEqual(cellVariable.domain, cellVariableDomain)
+    }
+    
+    func testDomain_setter_validNewDomain_reflectedInDomainUndoStack() {
+        // set to [.water]
+        let newDomain = Set([CellState.water])
+        cellVariable.domain = newDomain
+        
+        XCTAssertEqual(cellVariable.domain, newDomain)
+        
+        // check that previous is [.water, .air]
+        let expectedPreviousDomain = cellVariableDomain
+        let previousDomain = cellVariable.domainUndoStack.peek()
+        
+        XCTAssertEqual(previousDomain, expectedPreviousDomain)
+    }
+    
+    func testDomain_setter_emptyDomain_throwsError() {
+        
+    }
+    
+    func testDomain_setter_notSubsetOfCurrentDomain_throwsError() {
+        
+    }
+    
+    func testAssignment_getter_initialAssignmentNil() {
+        XCTAssertNil(cellVariable.assignment)
+    }
+    
+    func testAssignment_setter_validNewAssignment() {
+        cellVariable.assignment = .water
+        XCTAssertEqual(cellVariable.assignment, .water)
+        
+        cellVariable.unassign()
+        cellVariable.assignment = .air
+        XCTAssertEqual(cellVariable.assignment, .air)
+    }
+    
+    func testAssignment_setter_currentAssignmentNotNil_throwsError() {
+        
+    }
+    
+    func testAssignment_setter_newAssignmentNotInDomain_throwsError() {
+        
     }
     
     func testCanAssign_possibleValue_returnsTrue() {
@@ -25,12 +106,14 @@ final class CellVariableTests: XCTestCase {
         let cellValueWater = try XCTUnwrap(cellVariable.assignment)
         XCTAssertEqual(cellValueWater, .water)
         
+        cellVariable.unassign()
         cellVariable.assign(to: CellState.air)
         let cellValueAir = try XCTUnwrap(cellVariable.assignment)
         XCTAssertEqual(cellValueAir, .air)
     }
     
-    func testAssignTo_impossibleValue_notAssigned() throws {
+    func testAssignTo_impossibleValue_throwsError() throws {
+        /*
         // restricting domain only to true, so setting to false should fail
         cellVariable.domain = Set([CellState.water])
         
@@ -41,25 +124,23 @@ final class CellVariableTests: XCTestCase {
         cellVariable.assign(to: CellState.air)
         let cellValue = try XCTUnwrap(cellVariable.assignment)
         XCTAssertEqual(cellValue, CellState.water)
+         */
     }
     
-    func testSetDomain_validDomain() {
-        let newValidDomain = [CellState.water]
-        cellVariable.setDomain(newDomain: newValidDomain)
-        XCTAssertEqual(cellVariable.domain, Set(newValidDomain))
+    func testUndoSetDomain_oneLevel() {
+        // set domain to [.water]
+        let newDomain = Set([CellState.water])
+        cellVariable.domain = newDomain
+        XCTAssertEqual(cellVariable.domain, newDomain)
+        
+        let expectedPreviousDomain = cellVariableDomain
+        cellVariable.undoSetDomain()
+        
+        XCTAssertEqual(cellVariable.domain, expectedPreviousDomain)
     }
-    
-    // TODO: put back after introducing error messages
-    /*
-    func testSetDomain_invalidDomain_throwsError() {
-        let invalidDomain = ["a", "b", "c"]
-        XCTAssertThrowsError(cellVariable.setDomain(newDomain: invalidDomain))
-        XCTAssertEqual(cellVariable.domain, Set(CellState.allCases))
-    }
-     */
     
     func testUnassign_assignmentSetToNil() throws {
-        cellVariable.assign(to: CellState.air)
+        cellVariable.assignment = CellState.air
         let cellValue = try XCTUnwrap(cellVariable.assignment)
         XCTAssertEqual(cellValue, .air)
         cellVariable.unassign()

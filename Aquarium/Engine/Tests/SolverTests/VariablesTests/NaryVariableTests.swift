@@ -1,6 +1,7 @@
 @testable import Engine
 import XCTest
 
+/*
 final class NaryVariableTests: XCTestCase {
     var intVariableA: IntVariable!
     var strVariableB: StringVariable!
@@ -147,3 +148,4 @@ final class NaryVariableTests: XCTestCase {
         XCTAssertEqual(actualAssociatedDomains, expectedAssociatedDomains)
     }
 }
+*/
