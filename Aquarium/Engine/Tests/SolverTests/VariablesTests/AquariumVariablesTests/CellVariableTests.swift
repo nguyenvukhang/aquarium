@@ -51,18 +51,11 @@ final class CellVariableTests: XCTestCase {
         XCTAssertEqual(cellVariable.domain, [.water])
     }
 
-    func testDomain_setter_validNewDomain_reflectedInDomainUndoStack() {
-        // set to [.water]
+    func testDomain_setter_validNewDomain_setsDomainCorrectly() {
         let newDomain = Set([CellState.water])
         cellVariable.domain = newDomain
         
         XCTAssertEqual(cellVariable.domain, newDomain)
-        
-        // check that previous is [.water, .air]
-        let expectedPreviousDomain = cellVariableDomain
-        let previousDomain = cellVariable.domainUndoStack.peek()
-        
-        XCTAssertEqual(previousDomain, expectedPreviousDomain)
     }
 
     func testDomain_setter_notSubsetOfCurrentDomain_throwsError() {
@@ -140,18 +133,6 @@ final class CellVariableTests: XCTestCase {
     func testCanSetDomain_setter_notSubsetOfCurrentDomain_returnsFalse() {
         let newDomain: [any Value] = [CellState.water, CellState.air, 1]
         XCTAssertFalse(cellVariable.canSetDomain(to: newDomain))
-    }
-
-    func testUndoSetDomain_oneLevel() {
-        // set domain to [.water]
-        let newDomain = Set([CellState.water])
-        cellVariable.domain = newDomain
-        XCTAssertEqual(cellVariable.domain, newDomain)
-        
-        let expectedPreviousDomain = cellVariableDomain
-        cellVariable.undoSetDomain()
-        
-        XCTAssertEqual(cellVariable.domain, expectedPreviousDomain)
     }
     
     func testUnassign_assignmentSetToNil() throws {

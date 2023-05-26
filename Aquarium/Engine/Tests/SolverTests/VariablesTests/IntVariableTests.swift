@@ -22,30 +22,11 @@ final class IntVariableTests: XCTestCase {
         XCTAssertEqual(intVariable.domain, [1])
     }
 
-    func testDomain_setter_validNewDomain_reflectedInDomainUndoStack() {
-        // set to [1, 2]
-        var newDomain = Set([1, 2])
+    func testDomain_setter_validNewDomain_setsDomainCorrectly() {
+        let newDomain = Set([1, 2])
         intVariable.domain = newDomain
         
         XCTAssertEqual(intVariable.domain, newDomain)
-        
-        // check that previous is [1, 2, 3]
-        var expectedPreviousDomain = intVariableDomain
-        var previousDomain = intVariable.domainUndoStack.peek()
-        
-        XCTAssertEqual(previousDomain, expectedPreviousDomain)
-        
-        // set to [1]
-        newDomain = Set([1])
-        intVariable.domain = newDomain
-        
-        XCTAssertEqual(intVariable.domain, newDomain)
-        
-        // check that previous is [1, 2]
-        expectedPreviousDomain = Set([1, 2])
-        previousDomain = intVariable.domainUndoStack.peek()
-        
-        XCTAssertEqual(previousDomain, expectedPreviousDomain)
     }
     
     func testDomain_setter_notSubsetOfCurrentDomain_throwsError() {
@@ -117,40 +98,6 @@ final class IntVariableTests: XCTestCase {
     func testCanSetDomain_setter_notSubsetOfCurrentDomain_returnsFalse() {
         let newDomain = [2, 3, 4]
         XCTAssertFalse(intVariable.canSetDomain(to: newDomain))
-    }
-
-    func testUndoSetDomain_oneLevel() {
-        // set domain to [1, 2]
-        let newDomain = Set([1, 2])
-        intVariable.domain = newDomain
-        XCTAssertEqual(intVariable.domain, newDomain)
-        
-        let expectedPreviousDomain = intVariableDomain
-        intVariable.undoSetDomain()
-        
-        XCTAssertEqual(intVariable.domain, expectedPreviousDomain)
-    }
-    
-    func testUndoSetDomain_twoLevels() {
-        // set domain to [1, 2]
-        var newDomain = Set([1, 2])
-        intVariable.domain = newDomain
-        XCTAssertEqual(intVariable.domain, newDomain)
-        
-        // set domain to [2]
-        newDomain = Set([2])
-        intVariable.domain = newDomain
-        XCTAssertEqual(intVariable.domain, newDomain)
-        
-        // undo to [1, 2]
-        var expectedPreviousDomain = Set([1, 2])
-        intVariable.undoSetDomain()
-        XCTAssertEqual(intVariable.domain, expectedPreviousDomain)
-        
-        // undo to [1, 2, 3]
-        expectedPreviousDomain = intVariableDomain
-        intVariable.undoSetDomain()
-        XCTAssertEqual(intVariable.domain, expectedPreviousDomain)
     }
     
     func testUnassign_assignmentSetToNil() throws {

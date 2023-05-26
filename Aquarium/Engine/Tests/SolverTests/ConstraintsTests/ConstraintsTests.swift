@@ -24,8 +24,8 @@ final class ConstraintsTests: XCTestCase {
     }
 
     func testAllConstraints_returnsAllConstraints() {
-        var expectedConstraintArray = [aGreaterThanB, cGreaterThanA]
-        var actualConstraintArray = constraints.allConstraints
+        let expectedConstraintArray = [aGreaterThanB, cGreaterThanA]
+        let actualConstraintArray = constraints.allConstraints
 
         XCTAssertEqual(actualConstraintArray.count, expectedConstraintArray.count)
         for expectedConstraint in expectedConstraintArray {

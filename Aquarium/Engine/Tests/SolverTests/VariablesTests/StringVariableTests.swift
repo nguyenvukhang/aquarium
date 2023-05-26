@@ -22,30 +22,11 @@ final class StringVariableTests: XCTestCase {
         XCTAssertEqual(stringVariable.domain, ["b"])
     }
 
-    func testDomain_setter_validNewDomain_reflectedInDomainUndoStack() {
-        // set to ["b", "c"]
-        var newDomain = Set(["b", "c"])
+    func testDomain_setter_validNewDomain_setsDomainCorrectly() {
+        let newDomain = Set(["b", "c"])
         stringVariable.domain = newDomain
         
         XCTAssertEqual(stringVariable.domain, newDomain)
-        
-        // check that previous is ["a", "b", "c"]
-        var expectedPreviousDomain = stringVariableDomain
-        var previousDomain = stringVariable.domainUndoStack.peek()
-        
-        XCTAssertEqual(previousDomain, expectedPreviousDomain)
-        
-        // set to ["b"]
-        newDomain = Set(["b"])
-        stringVariable.domain = newDomain
-        
-        XCTAssertEqual(stringVariable.domain, newDomain)
-        
-        // check that previous is ["b", "c"]
-        expectedPreviousDomain = Set(["b", "c"])
-        previousDomain = stringVariable.domainUndoStack.peek()
-        
-        XCTAssertEqual(previousDomain, expectedPreviousDomain)
     }
     
     func testDomain_setter_notSubsetOfCurrentDomain_throwsError() {
@@ -119,6 +100,7 @@ final class StringVariableTests: XCTestCase {
         XCTAssertFalse(stringVariable.canSetDomain(to: newDomain))
     }
 
+    /*
     func testUndoSetDomain_oneLevel() {
         // set domain to ["b", "a"]
         let newDomain = Set(["b", "a"])
@@ -152,7 +134,8 @@ final class StringVariableTests: XCTestCase {
         stringVariable.undoSetDomain()
         XCTAssertEqual(stringVariable.domain, expectedPreviousDomain)
     }
-    
+    */
+
     func testUnassign_assignmentSetToNil() throws {
         stringVariable.assign(to: "b")
         let stringValue = try XCTUnwrap(stringVariable.assignment)

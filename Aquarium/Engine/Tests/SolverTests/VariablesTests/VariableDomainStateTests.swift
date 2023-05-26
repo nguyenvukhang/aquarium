@@ -2,14 +2,14 @@
 
 import XCTest
 
-final class InferenceTests: XCTestCase {
+final class VariableDomainStateTests: XCTestCase {
     var intVariableDomain: Set<Int>!
     var intVariable: IntVariable!
     
     var stringVariableDomain: Set<String>!
     var stringVariable: StringVariable!
     
-    var inference: Inference!
+    var inference: VariableDomainState!
     
     override func setUp() {
         intVariableDomain = [1, 2, 3]
@@ -18,20 +18,20 @@ final class InferenceTests: XCTestCase {
         stringVariableDomain = ["a", "b", "c"]
         stringVariable = StringVariable(name: "string", domain: stringVariableDomain)
         
-        inference = Inference()
+        inference = VariableDomainState()
         inference.addDomain(for: intVariable, domain: Array(intVariableDomain))
         inference.addDomain(for: stringVariable, domain: Array(stringVariableDomain))
     }
     
     func testLeadsToFailure_allVariablesHaveNonEmptyDomains_returnsFalse() {
-        XCTAssertFalse(inference.leadsToFailure)
+        XCTAssertFalse(inference.containsEmptyDomain)
     }
     
     func testLeadsToFailure_includesVariableWithEmptyDomain_returnsTrue() {
         let emptyDomain = Set<Int>()
         let testIntVariable = IntVariable(name: "test", domain: emptyDomain)
         inference.addDomain(for: testIntVariable, domain: Array(emptyDomain))
-        XCTAssertTrue(inference.leadsToFailure)
+        XCTAssertTrue(inference.containsEmptyDomain)
     }
     
     func testNumConsistentDomainValues() {
