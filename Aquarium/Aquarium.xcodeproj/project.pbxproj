@@ -18,7 +18,6 @@
 
 /* Begin PBXFileReference section */
 		2F2091DA29EEF70E00FF61E7 /* Engine */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Engine; sourceTree = "<group>"; };
-		2FBDEEDD2A17B85B00F92CBE /* Aquarium.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = Aquarium.app; path = "/Users/quantf/Documents/aquarium/Aquarium/build/Debug-iphoneos/Aquarium.app"; sourceTree = "<absolute>"; };
 		2FC8639E29EDAA01009C1AC4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2FC863A029EDAA01009C1AC4 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		2FC863A229EDAA01009C1AC4 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -26,6 +25,7 @@
 		2FC863A729EDAA01009C1AC4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2FC863AA29EDAA01009C1AC4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2FC863AC29EDAA01009C1AC4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2FF6B0592A1F4AF8002A23B8 /* Aquarium.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = Aquarium.app; path = "/Users/quantf/Documents/aquarium/Aquarium/build/Debug-iphoneos/Aquarium.app"; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,7 +82,7 @@
 				2F1E34EE29EEF72900279669 /* Engine */,
 			);
 			productName = Aquarium;
-			productReference = 2FBDEEDD2A17B85B00F92CBE /* Aquarium.app */;
+			productReference = 2FF6B0592A1F4AF8002A23B8 /* Aquarium.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */

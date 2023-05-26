@@ -15,4 +15,14 @@ extension Array {
         })
         return output
     }
+
+    static func permutations<T>(_ array: [T]) -> [[T]] {
+        if array.count <= 1 {
+            return [array]
+        }
+        var copy = array
+        let last = copy.removeLast()
+        let subproblemSolution = permutations(copy)
+        return subproblemSolution.map({ $0 + [last] })
+    }
 }
