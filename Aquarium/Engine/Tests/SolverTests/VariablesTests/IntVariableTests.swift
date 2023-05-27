@@ -54,8 +54,8 @@ final class IntVariableTests: XCTestCase {
     }
     
     func testCanAssign_possibleValue_returnsTrue() {
-        for intValue in intVariableDomain {
-            XCTAssertTrue(intVariable.canAssign(to: intValue))
+        for domainValue in intVariableDomain {
+            XCTAssertTrue(intVariable.canAssign(to: domainValue))
         }
     }
     
@@ -69,8 +69,8 @@ final class IntVariableTests: XCTestCase {
         for domainValue in intVariableDomain {
             intVariable.unassign()
             intVariable.assign(to: domainValue)
-            let domainValue = try XCTUnwrap(intVariable.assignment)
-            XCTAssertEqual(domainValue, domainValue)
+            let assignment = try XCTUnwrap(intVariable.assignment)
+            XCTAssertEqual(assignment, domainValue)
         }
     }
     

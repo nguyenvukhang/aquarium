@@ -35,7 +35,7 @@ final class NaryVariableTests: XCTestCase {
     func testDomain_getter_allVariableDomainNonEmpty_returnsAllPossibleAssignments() {
         let associatedVariableDomains = allAssociatedVariables.map({ $0.domainAsArray })
         let possibleAssignments = Array<any Value>.possibleAssignments(domains: associatedVariableDomains)
-        let expectedDomain = Set(possibleAssignments.map({ NaryVariableDomainValue(value: $0) }))
+        let expectedDomain = Set(possibleAssignments.map({ NaryVariableValueType(value: $0) }))
         
         let actualDomain = naryVariable.domain
         

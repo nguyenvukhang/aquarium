@@ -16,19 +16,16 @@ final class GreaterThanConstraintTests: XCTestCase {
     }
 
     func testVariables_returnsAllVariables() {
-        let expectedVariables = [intVariableA, intVariableB]
+        let expectedVariables: [any Variable] = [intVariableA, intVariableB]
         let actualVariables = aGreaterThanBConstraint.variables
-        XCTAssertEqual(actualVariables.count, expectedVariables.count)
-        for expectedVariable in expectedVariables {
-            XCTAssertTrue(actualVariables.contains(where: { $0 === expectedVariable}))
-        }
+        XCTAssertTrue(actualVariables.isEqual(expectedVariables))
     }
 
     func testContainsAssignedVariable_allUnassigned_returnsFalse() {
         XCTAssertFalse(aGreaterThanBConstraint.containsAssignedVariable)
     }
 
-    func testContainsAssignedVariable_someAssigned_returnsFalse() {
+    func testContainsAssignedVariable_someAssigned_returnsTrue() {
         intVariableA.assignment = 1
         XCTAssertEqual(intVariableA.assignment, 1)
 
