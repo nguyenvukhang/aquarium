@@ -1,7 +1,7 @@
 @testable import Engine
 import XCTest
 
-final class ConstraintsTests: XCTestCase {
+final class ConstraintCollectionTests: XCTestCase {
     var intVariableA: IntVariable!
     var intVariableB: IntVariable!
     var intVariableC: IntVariable!
@@ -9,7 +9,7 @@ final class ConstraintsTests: XCTestCase {
     var aGreaterThanB: GreaterThanConstraint!
     var cGreaterThanA: GreaterThanConstraint!
 
-    var constraints: Constraints!
+    var constraintCollection: ConstraintCollection!
     
     override func setUp() {
         intVariableA = IntVariable(name: "intA", domain: [1, 3, 4, 5])
@@ -19,12 +19,12 @@ final class ConstraintsTests: XCTestCase {
         aGreaterThanB = GreaterThanConstraint(intVariableA, isGreaterThan: intVariableB)
         cGreaterThanA = GreaterThanConstraint(intVariableC, isGreaterThan: intVariableA)
 
-        constraints = Constraints(allConstraints: [aGreaterThanB, cGreaterThanA])
+        constraintCollection = ConstraintCollection(allConstraints: [aGreaterThanB, cGreaterThanA])
     }
 
     func testAllConstraints_returnsAllConstraints() {
         let expectedConstraintArray = [aGreaterThanB, cGreaterThanA]
-        let actualConstraintArray = constraints.allConstraints
+        let actualConstraintArray = constraintCollection.allConstraints
 
         XCTAssertEqual(actualConstraintArray.count, expectedConstraintArray.count)
         for expectedConstraint in expectedConstraintArray {
@@ -34,10 +34,10 @@ final class ConstraintsTests: XCTestCase {
 
     func testAdd_constraintGetsAdded() {
         let newConstraint = GreaterThanConstraint(intVariableC, isGreaterThan: intVariableB)
-        constraints.add(constraint: newConstraint)
+        constraintCollection.add(constraint: newConstraint)
 
         let expectedConstraintArray = [aGreaterThanB, cGreaterThanA, newConstraint]
-        let actualConstraintArray = constraints.allConstraints
+        let actualConstraintArray = constraintCollection.allConstraints
 
         XCTAssertEqual(actualConstraintArray.count, expectedConstraintArray.count)
         for expectedConstraint in expectedConstraintArray {
@@ -52,7 +52,7 @@ final class ConstraintsTests: XCTestCase {
         XCTAssertFalse(aGreaterThanB.isSatisfied)
         XCTAssertFalse(cGreaterThanA.isSatisfied)
 
-        XCTAssertFalse(constraints.allSatisfied)
+        XCTAssertFalse(constraintCollection.allSatisfied)
     }
 
     func testAllSatisfied_oneNotSatisfied_returnsFalse() {
@@ -60,7 +60,7 @@ final class ConstraintsTests: XCTestCase {
         intVariableB.assignment = 2
         XCTAssertTrue(aGreaterThanB.isSatisfied)
 
-        XCTAssertFalse(constraints.allSatisfied)
+        XCTAssertFalse(constraintCollection.allSatisfied)
     }
 
     func testAllSatisfied_allSatisfied_returnsTrue() {
@@ -70,6 +70,6 @@ final class ConstraintsTests: XCTestCase {
         XCTAssertTrue(aGreaterThanB.isSatisfied)
         XCTAssertTrue(cGreaterThanA.isSatisfied)
 
-        XCTAssertTrue(constraints.allSatisfied)
+        XCTAssertTrue(constraintCollection.allSatisfied)
     }
 }
