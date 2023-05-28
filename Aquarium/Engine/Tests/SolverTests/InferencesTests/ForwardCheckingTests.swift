@@ -1,5 +1,4 @@
 @testable import Engine
-
 import XCTest
 
 // TODO: test that ForwardChecking is deterministic using a larger test
