@@ -29,6 +29,13 @@ final class TernaryVariableTests: XCTestCase {
         expectedTernaryVariableDomain = Set(possibleAssignments.map( {NaryVariableValueType(value: $0) }))
     }
 
+    // MARK: Testing methods/attributes defined in TernaryVariable
+    func testCopy_returnsExactCopyButNotSameInstance() {
+        let copiedTernaryVariable = ternaryVariable.copy()
+        XCTAssertEqual(ternaryVariable, copiedTernaryVariable)
+        XCTAssertFalse(ternaryVariable === copiedTernaryVariable)
+    }
+
     // MARK: Testing methods/attributes inherited from NaryVariable
     func testAssociatedDomains() {
         let expectedAssociatedDomains = allAssociatedVariables.map({ $0.domainAsArray })
@@ -212,6 +219,33 @@ final class TernaryVariableTests: XCTestCase {
         let actualDomain = TernaryVariable.createInternalDomain(from: associatedDomains)
 
         XCTAssertEqual(actualDomain, expectedDomain)
+    }
+
+    func testGetAssociatedDomains() throws {
+        let intVariableD = IntVariable(name: "intD", domain: Set([11, 22, 33]))
+        let intVariableE = IntVariable(name: "intE", domain: Set([44, 55, 66]))
+        let strVariableF = StringVariable(name: "strF", domain: Set(["xx", "yy", "zz"]))
+        let newAssociatedVariables: [any Variable] = [intVariableD, intVariableE, strVariableF]
+
+        let expectedAssociatedDomains: [[any Value]] = [[11, 22, 33], [44, 55, 66], ["xx", "yy", "zz"]]
+        let actualAssociatedDomains = TernaryVariable.getAssociatedDomains(from: newAssociatedVariables)
+
+        XCTAssertEqual(actualAssociatedDomains.count, expectedAssociatedDomains.count)
+        for idx1 in 0 ..< expectedAssociatedDomains.count {
+            XCTAssertEqual(actualAssociatedDomains[idx1].count, expectedAssociatedDomains[idx1].count)
+            for idx2 in 0 ..< expectedAssociatedDomains[idx1].count {
+                if let expectedValue = expectedAssociatedDomains[idx1][idx2] as? Int,
+                   let actualValue = actualAssociatedDomains[idx1][idx2] as? Int {
+                    XCTAssertEqual(actualValue, expectedValue)
+                    continue
+                } else if let expectedValue = expectedAssociatedDomains[idx1][idx2] as? String,
+                   let actualValue = actualAssociatedDomains[idx1][idx2] as? String {
+                    XCTAssertEqual(actualValue, expectedValue)
+                    continue
+                }
+                XCTFail()
+            }
+        }
     }
 
     // MARK: Testing methods/attributes inherited from Variable

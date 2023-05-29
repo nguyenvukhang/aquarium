@@ -10,7 +10,14 @@ final class CellVariableTests: XCTestCase {
         cellVariableDomain = Set(CellState.allCases)
         cellVariable = CellVariable(row: 0, col: 0)
     }
-    
+
+    // MARK: Testing methods/attributes defined in CellVariable
+    func testCopy_returnsExactCopyButNotSameInstance() {
+        let copiedCellVariable = cellVariable.copy()
+        XCTAssertEqual(cellVariable, copiedCellVariable)
+        XCTAssertFalse(cellVariable === copiedCellVariable)
+    }
+
     // MARK: Testing methods/attributes defined in CellVariable
     func testIsAir_nil_returnsFalse() {
         XCTAssertFalse(cellVariable.isAir)
