@@ -193,9 +193,9 @@ final class ForwardCheckingTests: XCTestCase {
 
         for variablePerm in variablePermutations {
             for constraintPerm in constraintPermutations {
-                let constraintCollection = ConstraintCollection(allConstraints: constraintPerm)
+                let constraintSet = ConstraintSet(allConstraints: constraintPerm)
                 inferenceEngines.append(ForwardChecking(variables: variablePerm,
-                                                        constraintCollection: constraintCollection))
+                                                        constraintSet: constraintSet))
             }
         }
 
