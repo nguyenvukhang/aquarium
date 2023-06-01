@@ -12,6 +12,8 @@ final class AuxillaryConstraintTests: XCTestCase {
     var dualVariable: TernaryVariable!
     var expectedDualVariableDomain: Set<NaryVariableValueType>!
 
+    var variableSet: SetOfVariables!
+
     var auxillaryConstraintA: AuxillaryConstraint!
     var auxillaryConstraintB: AuxillaryConstraint!
     var auxillaryConstraintC: AuxillaryConstraint!
@@ -34,6 +36,8 @@ final class AuxillaryConstraintTests: XCTestCase {
         let possibleAssignments = Array<any Value>.possibleAssignments(domains: allAssociatedDomains)
         expectedDualVariableDomain = Set(possibleAssignments.map( {NaryVariableValueType(value: $0) }))
 
+        variableSet = SetOfVariables(from: [intVariableA, intVariableB, strVariableC, dualVariable])
+
         auxillaryConstraintA = AuxillaryConstraint(mainVariable: intVariableA, dualVariable: dualVariable)
         auxillaryConstraintB = AuxillaryConstraint(mainVariable: intVariableB, dualVariable: dualVariable)
         auxillaryConstraintC = AuxillaryConstraint(mainVariable: strVariableC, dualVariable: dualVariable)
@@ -48,176 +52,223 @@ final class AuxillaryConstraintTests: XCTestCase {
         XCTAssertNil(failedAuxillaryConstraint)
     }
 
-    func testVariables_returnsAllVariables() {
+    func testVariableNames_returnsAllVariableNames() {
         for idx in 0 ..< allConstraints.count {
             let constraint = allConstraints[idx]
             let mainVariable = allAssociatedVariables[idx]
-            let expectedVariables: [any Variable] = [mainVariable, dualVariable]
+            let expectedVariableNames: [String] = [mainVariable.name, dualVariable.name]
 
-            let actualVariables = constraint.variables
+            let actualVariableNames = constraint.variableNames
 
-            XCTAssertTrue(actualVariables.isEqual(expectedVariables))
+            XCTAssertTrue(actualVariableNames == expectedVariableNames)
         }
     }
 
     func testContainsAssignedVariable_allUnassigned_returnsFalse() {
         for constraint in allConstraints {
-            XCTAssertFalse(constraint.containsAssignedVariable)
+            XCTAssertFalse(constraint.containsAssignedVariable(state: variableSet))
         }
     }
 
-    func testContainsAssignedVariable_mainVariableAssigned_returnsFalse() {
+    func testContainsAssignedVariable_mainVariableAssigned_returnsTrue() {
         // auxillaryConstraintA
-        intVariableA.assignment = 1
-        XCTAssertEqual(intVariableA.assignment, 1)
-        XCTAssertTrue(auxillaryConstraintA.containsAssignedVariable)
+        variableSet.assign(intVariableA.name, to: 1)
+        let assignmentA = variableSet.getAssignment(intVariableA.name, type: IntVariable.self)
+        XCTAssertEqual(assignmentA, 1)
+        XCTAssertTrue(auxillaryConstraintA.containsAssignedVariable(state: variableSet))
 
         // auxillaryConstraintB
-        intVariableB.assignment = 5
-        XCTAssertEqual(intVariableB.assignment, 5)
-        XCTAssertTrue(auxillaryConstraintB.containsAssignedVariable)
+        variableSet.assign(intVariableB.name, to: 5)
+        let assignmentB = variableSet.getAssignment(intVariableB.name, type: IntVariable.self)
+        XCTAssertEqual(assignmentB, 5)
+        XCTAssertTrue(auxillaryConstraintB.containsAssignedVariable(state: variableSet))
 
         // auxillaryConstraintC
-        strVariableC.assignment = "y"
-        XCTAssertEqual(strVariableC.assignment, "y")
-        XCTAssertTrue(auxillaryConstraintC.containsAssignedVariable)
+        variableSet.assign(strVariableC.name, to: "y")
+        let assignmentC = variableSet.getAssignment(strVariableC.name, type: StringVariable.self)
+        XCTAssertEqual(assignmentC, "y")
+        XCTAssertTrue(auxillaryConstraintC.containsAssignedVariable(state: variableSet))
     }
 
-    func testContainsAssignedVariable_dualVariableAssigned_returnsFalse() {
-        dualVariable.assignment = NaryVariableValueType(value: [2, 5, "z"])
+    func testContainsAssignedVariable_dualVariableAssigned_returnsTrue() {
+        let newAssignment = NaryVariableValueType(value: [2, 5, "z"])
+        variableSet.assign(dualVariable.name, to: newAssignment)
+        XCTAssertTrue(variableSet.isAssigned(dualVariable.name))
 
         for constraint in allConstraints {
-            XCTAssertTrue(constraint.containsAssignedVariable)
+            XCTAssertTrue(constraint.containsAssignedVariable(state: variableSet))
         }
     }
 
     // MARK: tests for isSatisfied
     func testIsSatisfied_bothUnassigned_returnsFalse() {
         for constraint in allConstraints {
-            XCTAssertFalse(constraint.isSatisfied)
+            XCTAssertFalse(constraint.isSatisfied(state: variableSet))
         }
     }
 
     func testIsSatisfied_onlyMainVariableAssigned_returnsFalse() {
         // auxillaryConstraintA
-        intVariableA.assignment = 1
-        XCTAssertEqual(intVariableA.assignment, 1)
-        XCTAssertFalse(dualVariable.isAssigned)
-        XCTAssertFalse(auxillaryConstraintA.isSatisfied)
+        variableSet.assign(intVariableA.name, to: 1)
+        let assignmentA = variableSet.getAssignment(intVariableA.name, type: IntVariable.self)
+        XCTAssertEqual(assignmentA, 1)
+        XCTAssertFalse(variableSet.isAssigned(dualVariable.name))
+        XCTAssertFalse(auxillaryConstraintA.isSatisfied(state: variableSet))
 
         // auxillaryConstraintB
-        intVariableB.assignment = 5
-        XCTAssertEqual(intVariableB.assignment, 5)
-        XCTAssertFalse(dualVariable.isAssigned)
-        XCTAssertFalse(auxillaryConstraintB.isSatisfied)
+        variableSet.assign(intVariableB.name, to: 5)
+        let assignmentB = variableSet.getAssignment(intVariableB.name, type: IntVariable.self)
+        XCTAssertEqual(assignmentB, 5)
+        XCTAssertFalse(variableSet.isAssigned(dualVariable.name))
+        XCTAssertFalse(auxillaryConstraintB.isSatisfied(state: variableSet))
 
         // auxillaryConstraintC
-        strVariableC.assignment = "z"
-        XCTAssertEqual(strVariableC.assignment, "z")
-        XCTAssertFalse(dualVariable.isAssigned)
-        XCTAssertFalse(auxillaryConstraintC.isSatisfied)
+        variableSet.assign(strVariableC.name, to: "y")
+        let assignmentC = variableSet.getAssignment(strVariableC.name, type: StringVariable.self)
+        XCTAssertEqual(assignmentC, "y")
+        XCTAssertFalse(variableSet.isAssigned(dualVariable.name))
+        XCTAssertFalse(auxillaryConstraintC.isSatisfied(state: variableSet))
     }
 
     func testIsSatisfied_onlyDualVariableAssigned_returnsFalse() {
-        dualVariable.assignment = NaryVariableValueType(value: [1, 6, "y"])
+        let newAssignment = NaryVariableValueType(value: [1, 6, "y"])
+        variableSet.assign(dualVariable.name, to: newAssignment)
+        XCTAssertTrue(variableSet.isAssigned(dualVariable.name))
 
         for constraint in allConstraints {
-            XCTAssertFalse(constraint.isSatisfied)
+            XCTAssertFalse(constraint.isSatisfied(state: variableSet))
         }
     }
 
     func testIsSatisfied_allVariablesNotEqualDualVariable_allReturnFalse() {
-        intVariableA.assignment = 1
-        XCTAssertEqual(intVariableA.assignment, 1)
-        intVariableB.assignment = 4
-        XCTAssertEqual(intVariableB.assignment, 4)
-        strVariableC.assignment = "x"
-        XCTAssertEqual(strVariableC.assignment, "x")
+        variableSet.assign(intVariableA.name, to: 1)
+        let assignmentA = variableSet.getAssignment(intVariableA.name, type: IntVariable.self)
+        XCTAssertEqual(assignmentA, 1)
 
-        dualVariable.assignment = NaryVariableValueType(value: [2, 6, "y"])
+        variableSet.assign(intVariableB.name, to: 4)
+        let assignmentB = variableSet.getAssignment(intVariableB.name, type: IntVariable.self)
+        XCTAssertEqual(assignmentB, 4)
+
+        variableSet.assign(strVariableC.name, to: "x")
+        let assignmentC = variableSet.getAssignment(strVariableC.name, type: StringVariable.self)
+        XCTAssertEqual(assignmentC, "x")
+
+        let newAssignment = NaryVariableValueType(value: [2, 6, "y"])
+        variableSet.assign(dualVariable.name, to: newAssignment)
+        let dualVariableAssignment = variableSet.getAssignment(dualVariable.name, type: TernaryVariable.self)
+        XCTAssertEqual(dualVariableAssignment, newAssignment)
 
         for constraint in allConstraints {
-            XCTAssertFalse(constraint.isSatisfied)
+            XCTAssertFalse(constraint.isSatisfied(state: variableSet))
         }
     }
 
     func testIsSatisfied_someVariablesEqualDualVariable_equalAssignmentsReturnTrue() {
-        intVariableA.assignment = 1
-        XCTAssertEqual(intVariableA.assignment, 1)
-        intVariableB.assignment = 4
-        XCTAssertEqual(intVariableB.assignment, 4)
-        strVariableC.assignment = "x"
-        XCTAssertEqual(strVariableC.assignment, "x")
+        variableSet.assign(intVariableA.name, to: 2)
+        let assignmentA = variableSet.getAssignment(intVariableA.name, type: IntVariable.self)
+        XCTAssertEqual(assignmentA, 2)
 
-        dualVariable.assignment = NaryVariableValueType(value: [1, 6, "x"])
+        variableSet.assign(intVariableB.name, to: 4)
+        let assignmentB = variableSet.getAssignment(intVariableB.name, type: IntVariable.self)
+        XCTAssertEqual(assignmentB, 4)
 
-        XCTAssertTrue(auxillaryConstraintA.isSatisfied)
-        XCTAssertFalse(auxillaryConstraintB.isSatisfied)
-        XCTAssertTrue(auxillaryConstraintC.isSatisfied)
+        variableSet.assign(strVariableC.name, to: "y")
+        let assignmentC = variableSet.getAssignment(strVariableC.name, type: StringVariable.self)
+        XCTAssertEqual(assignmentC, "y")
+
+        let newAssignment = NaryVariableValueType(value: [2, 6, "y"])
+        variableSet.assign(dualVariable.name, to: newAssignment)
+        let dualVariableAssignment = variableSet.getAssignment(dualVariable.name, type: TernaryVariable.self)
+        XCTAssertEqual(dualVariableAssignment, newAssignment)
+
+        XCTAssertTrue(auxillaryConstraintA.isSatisfied(state: variableSet))
+        XCTAssertFalse(auxillaryConstraintB.isSatisfied(state: variableSet))
+        XCTAssertTrue(auxillaryConstraintC.isSatisfied(state: variableSet))
     }
 
     // MARK: tests for isViolated
     func testIsViolated_bothUnassigned_returnsFalse() {
         for constraint in allConstraints {
-            XCTAssertFalse(constraint.isViolated)
+            XCTAssertFalse(constraint.isViolated(state: variableSet))
         }
     }
 
     func testIsViolated_onlyMainVariableAssigned_returnsFalse() {
         // auxillaryConstraintA
-        intVariableA.assignment = 1
-        XCTAssertEqual(intVariableA.assignment, 1)
-        XCTAssertFalse(dualVariable.isAssigned)
-        XCTAssertFalse(auxillaryConstraintA.isViolated)
+        variableSet.assign(intVariableA.name, to: 1)
+        let assignmentA = variableSet.getAssignment(intVariableA.name, type: IntVariable.self)
+        XCTAssertEqual(assignmentA, 1)
+        XCTAssertFalse(variableSet.isAssigned(dualVariable.name))
+        XCTAssertFalse(auxillaryConstraintA.isViolated(state: variableSet))
 
         // auxillaryConstraintB
-        intVariableB.assignment = 5
-        XCTAssertEqual(intVariableB.assignment, 5)
-        XCTAssertFalse(dualVariable.isAssigned)
-        XCTAssertFalse(auxillaryConstraintB.isViolated)
+        variableSet.assign(intVariableB.name, to: 5)
+        let assignmentB = variableSet.getAssignment(intVariableB.name, type: IntVariable.self)
+        XCTAssertEqual(assignmentB, 5)
+        XCTAssertFalse(variableSet.isAssigned(dualVariable.name))
+        XCTAssertFalse(auxillaryConstraintB.isViolated(state: variableSet))
 
         // auxillaryConstraintC
-        strVariableC.assignment = "z"
-        XCTAssertEqual(strVariableC.assignment, "z")
-        XCTAssertFalse(dualVariable.isAssigned)
-        XCTAssertFalse(auxillaryConstraintC.isViolated)
+        variableSet.assign(strVariableC.name, to: "y")
+        let assignmentC = variableSet.getAssignment(strVariableC.name, type: StringVariable.self)
+        XCTAssertEqual(assignmentC, "y")
+        XCTAssertFalse(variableSet.isAssigned(dualVariable.name))
+        XCTAssertFalse(auxillaryConstraintC.isViolated(state: variableSet))
     }
 
     func testIsViolated_onlyDualVariableAssigned_returnsFalse() {
-        dualVariable.assignment = NaryVariableValueType(value: [1, 6, "y"])
+        let newAssignment = NaryVariableValueType(value: [1, 6, "y"])
+        variableSet.assign(dualVariable.name, to: newAssignment)
+        XCTAssertTrue(variableSet.isAssigned(dualVariable.name))
 
         for constraint in allConstraints {
-            XCTAssertFalse(constraint.isViolated)
+            XCTAssertFalse(constraint.isViolated(state: variableSet))
         }
     }
 
     func testIsViolated_someVariablesEqualDualVariable_unequalAssignmentsReturnTrue() {
-        intVariableA.assignment = 1
-        XCTAssertEqual(intVariableA.assignment, 1)
-        intVariableB.assignment = 4
-        XCTAssertEqual(intVariableB.assignment, 4)
-        strVariableC.assignment = "x"
-        XCTAssertEqual(strVariableC.assignment, "x")
+        variableSet.assign(intVariableA.name, to: 1)
+        let assignmentA = variableSet.getAssignment(intVariableA.name, type: IntVariable.self)
+        XCTAssertEqual(assignmentA, 1)
 
-        dualVariable.assignment = NaryVariableValueType(value: [1, 6, "x"])
+        variableSet.assign(intVariableB.name, to: 4)
+        let assignmentB = variableSet.getAssignment(intVariableB.name, type: IntVariable.self)
+        XCTAssertEqual(assignmentB, 4)
 
-        XCTAssertFalse(auxillaryConstraintA.isViolated)
-        XCTAssertTrue(auxillaryConstraintB.isViolated)
-        XCTAssertFalse(auxillaryConstraintC.isViolated)
+        variableSet.assign(strVariableC.name, to: "x")
+        let assignmentC = variableSet.getAssignment(strVariableC.name, type: StringVariable.self)
+        XCTAssertEqual(assignmentC, "x")
+
+        let newAssignment = NaryVariableValueType(value: [1, 6, "x"])
+        variableSet.assign(dualVariable.name, to: newAssignment)
+        let dualVariableAssignment = variableSet.getAssignment(dualVariable.name, type: TernaryVariable.self)
+        XCTAssertEqual(dualVariableAssignment, newAssignment)
+
+        XCTAssertFalse(auxillaryConstraintA.isViolated(state: variableSet))
+        XCTAssertTrue(auxillaryConstraintB.isViolated(state: variableSet))
+        XCTAssertFalse(auxillaryConstraintC.isViolated(state: variableSet))
     }
 
     func testIsViolated_allVariablesNotEqualDualVariable_allReturnTrue() {
-        intVariableA.assignment = 1
-        XCTAssertEqual(intVariableA.assignment, 1)
-        intVariableB.assignment = 4
-        XCTAssertEqual(intVariableB.assignment, 4)
-        strVariableC.assignment = "x"
-        XCTAssertEqual(strVariableC.assignment, "x")
+        variableSet.assign(intVariableA.name, to: 1)
+        let assignmentA = variableSet.getAssignment(intVariableA.name, type: IntVariable.self)
+        XCTAssertEqual(assignmentA, 1)
 
-        dualVariable.assignment = NaryVariableValueType(value: [2, 6, "y"])
+        variableSet.assign(intVariableB.name, to: 4)
+        let assignmentB = variableSet.getAssignment(intVariableB.name, type: IntVariable.self)
+        XCTAssertEqual(assignmentB, 4)
+
+        variableSet.assign(strVariableC.name, to: "x")
+        let assignmentC = variableSet.getAssignment(strVariableC.name, type: StringVariable.self)
+        XCTAssertEqual(assignmentC, "x")
+
+        let newAssignment = NaryVariableValueType(value: [2, 6, "y"])
+        variableSet.assign(dualVariable.name, to: newAssignment)
+        let dualVariableAssignment = variableSet.getAssignment(dualVariable.name, type: TernaryVariable.self)
+        XCTAssertEqual(dualVariableAssignment, newAssignment)
 
         for constraint in allConstraints {
-            XCTAssertTrue(constraint.isViolated)
+            XCTAssertTrue(constraint.isViolated(state: variableSet))
         }
     }
 }

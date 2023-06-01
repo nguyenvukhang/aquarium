@@ -8,6 +8,8 @@ final class LinearCombinationConstraintTests: XCTestCase {
 
     var ternaryVariable: TernaryVariable!
 
+    var variableSet: SetOfVariables!
+
     var linearCombinationConstraint: LinearCombinationConstraint!
 
     override func setUp() {
@@ -20,6 +22,8 @@ final class LinearCombinationConstraintTests: XCTestCase {
                                           variableB: floatVariableB,
                                           variableC: floatVariableC)
 
+        variableSet = SetOfVariables(from: [intVariableA, floatVariableB, floatVariableC, ternaryVariable])
+
         linearCombinationConstraint = LinearCombinationConstraint(ternaryVariable,
                                                                   scaleA: 1,
                                                                   scaleB: 2,
@@ -27,73 +31,77 @@ final class LinearCombinationConstraintTests: XCTestCase {
                                                                   add: -7.591)
     }
 
-    func testVariables_returnsAllVariables() {
-        let expectedVariables: [any Variable] = [ternaryVariable]
-        let actualVariables = linearCombinationConstraint.variables
-        XCTAssertTrue(actualVariables.isEqual(expectedVariables))
+    func testVariableNames_returnsAllVariableNames() {
+        let expectedVariableNames: [String] = [ternaryVariable.name]
+        let actualVariableNames = linearCombinationConstraint.variableNames
+        XCTAssertTrue(actualVariableNames == expectedVariableNames)
     }
 
     func testContainsAssignedVariable_allUnassigned_returnsFalse() {
-        XCTAssertFalse(linearCombinationConstraint.containsAssignedVariable)
+        XCTAssertFalse(linearCombinationConstraint.containsAssignedVariable(state: variableSet))
     }
 
     func testContainsAssignedVariable_someAssigned_returnsTrue() {
         let floatA: Float = 5.456
         let floatB: Float = 9.321
-        let assignment = NaryVariableValueType(value: [1, floatA, floatB])
-        ternaryVariable.assignment = assignment
-        XCTAssertEqual(ternaryVariable.assignment, assignment)
+        let newAssignment = NaryVariableValueType(value: [1, floatA, floatB])
+        variableSet.assign(ternaryVariable.name, to: newAssignment)
+        XCTAssertTrue(variableSet.isAssigned(ternaryVariable.name))
 
-        XCTAssertTrue(linearCombinationConstraint.containsAssignedVariable)
+        XCTAssertTrue(linearCombinationConstraint.containsAssignedVariable(state: variableSet))
     }
 
     // MARK: tests for isSatisfied
     func testIsSatisfied_unassigned_returnsFalse() {
-        XCTAssertFalse(linearCombinationConstraint.isSatisfied)
+        XCTAssertFalse(linearCombinationConstraint.isSatisfied(state: variableSet))
     }
 
     func testIsSatisfied_doesNotSatisfyLinearCombination_returnsFalse() {
         let floatA: Float = 4.123
         let floatB: Float = 7.987
-        let assignment = NaryVariableValueType(value: [1, floatA, floatB])
-        ternaryVariable.assignment = assignment
-        XCTAssertEqual(ternaryVariable.assignment, assignment)
+        let newAssignment = NaryVariableValueType(value: [1, floatA, floatB])
+        variableSet.assign(ternaryVariable.name, to: newAssignment)
+        let ternaryVariableAssignment = variableSet.getAssignment(ternaryVariable.name, type: TernaryVariable.self)
+        XCTAssertEqual(ternaryVariableAssignment, newAssignment)
 
-        XCTAssertFalse(linearCombinationConstraint.isSatisfied)
+        XCTAssertFalse(linearCombinationConstraint.isSatisfied(state: variableSet))
     }
 
     func testIsSatisfied_satisfiesLinearCombination_returnsTrue() {
         let floatA: Float = 6.789
         let floatB: Float = 7.987
-        let assignment = NaryVariableValueType(value: [2, floatA, floatB])
-        ternaryVariable.assignment = assignment
-        XCTAssertEqual(ternaryVariable.assignment, assignment)
+        let newAssignment = NaryVariableValueType(value: [2, floatA, floatB])
+        variableSet.assign(ternaryVariable.name, to: newAssignment)
+        let ternaryVariableAssignment = variableSet.getAssignment(ternaryVariable.name, type: TernaryVariable.self)
+        XCTAssertEqual(ternaryVariableAssignment, newAssignment)
 
-        XCTAssertTrue(linearCombinationConstraint.isSatisfied)
+        XCTAssertTrue(linearCombinationConstraint.isSatisfied(state: variableSet))
     }
 
     // MARK: tests for isViolated
     func testIsViolated_unassigned_returnsFalse() {
-        XCTAssertFalse(linearCombinationConstraint.isViolated)
+        XCTAssertFalse(linearCombinationConstraint.isViolated(state: variableSet))
     }
 
     func testIsViolated_satisfiesLinearCombination_returnsFalse() {
         let floatA: Float = 6.789
         let floatB: Float = 7.987
-        let assignment = NaryVariableValueType(value: [2, floatA, floatB])
-        ternaryVariable.assignment = assignment
-        XCTAssertEqual(ternaryVariable.assignment, assignment)
+        let newAssignment = NaryVariableValueType(value: [2, floatA, floatB])
+        variableSet.assign(ternaryVariable.name, to: newAssignment)
+        let ternaryVariableAssignment = variableSet.getAssignment(ternaryVariable.name, type: TernaryVariable.self)
+        XCTAssertEqual(ternaryVariableAssignment, newAssignment)
 
-        XCTAssertFalse(linearCombinationConstraint.isViolated)
+        XCTAssertFalse(linearCombinationConstraint.isViolated(state: variableSet))
     }
 
     func testIsViolated_doesNotSatisfyLinearCombination_returnsTrue() {
         let floatA: Float = 4.123
         let floatB: Float = 7.987
-        let assignment = NaryVariableValueType(value: [1, floatA, floatB])
-        ternaryVariable.assignment = assignment
-        XCTAssertEqual(ternaryVariable.assignment, assignment)
+        let newAssignment = NaryVariableValueType(value: [1, floatA, floatB])
+        variableSet.assign(ternaryVariable.name, to: newAssignment)
+        let ternaryVariableAssignment = variableSet.getAssignment(ternaryVariable.name, type: TernaryVariable.self)
+        XCTAssertEqual(ternaryVariableAssignment, newAssignment)
 
-        XCTAssertTrue(linearCombinationConstraint.isViolated)
+        XCTAssertTrue(linearCombinationConstraint.isViolated(state: variableSet))
     }
 }

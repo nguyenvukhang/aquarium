@@ -12,10 +12,9 @@ final class IntVariableTests: XCTestCase {
     }
 
     // MARK: Testing methods/attributes defined in IntVariable
-    func testCopy_returnsExactCopyButNotSameInstance() {
+    func testCopy_returnsExactCopy() {
         let copiedIntVariable = intVariable.copy()
         XCTAssertEqual(intVariable, copiedIntVariable)
-        XCTAssertFalse(intVariable === copiedIntVariable)
     }
 
     // MARK: Testing methods/attributes inherited from Variable

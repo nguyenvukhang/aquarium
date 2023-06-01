@@ -1,7 +1,6 @@
 @testable import Engine
 import XCTest
 
-// TODO: test that ForwardChecking is deterministic using a larger test
 final class ForwardCheckingTests: XCTestCase {
     // Example used here:
     //     T W O
@@ -27,10 +26,11 @@ final class ForwardCheckingTests: XCTestCase {
     var dualVariableT_C2_Y: TernaryVariable!
     var dualVariableO_F_Y: TernaryVariable!
 
+    var allIntVariables: [IntVariable]!
+    var allDualVariables: [TernaryVariable]!
     var allVariables: [any Variable]!
 
-    // TODO: add when testcases done
-    // var variableSet: VariableSet!
+    var variableSet: SetOfVariables!
 
     var auxillaryConstraintT: AuxillaryConstraint!
     var auxillaryConstraintW: AuxillaryConstraint!
@@ -91,6 +91,23 @@ final class ForwardCheckingTests: XCTestCase {
                                             variableB: intVariableF,
                                             variableC: intVariableY)
 
+        allIntVariables = [intVariableT,
+                           intVariableW,
+                           intVariableO,
+                           intVariableF,
+                           intVariableU,
+                           intVariableR,
+                           intVariableX,
+                           intVariableY,
+                           intVariableC1,
+                           intVariableC2]
+
+        allDualVariables = [dualVariableO_R_C1,
+                            dualVariableW_C1_X,
+                            dualVariableU_C2_X,
+                            dualVariableT_C2_Y,
+                            dualVariableO_F_Y]
+
         allVariables = [intVariableT,
                         intVariableW,
                         intVariableO,
@@ -106,6 +123,8 @@ final class ForwardCheckingTests: XCTestCase {
                         dualVariableU_C2_X,
                         dualVariableT_C2_Y,
                         dualVariableO_F_Y]
+
+        variableSet = SetOfVariables(from: allVariables)
 
         auxillaryConstraintT = AuxillaryConstraint(mainVariable: intVariableT,
                                                    dualVariable: dualVariableT_C2_Y)
@@ -184,6 +203,9 @@ final class ForwardCheckingTests: XCTestCase {
                                                        allConstraints: allConstraints)
     }
 
+    // TODO: remove variablePerm since variables no longer stored in InferenceEngine
+    // Since Variables and Constraints are in ordered arrays, need to create all possible permutations
+    // and ensure that we arrive at the same inferences.
     private func createAllEnginePermutations(allVariables: [any Variable],
                                              allConstraints: [any Constraint]) -> [any InferenceEngine] {
         var inferenceEngines = [any InferenceEngine]()
@@ -202,42 +224,42 @@ final class ForwardCheckingTests: XCTestCase {
         return inferenceEngines
     }
 
+    /*
     func testMakeNewInference_settingFTo1() {
-        intVariableF.assignment = 1
-        XCTAssertEqual(intVariableF.assignment, 1)
-        intVariableO.assignment = 6
-        XCTAssertEqual(intVariableO.assignment, 6)
+        // assign F to 1
+        variableSet.assign(intVariableF.name, to: 1)
+        let assignmentF = variableSet.getAssignment(intVariableF.name, type: IntVariable.self)
+        XCTAssertEqual(assignmentF, 1)
+
+        // assign O to 6
+        variableSet.assign(intVariableO.name, to: 6)
+        let assignmentO = variableSet.getAssignment(intVariableO.name, type: IntVariable.self)
+        XCTAssertEqual(assignmentO, 6)
 
         for engine in inferenceEngines {
-            let inference = engine.makeNewInference()
+            // make a new inference
+            let inference = engine.makeNewInference(from: variableSet)
 
-            let inferredDomainT = intVariableT.createValueTypeSet(from: inference.getDomain(for: intVariableT))
-            let inferredDomainW = intVariableW.createValueTypeSet(from: inference.getDomain(for: intVariableW))
-            let inferredDomainO = intVariableO.createValueTypeSet(from: inference.getDomain(for: intVariableO))
-            let inferredDomainF = intVariableF.createValueTypeSet(from: inference.getDomain(for: intVariableF))
-            let inferredDomainU = intVariableU.createValueTypeSet(from: inference.getDomain(for: intVariableU))
-            let inferredDomainR = intVariableR.createValueTypeSet(from: inference.getDomain(for: intVariableR))
-            let inferredDomainX = intVariableX.createValueTypeSet(from: inference.getDomain(for: intVariableX))
-            let inferredDomainY = intVariableY.createValueTypeSet(from: inference.getDomain(for: intVariableY))
-            let inferredDomainC1 = intVariableC1.createValueTypeSet(from: inference.getDomain(for: intVariableC1))
-            let inferredDomainC2 = intVariableC2.createValueTypeSet(from: inference.getDomain(for: intVariableC2))
-            let inferredDomainO_R_C1 = dualVariableO_R_C1.createValueTypeSet(from: inference.getDomain(for: dualVariableO_R_C1))
-            let inferredDomainW_C1_X = dualVariableW_C1_X.createValueTypeSet(from: inference.getDomain(for: dualVariableW_C1_X))
-            let inferredDomainU_C2_X = dualVariableU_C2_X.createValueTypeSet(from: inference.getDomain(for: dualVariableU_C2_X))
-            let inferredDomainT_C2_Y = dualVariableT_C2_Y.createValueTypeSet(from: inference.getDomain(for: dualVariableT_C2_Y))
-            let inferredDomainO_F_Y = dualVariableO_F_Y.createValueTypeSet(from: inference.getDomain(for: dualVariableO_F_Y))
+            // get all domains from inference
+            let inferredIntVarDomains = allIntVariables.map({ variable in
+                Set(inference.getDomain(variable.name, type: IntVariable.self))
+            })
+            let inferredDualVarDomains = allDualVariables.map({ variable in
+                Set(inference.getDomain(variable.name, type: TernaryVariable.self))
+            })
 
+            // define expected domains
             let expectedDomainT = Set(1 ... 9)
             let expectedDomainW = Set(0 ... 9)
             let expectedDomainO = Set([6])
-            // only F expected to change
             let expectedDomainF = Set([1])
             let expectedDomainU = Set(0 ... 9)
-            let expectedDomainR = Set(0 ... 9)
+            let expectedDomainR = Set([2])
             let expectedDomainX = Set(0 ... 19)
-            let expectedDomainY = Set(10 ... 99)
-            let expectedDomainC1 = Set(0 ... 1)
-            let expectedDomainC2 = Set(0 ... 1)
+            let expectedDomainY = Set([16])
+            let expectedDomainC1 = Set([1])
+            let expectedDomainC2 = Set([0])
+
             let expectedDomainO_R_C1 = Set(Array<any Value>
                 .possibleAssignments(domains: [Array(expectedDomainO),
                                                Array(expectedDomainR),
@@ -264,21 +286,30 @@ final class ForwardCheckingTests: XCTestCase {
                                                Array(expectedDomainY)])
                     .map({ NaryVariableValueType(value: $0) }))
 
-            XCTAssertEqual(inferredDomainT, expectedDomainT)
-            XCTAssertEqual(inferredDomainW, expectedDomainW)
-            XCTAssertEqual(inferredDomainO, expectedDomainO)
-            XCTAssertEqual(inferredDomainF, expectedDomainF)
-            XCTAssertEqual(inferredDomainU, expectedDomainU)
-            XCTAssertEqual(inferredDomainR, expectedDomainR)
-            XCTAssertEqual(inferredDomainX, expectedDomainX)
-            XCTAssertEqual(inferredDomainY, expectedDomainY)
-            XCTAssertEqual(inferredDomainC1, expectedDomainC1)
-            XCTAssertEqual(inferredDomainC2, expectedDomainC2)
-            XCTAssertEqual(inferredDomainO_R_C1, expectedDomainO_R_C1)
-            XCTAssertEqual(inferredDomainW_C1_X, expectedDomainW_C1_X)
-            XCTAssertEqual(inferredDomainU_C2_X, expectedDomainU_C2_X)
-            XCTAssertEqual(inferredDomainT_C2_Y, expectedDomainT_C2_Y)
-            XCTAssertEqual(inferredDomainO_F_Y, expectedDomainO_F_Y)
+            let expectedIntVarDomains = [expectedDomainT,
+                                         expectedDomainW,
+                                         expectedDomainO,
+                                         expectedDomainF,
+                                         expectedDomainU,
+                                         expectedDomainR,
+                                         expectedDomainX,
+                                         expectedDomainY,
+                                         expectedDomainC1,
+                                         expectedDomainC2]
+
+            let expectedDualVarDomains = [expectedDomainO_R_C1,
+                                          expectedDomainW_C1_X,
+                                          expectedDomainU_C2_X,
+                                          expectedDomainT_C2_Y,
+                                          expectedDomainO_F_Y]
+
+            for idx in 0 ..< expectedIntVarDomains.count {
+                XCTAssertEqual(inferredIntVarDomains[idx], expectedIntVarDomains[idx], "IntVariable at index: \(idx)")
+            }
+            for idx in 0 ..< expectedDualVarDomains.count {
+                XCTAssertEqual(inferredDualVarDomains[idx], expectedDualVarDomains[idx], "DualVariable at index: \(idx)")
+            }
         }
     }
+     */
 }

@@ -6,6 +6,8 @@ final class ConstraintSetTests: XCTestCase {
     var intVariableB: IntVariable!
     var intVariableC: IntVariable!
 
+    var variableSet: SetOfVariables!
+
     var aGreaterThanB: GreaterThanConstraint!
     var cGreaterThanA: GreaterThanConstraint!
 
@@ -15,6 +17,8 @@ final class ConstraintSetTests: XCTestCase {
         intVariableA = IntVariable(name: "intA", domain: [1, 3, 4, 5])
         intVariableB = IntVariable(name: "intB", domain: [1, 2, 3])
         intVariableC = IntVariable(name: "intC", domain: [2, 3, 4, 5])
+
+        variableSet = SetOfVariables(from: [intVariableA, intVariableB, intVariableC])
 
         aGreaterThanB = GreaterThanConstraint(intVariableA, isGreaterThan: intVariableB)
         cGreaterThanA = GreaterThanConstraint(intVariableC, isGreaterThan: intVariableA)
@@ -46,30 +50,55 @@ final class ConstraintSetTests: XCTestCase {
     }
 
     func testAllSatisfied_allNotSatisfied_returnsFalse() {
-        intVariableA.assignment = 3
-        intVariableB.assignment = 3
-        intVariableC.assignment = 2
-        XCTAssertFalse(aGreaterThanB.isSatisfied)
-        XCTAssertFalse(cGreaterThanA.isSatisfied)
+        variableSet.assign(intVariableA.name, to: 3)
+        let assignmentA = variableSet.getAssignment(intVariableA.name, type: IntVariable.self)
+        XCTAssertEqual(assignmentA, 3)
 
-        XCTAssertFalse(constraintSet.allSatisfied)
+        variableSet.assign(intVariableB.name, to: 3)
+        let assignmentB = variableSet.getAssignment(intVariableB.name, type: IntVariable.self)
+        XCTAssertEqual(assignmentB, 3)
+
+        variableSet.assign(intVariableC.name, to: 2)
+        let assignmentC = variableSet.getAssignment(intVariableC.name, type: IntVariable.self)
+        XCTAssertEqual(assignmentC, 2)
+
+        XCTAssertFalse(aGreaterThanB.isSatisfied(state: variableSet))
+        XCTAssertFalse(cGreaterThanA.isSatisfied(state: variableSet))
+
+        XCTAssertFalse(constraintSet.allSatisfied(state: variableSet))
     }
 
     func testAllSatisfied_oneNotSatisfied_returnsFalse() {
-        intVariableA.assignment = 5
-        intVariableB.assignment = 2
-        XCTAssertTrue(aGreaterThanB.isSatisfied)
+        variableSet.assign(intVariableA.name, to: 5)
+        let assignmentA = variableSet.getAssignment(intVariableA.name, type: IntVariable.self)
+        XCTAssertEqual(assignmentA, 5)
 
-        XCTAssertFalse(constraintSet.allSatisfied)
+        variableSet.assign(intVariableB.name, to: 2)
+        let assignmentB = variableSet.getAssignment(intVariableB.name, type: IntVariable.self)
+        XCTAssertEqual(assignmentB, 2)
+
+        XCTAssertTrue(aGreaterThanB.isSatisfied(state: variableSet))
+        XCTAssertFalse(cGreaterThanA.isSatisfied(state: variableSet))
+
+        XCTAssertFalse(constraintSet.allSatisfied(state: variableSet))
     }
 
     func testAllSatisfied_allSatisfied_returnsTrue() {
-        intVariableA.assignment = 3
-        intVariableB.assignment = 2
-        intVariableC.assignment = 4
-        XCTAssertTrue(aGreaterThanB.isSatisfied)
-        XCTAssertTrue(cGreaterThanA.isSatisfied)
+        variableSet.assign(intVariableA.name, to: 3)
+        let assignmentA = variableSet.getAssignment(intVariableA.name, type: IntVariable.self)
+        XCTAssertEqual(assignmentA, 3)
 
-        XCTAssertTrue(constraintSet.allSatisfied)
+        variableSet.assign(intVariableB.name, to: 2)
+        let assignmentB = variableSet.getAssignment(intVariableB.name, type: IntVariable.self)
+        XCTAssertEqual(assignmentB, 2)
+
+        variableSet.assign(intVariableC.name, to: 4)
+        let assignmentC = variableSet.getAssignment(intVariableC.name, type: IntVariable.self)
+        XCTAssertEqual(assignmentC, 4)
+
+        XCTAssertTrue(aGreaterThanB.isSatisfied(state: variableSet))
+        XCTAssertTrue(cGreaterThanA.isSatisfied(state: variableSet))
+
+        XCTAssertTrue(constraintSet.allSatisfied(state: variableSet))
     }
 }

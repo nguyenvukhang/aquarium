@@ -12,10 +12,9 @@ final class StringVariableTests: XCTestCase {
     }
 
     // MARK: Testing methods/attributes defined in StringVariable
-    func testCopy_returnsExactCopyButNotSameInstance() {
+    func testCopy_returnsExactCopy() {
         let copiedStringVariable = stringVariable.copy()
         XCTAssertEqual(stringVariable, copiedStringVariable)
-        XCTAssertFalse(stringVariable === copiedStringVariable)
     }
 
     // MARK: Testing methods/attributes inherited from Variable
