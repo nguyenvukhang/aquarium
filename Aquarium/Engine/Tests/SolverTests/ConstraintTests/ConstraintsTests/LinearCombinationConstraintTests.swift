@@ -31,6 +31,7 @@ final class LinearCombinationConstraintTests: XCTestCase {
                                                                   add: -7.591)
     }
 
+    // MARK: testing methods/attributes inherited from Constraint
     func testVariableNames_returnsAllVariableNames() {
         let expectedVariableNames: [String] = [ternaryVariable.name]
         let actualVariableNames = linearCombinationConstraint.variableNames
@@ -42,9 +43,9 @@ final class LinearCombinationConstraintTests: XCTestCase {
     }
 
     func testContainsAssignedVariable_someAssigned_returnsTrue() {
-        let floatA: Float = 5.456
-        let floatB: Float = 9.321
-        let newAssignment = NaryVariableValueType(value: [1, floatA, floatB])
+        let floatB: Float = 5.456
+        let floatC: Float = 9.321
+        let newAssignment = NaryVariableValueType(value: [1, floatB, floatC])
         variableSet.assign(ternaryVariable.name, to: newAssignment)
         XCTAssertTrue(variableSet.isAssigned(ternaryVariable.name))
 
@@ -57,9 +58,9 @@ final class LinearCombinationConstraintTests: XCTestCase {
     }
 
     func testIsSatisfied_doesNotSatisfyLinearCombination_returnsFalse() {
-        let floatA: Float = 4.123
-        let floatB: Float = 7.987
-        let newAssignment = NaryVariableValueType(value: [1, floatA, floatB])
+        let floatB: Float = 4.123
+        let floatC: Float = 7.987
+        let newAssignment = NaryVariableValueType(value: [1, floatB, floatC])
         variableSet.assign(ternaryVariable.name, to: newAssignment)
         let ternaryVariableAssignment = variableSet.getAssignment(ternaryVariable.name, type: TernaryVariable.self)
         XCTAssertEqual(ternaryVariableAssignment, newAssignment)
@@ -68,9 +69,9 @@ final class LinearCombinationConstraintTests: XCTestCase {
     }
 
     func testIsSatisfied_satisfiesLinearCombination_returnsTrue() {
-        let floatA: Float = 6.789
-        let floatB: Float = 7.987
-        let newAssignment = NaryVariableValueType(value: [2, floatA, floatB])
+        let floatB: Float = 6.789
+        let floatC: Float = 7.987
+        let newAssignment = NaryVariableValueType(value: [2, floatB, floatC])
         variableSet.assign(ternaryVariable.name, to: newAssignment)
         let ternaryVariableAssignment = variableSet.getAssignment(ternaryVariable.name, type: TernaryVariable.self)
         XCTAssertEqual(ternaryVariableAssignment, newAssignment)
@@ -84,9 +85,9 @@ final class LinearCombinationConstraintTests: XCTestCase {
     }
 
     func testIsViolated_satisfiesLinearCombination_returnsFalse() {
-        let floatA: Float = 6.789
-        let floatB: Float = 7.987
-        let newAssignment = NaryVariableValueType(value: [2, floatA, floatB])
+        let floatB: Float = 6.789
+        let floatC: Float = 7.987
+        let newAssignment = NaryVariableValueType(value: [2, floatB, floatC])
         variableSet.assign(ternaryVariable.name, to: newAssignment)
         let ternaryVariableAssignment = variableSet.getAssignment(ternaryVariable.name, type: TernaryVariable.self)
         XCTAssertEqual(ternaryVariableAssignment, newAssignment)
@@ -95,13 +96,31 @@ final class LinearCombinationConstraintTests: XCTestCase {
     }
 
     func testIsViolated_doesNotSatisfyLinearCombination_returnsTrue() {
-        let floatA: Float = 4.123
-        let floatB: Float = 7.987
-        let newAssignment = NaryVariableValueType(value: [1, floatA, floatB])
+        let floatB: Float = 4.123
+        let floatC: Float = 7.987
+        let newAssignment = NaryVariableValueType(value: [1, floatB, floatC])
         variableSet.assign(ternaryVariable.name, to: newAssignment)
         let ternaryVariableAssignment = variableSet.getAssignment(ternaryVariable.name, type: TernaryVariable.self)
         XCTAssertEqual(ternaryVariableAssignment, newAssignment)
 
         XCTAssertTrue(linearCombinationConstraint.isViolated(state: variableSet))
+    }
+
+    // MARK: testing methods/attributes inherited from UnaryConstraint
+    func testRestrictDomain_returnsCorrectlyRestrictedDomain() {
+        let floatB: Float = 6.789
+        let floatC: Float = 7.987
+
+        // preparing expected result
+        var copiedVariableSet = variableSet!
+        let newAssignment = NaryVariableValueType(value: [2, floatB, floatC])
+        copiedVariableSet.assign(ternaryVariable.name, to: newAssignment)
+        let expectedTernaryVariableDomain = copiedVariableSet.getDomain(ternaryVariable.name, type: TernaryVariable.self)
+
+        // getting result
+        let restrictedVariableSet = linearCombinationConstraint.restrictDomain(state: variableSet)
+        let actualTernaryVariableDomain = restrictedVariableSet.getDomain(ternaryVariable.name, type: TernaryVariable.self)
+
+        XCTAssertEqual(actualTernaryVariableDomain, expectedTernaryVariableDomain)
     }
 }
