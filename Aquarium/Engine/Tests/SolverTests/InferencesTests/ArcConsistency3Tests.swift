@@ -1,7 +1,7 @@
 @testable import Engine
 import XCTest
 
-final class ForwardCheckingTests: XCTestCase {
+final class ArcConsistency3Tests: XCTestCase {
     // Example used here:
     //     T W O
     // +   T W O
@@ -199,11 +199,15 @@ final class ForwardCheckingTests: XCTestCase {
                           constraintT_C2_Y,
                           constraintO_F_Y]
 
-        inferenceEngines = createAllEnginePermutations(allConstraints: allConstraints)
+        // inferenceEngines = createAllEnginePermutations(allConstraints: allConstraints)
+
+        let constraintSet = ConstraintSet(allConstraints: allConstraints)
+        inferenceEngines = [ArcConsistency3(constraintSet: constraintSet)]
     }
 
     // Since Constraints are in ordered arrays, need to create all possible permutations
     // and ensure that we arrive at the same inferences.
+    /*
     private func createAllEnginePermutations(allConstraints: [any Constraint]) -> [any InferenceEngine] {
         var inferenceEngines = [any InferenceEngine]()
 
@@ -214,10 +218,12 @@ final class ForwardCheckingTests: XCTestCase {
             inferenceEngines.append(ForwardChecking(constraintSet: constraintSet))
         }
 
+        print("num inference engines: \(inferenceEngines.count)")
         return inferenceEngines
     }
+     */
 
-    /*
+    // FIXME: really infeasible, try to apply all unary constraints first
     func testMakeNewInference_settingFTo1() {
         // assign F to 1
         variableSet.assign(intVariableF.name, to: 1)
@@ -231,7 +237,7 @@ final class ForwardCheckingTests: XCTestCase {
 
         for engine in inferenceEngines {
             // make a new inference
-            let inference = engine.makeNewInference(from: variableSet)
+            let inference = engine.makeNewInference(from: variableSet)!
 
             // get all domains from inference
             let inferredIntVarDomains = allIntVariables.map({ variable in
@@ -308,5 +314,4 @@ final class ForwardCheckingTests: XCTestCase {
             }
         }
     }
-     */
 }

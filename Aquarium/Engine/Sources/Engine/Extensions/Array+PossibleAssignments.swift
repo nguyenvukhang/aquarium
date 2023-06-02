@@ -23,6 +23,14 @@ extension Array {
         var copy = array
         let last = copy.removeLast()
         let subproblemSolution = permutations(copy)
-        return subproblemSolution.map({ $0 + [last] })
+        var output = [[T]]()
+        for perm in subproblemSolution {
+            for idx in 0 ... perm.count {
+                var copiedPerm = perm
+                copiedPerm.insert(last, at: idx)
+                output.append(copiedPerm)
+            }
+        }
+        return output
     }
 }
