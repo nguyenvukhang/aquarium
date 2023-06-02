@@ -56,6 +56,8 @@ final class ArcConsistency3Tests: XCTestCase {
 
     var allConstraints: [any Constraint]!
 
+    var constraintSet: ConstraintSet!
+
     var inferenceEngines: [InferenceEngine]!
 
     override func setUp() {
@@ -199,9 +201,10 @@ final class ArcConsistency3Tests: XCTestCase {
                           constraintT_C2_Y,
                           constraintO_F_Y]
 
-        // inferenceEngines = createAllEnginePermutations(allConstraints: allConstraints)
+        constraintSet = ConstraintSet(allConstraints: allConstraints)
+        variableSet = constraintSet.applyUnaryConstraints(to: variableSet)
+        constraintSet.removeUnaryConstraints()
 
-        let constraintSet = ConstraintSet(allConstraints: allConstraints)
         inferenceEngines = [ArcConsistency3(constraintSet: constraintSet)]
     }
 
@@ -223,7 +226,6 @@ final class ArcConsistency3Tests: XCTestCase {
     }
      */
 
-    // FIXME: really infeasible, try to apply all unary constraints first
     func testMakeNewInference_settingFTo1() {
         // assign F to 1
         variableSet.assign(intVariableF.name, to: 1)
