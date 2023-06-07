@@ -124,7 +124,8 @@ final class ArcConsistency3Tests: XCTestCase {
                         dualVariableW_C1_X,
                         dualVariableU_C2_X,
                         dualVariableT_C2_Y,
-                        dualVariableO_F_Y]
+                        dualVariableO_F_Y
+        ]
 
         variableSet = SetOfVariables(from: allVariables)
 
@@ -199,7 +200,8 @@ final class ArcConsistency3Tests: XCTestCase {
                           constraintW_C1_X,
                           constraintU_C2_X,
                           constraintT_C2_Y,
-                          constraintO_F_Y]
+                          constraintO_F_Y
+        ]
 
         constraintSet = ConstraintSet(allConstraints: allConstraints)
         variableSet = constraintSet.applyUnaryConstraints(to: variableSet)
@@ -250,46 +252,24 @@ final class ArcConsistency3Tests: XCTestCase {
             })
 
             // define expected domains
-            // let expectedDomainT = Set(1 ... 9)
             let expectedDomainT = Set([8])
-            // let expectedDomainW = Set(0 ... 9)
             let expectedDomainW = Set(0 ... 4)
             let expectedDomainO = Set([6])
             let expectedDomainF = Set([1])
-            // let expectedDomainU = Set(0 ... 9)
-            let expectedDomainU = Set(1 ... 9)
+            let expectedDomainU = Set([1, 3, 5, 7, 9])
             let expectedDomainR = Set([2])
-            // let expectedDomainX = Set(0 ... 19)
-            let expectedDomainX = Set(1 ... 9)
+            let expectedDomainX = Set([1, 3, 5, 7, 9])
             let expectedDomainY = Set([16])
             let expectedDomainC1 = Set([1])
             let expectedDomainC2 = Set([0])
 
-            let expectedDomainO_R_C1 = Set(Array<any Value>
-                .possibleAssignments(domains: [Array(expectedDomainO),
-                                               Array(expectedDomainR),
-                                               Array(expectedDomainC1)])
-                    .map({ NaryVariableValueType(value: $0) }))
-            let expectedDomainW_C1_X = Set(Array<any Value>
-                .possibleAssignments(domains: [Array(expectedDomainW),
-                                               Array(expectedDomainC1),
-                                               Array(expectedDomainX)])
-                    .map({ NaryVariableValueType(value: $0) }))
-            let expectedDomainU_C2_X = Set(Array<any Value>
-                .possibleAssignments(domains: [Array(expectedDomainU),
-                                               Array(expectedDomainC2),
-                                               Array(expectedDomainX)])
-                    .map({ NaryVariableValueType(value: $0) }))
-            let expectedDomainT_C2_Y = Set(Array<any Value>
-                .possibleAssignments(domains: [Array(expectedDomainT),
-                                               Array(expectedDomainC2),
-                                               Array(expectedDomainY)])
-                    .map({ NaryVariableValueType(value: $0) }))
-            let expectedDomainO_F_Y = Set(Array<any Value>
-                .possibleAssignments(domains: [Array(expectedDomainO),
-                                               Array(expectedDomainF),
-                                               Array(expectedDomainY)])
-                    .map({ NaryVariableValueType(value: $0) }))
+            let expectedDomainO_R_C1 = Set([NaryVariableValueType(value: [6, 2, 1])])
+            let expectedDomainW_C1_X = Set([[0, 1, 1], [1, 1, 3], [2, 1, 5], [3, 1, 7], [4, 1, 9]]
+                .map({ NaryVariableValueType(value: $0) }))
+            let expectedDomainU_C2_X = Set([[1, 0, 1], [3, 0, 3], [5, 0, 5], [7, 0, 7], [9, 0, 9]]
+                .map({ NaryVariableValueType(value: $0) }))
+            let expectedDomainT_C2_Y = Set([NaryVariableValueType(value: [8, 0, 16])])
+            let expectedDomainO_F_Y = Set([NaryVariableValueType(value: [6, 1, 16])])
 
             let expectedIntVarDomains = [expectedDomainT,
                                          expectedDomainW,
@@ -309,10 +289,10 @@ final class ArcConsistency3Tests: XCTestCase {
                                           expectedDomainO_F_Y]
 
             for idx in 0 ..< expectedIntVarDomains.count {
-                XCTAssertEqual(inferredIntVarDomains[idx], expectedIntVarDomains[idx], "IntVariable at index: \(idx)")
+                XCTAssertEqual(inferredIntVarDomains[idx], expectedIntVarDomains[idx], "\(allIntVariables[idx].name)")
             }
             for idx in 0 ..< expectedDualVarDomains.count {
-                XCTAssertEqual(inferredDualVarDomains[idx], expectedDualVarDomains[idx], "DualVariable at index: \(idx)")
+                XCTAssertEqual(inferredDualVarDomains[idx], expectedDualVarDomains[idx], "\(allDualVariables[idx].name)")
             }
         }
     }

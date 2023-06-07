@@ -103,6 +103,10 @@ final class LinearCombinationConstraintTests: XCTestCase {
         let ternaryVariableAssignment = variableSet.getAssignment(ternaryVariable.name, type: TernaryVariable.self)
         XCTAssertEqual(ternaryVariableAssignment, newAssignment)
 
+        measure {
+            _ = linearCombinationConstraint.isViolated(state: variableSet)
+        }
+
         XCTAssertTrue(linearCombinationConstraint.isViolated(state: variableSet))
     }
 
@@ -120,6 +124,10 @@ final class LinearCombinationConstraintTests: XCTestCase {
         // getting result
         let restrictedVariableSet = linearCombinationConstraint.restrictDomain(state: variableSet)
         let actualTernaryVariableDomain = restrictedVariableSet.getDomain(ternaryVariable.name, type: TernaryVariable.self)
+
+        measure {
+            _ = linearCombinationConstraint.restrictDomain(state: variableSet)
+        }
 
         XCTAssertEqual(actualTernaryVariableDomain, expectedTernaryVariableDomain)
     }

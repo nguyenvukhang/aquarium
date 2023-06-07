@@ -72,10 +72,10 @@ final class IntVariableTests: XCTestCase {
     
     func testAssignTo_possibleValue_getsAssigned() throws {
         for domainValue in intVariableDomain {
-            intVariable.unassign()
             intVariable.assign(to: domainValue)
             let assignment = try XCTUnwrap(intVariable.assignment)
             XCTAssertEqual(assignment, domainValue)
+            intVariable.unassign()
         }
     }
     
