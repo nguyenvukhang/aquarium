@@ -16,6 +16,7 @@ extension Array {
         return output
     }
 
+    // TODO: TEST
     static func permutations<T>(_ array: [T]) -> [[T]] {
         if array.count <= 1 {
             return [array]

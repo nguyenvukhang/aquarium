@@ -1,11 +1,5 @@
 extension Int: Value {}
 
-extension Int: Copyable {
-    public func copy() -> Int {
-        self
-    }
-}
-
 extension Float: Value {
     init?(_ value: any Value) {
         switch value {
@@ -19,12 +13,6 @@ extension Float: Value {
     }
 }
 
-extension Float: Copyable {
-    public func copy() -> Float {
-        self
-    }
-}
-
 extension Bool: Value {}
 
 extension Bool: Comparable {
@@ -34,16 +22,4 @@ extension Bool: Comparable {
     }
 }
 
-extension Bool: Copyable {
-    public func copy() -> Bool {
-        self
-    }
-}
-
 extension String: Value {}
-
-extension String: Copyable {
-    public func copy() -> String {
-        self
-    }
-}

@@ -11,12 +11,6 @@ final class IntVariableTests: XCTestCase {
         intVariable = IntVariable(name: "int", domain: intVariableDomain)
     }
 
-    // MARK: Testing methods/attributes defined in IntVariable
-    func testCopy_returnsExactCopy() {
-        let copiedIntVariable = intVariable.copy()
-        XCTAssertEqual(intVariable, copiedIntVariable)
-    }
-
     // MARK: Testing methods/attributes inherited from Variable
     func testDomain_getter() {
         XCTAssertEqual(intVariable.domain, intVariableDomain)

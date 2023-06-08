@@ -12,12 +12,6 @@ final class CellVariableTests: XCTestCase {
     }
 
     // MARK: Testing methods/attributes defined in CellVariable
-    func testCopy_returnsExactCopy() {
-        let copiedCellVariable = cellVariable.copy()
-        XCTAssertEqual(cellVariable, copiedCellVariable)
-    }
-
-    // MARK: Testing methods/attributes defined in CellVariable
     func testIsAir_nil_returnsFalse() {
         XCTAssertFalse(cellVariable.isAir)
     }

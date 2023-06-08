@@ -11,12 +11,6 @@ final class StringVariableTests: XCTestCase {
         stringVariable = StringVariable(name: "string", domain: stringVariableDomain)
     }
 
-    // MARK: Testing methods/attributes defined in StringVariable
-    func testCopy_returnsExactCopy() {
-        let copiedStringVariable = stringVariable.copy()
-        XCTAssertEqual(stringVariable, copiedStringVariable)
-    }
-
     // MARK: Testing methods/attributes inherited from Variable
     func testDomain_getter() {
         XCTAssertEqual(stringVariable.domain, stringVariableDomain)

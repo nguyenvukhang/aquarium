@@ -29,12 +29,6 @@ final class TernaryVariableTests: XCTestCase {
         expectedTernaryVariableDomain = Set(possibleAssignments.map( {NaryVariableValueType(value: $0) }))
     }
 
-    // MARK: Testing methods/attributes defined in TernaryVariable
-    func testCopy_returnsExactCopy() {
-        let copiedTernaryVariable = ternaryVariable.copy()
-        XCTAssertEqual(ternaryVariable, copiedTernaryVariable)
-    }
-
     // MARK: Testing methods/attributes inherited from NaryVariable
     func testIsAssociated_associatedVariable_returnsTrue() {
         for associatedVariable in allAssociatedVariables {
