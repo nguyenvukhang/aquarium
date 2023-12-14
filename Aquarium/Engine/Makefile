@@ -1,14 +1,15 @@
+# the command that runs when `make` is ran without arguments
 current:
-	make test
+	swift run -c release Csp
 
+# build + run EngineCli in one command
 dev:
-	swift run Cli
+	swift run -c release EngineCli
 
+# build EngineCli
 build:
-	swift build --product Cli
+	swift build --product EngineCli
 
-run:
-	./.build/debug/Cli
-
+# run tests without
 test:
 	swift test || exit 0
